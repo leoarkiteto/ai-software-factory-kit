@@ -234,6 +234,7 @@
           "adrs",
           "spec",
           "plan",
+          "planReview",
           "validationReport",
           "finalReport"
         ]

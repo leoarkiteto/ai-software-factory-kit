@@ -27,7 +27,8 @@ Durable domain knowledge (`GLOSSARY.md`, `docs/adr/`) follows the repository's c
 Rules:
 
 - `manifest.json` is the only state that skills and hooks read. Markdown artifacts are for humans and reviewers.
-- Every write goes through `factory-state` (Phase 3), which validates before it writes and stamps `updatedAt`.
+- Every write goes through `factory-state` (plugin `bin/`, on the Bash tool's `PATH`), which validates before it writes, stamps `updatedAt`, and writes atomically. Run `factory-state help` for commands. Exit codes: `0` ok, `1` rejected by a rule (message explains why), `2` usage error.
+- There is no file locking. Only the orchestrator (main thread) writes manifests; workers return reports in their reply and never call `factory-state`.
 - Artifact paths are repo-relative. Absolute paths and `..` are rejected by the schema.
 - Never write secrets, tokens or the contents of `security.protectedPaths` into any artifact.
 

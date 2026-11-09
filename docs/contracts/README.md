@@ -20,5 +20,12 @@ Status of enforcement (updated each phase):
 | Config merge and semantic checks; model resolution | `lib/contracts.mjs` | Phase 2 |
 | Review outcome vs findings; independence claim | `lib/contracts.mjs` | Phase 2 |
 | Worker scope deviations | `lib/contracts.mjs` + `lib/glob.mjs` | Phase 2 |
-| Status transitions, DAG acyclicity, ready set, failure propagation, review limit | `lib/state.mjs` | Phase 3 (planned) |
+| Status transitions per mode, guards, mode-change rules, history | `lib/state.mjs` | Phase 3 |
+| DAG validation (duplicates, unknown/self deps, cycles), plan checks (roles, worktree policy, FR coverage) | `lib/state.mjs` | Phase 3 |
+| Ready set, scheduling with file-scope overlap and concurrency limit | `lib/state.mjs` + `lib/glob.mjs` | Phase 3 |
+| Task attempts, retry limit, failure propagation to transitive dependants | `lib/state.mjs` | Phase 3 |
+| Review round numbering, iteration limit, review decision (rework / escalate / integrate) | `lib/state.mjs` | Phase 3 |
+| Rubric total, thresholds, escalators, overrides, confirmation and review policy | `lib/classify.mjs` | Phase 3 |
+| Validated, atomic persistence; out-of-repo artifact paths rejected | `lib/store.mjs` | Phase 3 |
+| Single writer of manifests | `bin/factory-state` (CLI) | Phase 3 |
 | Spec completeness | `factory-spec check` | Phase 5 (planned) |

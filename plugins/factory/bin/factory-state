@@ -1,0 +1,7 @@
+#!/usr/bin/env node
+// Thin launcher; logic lives in lib/cli/factory-state.mjs.
+// Uses only dynamic import() so it runs whether Node treats this
+// extensionless file as CommonJS (installed plugin) or ESM (dev repo).
+import("../lib/cli/factory-state.mjs").then(({ run }) => {
+  process.exitCode = run(process.argv.slice(2));
+});
