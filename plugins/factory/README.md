@@ -21,4 +21,4 @@ Optional integrations need their own access:
 - `/grill-with-docs` reads its format files from where it is installed (for example `~/.claude/skills/domain-modeling/`), and writes `GLOSSARY.md` and `docs/adr/`.
 - Spec Kit's `speckit-specify` writes `specs/` and `.specify/feature.json`.
 
-Status: v0.1.0 pre-release. All three modes are implemented. QUICK and STANDARD have been exercised end to end in real sessions. FULL-SPEC has been exercised through discovery (`/grill-with-docs`), specification (Spec Kit) and plan review; its execution and change-review stages use the same procedures as STANDARD.
+Status: v0.1.0 pre-release. All three modes are implemented and have each been exercised end to end in real sessions (single runs, not yet systematic evals).

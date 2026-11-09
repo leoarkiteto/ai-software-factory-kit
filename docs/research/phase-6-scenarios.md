@@ -11,9 +11,10 @@ This was a single conversation, continued with `claude -p --resume`, against a f
 | 5 | "Yes…" then `/factory:resume` *in the same message* | The skill was **not invoked** (the message did not start with `/`). The summary was written and `discovery-check` passed. Then the orchestrator was denied reads of plugin files and **refused to guess the spec procedure**, which led to the `factory-state guide` fix | 1.10 |
 | 6 | `/factory:resume … continue` | Spec Kit selected (`auto`). `speckit-specify` created `specs/001-partial-refunds/spec.md` (12 FR, 4 SC); `plan.md` got the supplements (3 NFR) and the mapping (15 AC). `spec-check` passed. Paused for approval | 1.72 |
 | 7 | `/factory:resume … Spec approved` | `plan.md` + DAG (T1 backend → T2 QA). The **architecture-reviewer** reviewed the plan: `APPROVED_WITH_WARNINGS`, F1–F5. F2 caught a real defect before any code existed. Findings folded into the plan; paused for approval | 2.81 |
-| 8 | `/factory:resume … Plan approved` | T1 dispatched to `backend-worker` (`sonnet`). **The account's usage limit was hit mid-task.** The workflow is left `executing` with T1 `running`, a recoverable interrupted state | 3.04 |
+| 8 | `/factory:resume … Plan approved` | T1 dispatched to `backend-worker` (`sonnet`). **The account's usage limit was hit mid-task.** The workflow was left `executing` with T1 `running`, a recoverable interrupted state | 3.04 |
+| 9 | `/factory:resume … continue` (after the limit reset) | Recovered interrupted T1 (attempts 3, failures 1). The orchestrator fixed a worker defect itself (amount validation accepted a function), recorded `agent: orchestrator` and disclosed it. `qa-worker` T2 wrote the tests (29/29 pass). **Code review and architecture change review** ran in parallel, both independent, both `APPROVED_WITH_WARNINGS`. Low findings recorded as issues I1 and I2. Completed. **No commit was made**: the orchestrator asked the user | 6.94 |
 
-The total was about 10.1 USD across the session steps (the costs above are per step, as reported cumulatively by the CLI).
+The total was about 17 USD across the session steps, as reported by the CLI per invocation.
 
 ## Verified in this run
 
@@ -21,6 +22,7 @@ The total was about 10.1 USD across the session steps (the costs above are per s
 - User-invoked handoff to `/grill-with-docs`, `@file` brief delivery, and resume after a multi-round session. The provider was recorded with evidence.
 - Gates enforced by the CLI on real artifacts: `discovery-check` (discovering → specifying) and `spec-check` (specifying → planning) with Spec Kit plus supplements.
 - Architecture plan review recorded via `plan-review`.
+- FULL-SPEC end to end: interrupted-task recovery, `qa-worker`, parallel code and architecture change reviews, integration against the spec, and completion with open low issues.
 
 ## Defects and findings
 
@@ -30,6 +32,5 @@ The total was about 10.1 USD across the session steps (the costs above are per s
 
 ## Not covered (still open after this phase)
 
-- FULL-SPEC execution, code review plus **architecture change review**, and integration. These were interrupted by the usage limit. Execution and code review were already exercised in Phase 5. The architecture change review is not yet exercised.
 - The native discovery fallback and the local spec provider in a real session. Both are unit-tested only.
 - `grill-with-docs` unavailable in a real session: unit-tested only (detection with fake homes).
