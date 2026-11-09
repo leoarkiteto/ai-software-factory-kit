@@ -86,8 +86,9 @@ failed       → replanning              (explicit user-approved resume only)
 - `tasks[].dependsOn` must reference existing task IDs, and the graph must be acyclic (validated on every write).
 - A task is **ready** when it is `pending` and every dependency is `completed`.
 - Two ready tasks may run in parallel only when `execution.parallel` is true and their `scope.files` globs do not overlap (`globsMayOverlap`, which is conservative). Otherwise they run sequentially (ADR-0007).
-- `isolation: "worktree"` is allowed only when `execution.worktreeIsolation` is `opt_in` and every dependency's output is already committed.
-- **Failure propagation:** when a task becomes `failed` after `execution.maxTaskAttempts`, every transitive dependant becomes `blocked`, with `blockedReason` naming the failed task. The workflow moves to `replanning`.
+- `isolation: "worktree"` is rejected while `execution.worktreeIsolation` is `never`, which is the v0.1 default (ADR-0007).
+- **Attempts vs. failures:** `attempts` counts every start and numbers the worker reports. `failures` counts attempts that ended `failed`. Only `failures` is bounded by `execution.maxTaskAttempts`, so review rework (completed → pending) never exhausts a task.
+- **Failure propagation:** when a task's `failures` reach `execution.maxTaskAttempts`, every transitive dependant becomes `blocked`, with `blockedReason` naming the failed task. The workflow moves to `replanning`.
 - Integration checkpoints are explicit tasks (role `qa-worker`, or the orchestrator itself) that depend on the tasks they integrate.
 
 ## 4. Review accounting
@@ -95,6 +96,7 @@ failed       → replanning              (explicit user-approved resume only)
 - `review.attempts` counts review rounds, not individual reports. Code and architecture review in the same round share one attempt number.
 - `review.maxIterations` is copied from config when the workflow is created, so changing config later does not change a running workflow.
 - When `attempts == maxIterations` and the latest outcome is still `NEEDS_CHANGES`, the workflow does not start another round. It sets `blockedOn.kind = "escalation"`, records the open findings as `issues[]` with status `escalated`, and asks the user to decide (accept risk, replan, or stop).
+- **Accepting risk:** `transition integrating --user-approved` waives the review-approval guard, but never the guard on all tasks being completed. The reason must name the accepted findings.
 
 ## 5. Resumability
 

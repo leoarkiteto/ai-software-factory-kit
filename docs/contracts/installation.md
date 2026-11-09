@@ -19,14 +19,14 @@ The plugin works without `init`. It falls back to the defaults and creates `.fac
 | `gitignore-block` | `.gitignore` | marked block | proposed when `artifacts.commitWorkflows` is false |
 | `rules` | `.claude/rules/factory-workflow.md` | whole file | optional |
 | `claude-md-block` | `CLAUDE.md` | marked block | **off**; the rules file is preferred because it needs no edit to `CLAUDE.md` |
-| `settings-permissions` | `.claude/settings.json` (or `.local.json`, user's choice) | specific `permissions.deny` entries | optional |
+| `settings-permissions` | `.claude/settings.json` (or `.local.json`, user's choice) | specific array entries: **allow** `Bash(factory-state *)` and `Edit(/.factory/**)` (needed for delegated workflows, ADR-0010), plus optional **deny** entries for protected paths and push/deploy | proposed (allow), optional (deny) |
 
 Marked blocks use comment delimiters:
 
 - in Markdown, `<!-- factory:begin v1 -->` … `<!-- factory:end -->` (Claude Code strips HTML block comments before injection, so the markers cost no context);
 - in `.gitignore`, `# factory:begin v1` … `# factory:end`.
 
-JSON settings get no markers. The receipt records exactly which array entries were added.
+JSON settings get no markers. The receipt records exactly which array entries were added (`permissions.allow` and/or `permissions.deny`).
 
 ## 3. Procedure (`/factory:init`)
 
@@ -75,4 +75,4 @@ The installer never:
 - edits `~/.claude/` (user scope);
 - installs third-party skills or plugins on its own (it prints the command instead);
 - runs `specify init`;
-- adds `permissions.allow` entries without the user listing them explicitly.
+- adds any `permissions.allow` entry other than the two Factory rules from ADR-0010. Those two are shown verbatim and approved individually.

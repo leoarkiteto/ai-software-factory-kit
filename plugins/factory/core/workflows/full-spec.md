@@ -28,7 +28,7 @@ Follow `${CLAUDE_PLUGIN_ROOT}/core/workflows/specification.md`. Choose a provide
 
 - Write `plan.md` from `${CLAUDE_PLUGIN_ROOT}/core/templates/plan.md`. Define interfaces and contracts **before** the tasks that use them, so that parallel tasks have a stable contract.
 - Decompose the plan (`${CLAUDE_PLUGIN_ROOT}/core/workflows/decomposition.md`). Every `FR` must be referenced by at least one task.
-- **Plan review:** delegate to `factory:architecture-reviewer` with the spec and plan (review.md, "Plan review"). Save its report as `.factory/workflows/<id>/plan-review.json` and record it with `factory-state artifact <id> planReview …`. Resolve required findings before asking for approval.
+- **Plan review:** follow "Plan review" in `${CLAUDE_PLUGIN_ROOT}/core/workflows/review.md` (`factory-state plan-review`). Resolve required findings before asking for approval.
 - Get the user's approval of the plan, then `transition executing --reason "plan approved by user"`.
 
 ## 5. Execute

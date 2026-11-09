@@ -129,6 +129,11 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 | Heredoc bodies containing JSON are denied even with `Bash(factory-state *)` allowed; plain-text heredocs (quotes, `$`, backticks, globs, `===`) pass | runtime |
 | Compound commands (`X=…; cmd`, `cd … && cmd`, `cmd; echo $?`) are denied when any part is not allowed | runtime |
 | A fresh session can resume a workflow purely from `.factory/` state | runtime |
+| Skill `allowed-tools` stop applying after delegated subagents return within the same invocation: later `factory-state` and `.factory/` writes were denied | runtime (Phase 5) |
+| Multiple Agent tool calls in one assistant message run plugin agents in parallel | runtime (Phase 5) |
+| `${CLAUDE_PLUGIN_ROOT}` is substituted inside plugin agent bodies (workers read the shared contract) | runtime (Phase 5) |
+| Per-call `model` on plugin agents is honoured (`sonnet` workers, `opus` reviewers) | runtime (Phase 5) |
+| Subagent worktree: `.claude/worktrees/agent-<id>`, branch `worktree-agent-<id>`, reported as `worktreePath`/`worktreeBranch`; main-checkout uncommitted files absent; worker changes left uncommitted in the worktree | runtime (Phase 5) |
 
 ## 9. Implications carried into Phase 2
 
@@ -147,4 +152,3 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 - `enabledPlugins` / `extraKnownMarketplaces` shapes (needed for team rollout docs, Phase 8).
 - Hook exit-code/JSON semantics and Stop/SubagentStop stdin schema (re-check before Phase 7).
 - Skill frontmatter table verbatim (re-check before Phase 4).
-- Branch name and path of a subagent worktree with changes (probe before Phase 5).

@@ -7,4 +7,14 @@ Classifies development requests into **QUICK**, **STANDARD** or **FULL-SPEC** wo
 
 Requires Node.js ≥ 18 (deterministic state tooling, exposed as `factory-state` on the Bash `PATH`). Full documentation, contracts and design decisions live in the kit repository under `docs/`.
 
-Status: v0.1.0 pre-release. QUICK is usable. STANDARD and FULL-SPEC planning is defined, but delegated execution, review, discovery and specification procedures are not implemented yet; workflows stop with an explicit message when they reach them.
+## Permissions
+
+Workflows that delegate to workers need two allow rules in your project settings, because skill-level pre-approval ends once subagents return (ADR-0010):
+
+```json
+{ "permissions": { "allow": ["Bash(factory-state *)", "Edit(/.factory/**)"] } }
+```
+
+`factory-state` only writes validated workflow state under `.factory/`. Without these rules, Claude Code asks each time.
+
+Status: v0.1.0 pre-release. QUICK and STANDARD are usable end to end: planning, parallel delegated execution, independent review and bounded rework. FULL-SPEC discovery and specification procedures are not implemented yet; workflows stop with an explicit message when they reach them.

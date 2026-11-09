@@ -114,6 +114,7 @@
       }
     },
     "attempts": {
+      "description": "Number of times the task was started (numbers worker reports).",
       "type": "integer",
       "minimum": 0
     },
@@ -130,6 +131,11 @@
     },
     "blockedReason": {
       "type": "string"
+    },
+    "failures": {
+      "description": "Attempts that ended in failure. Bounded by execution.maxTaskAttempts; review rework does not count.",
+      "type": "integer",
+      "minimum": 0
     }
   },
   "$defs": {

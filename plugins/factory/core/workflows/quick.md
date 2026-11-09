@@ -44,7 +44,7 @@ factory-state task <id> T1 --status running --agent orchestrator --model null
 
 `factory-state next <id>` says `review` or `integrate`.
 
-- **`review`** (the classification flagged risk): `factory-state transition <id> reviewing --reason "..."`. Then delegate to the `factory:code-reviewer` agent, following `${CLAUDE_PLUGIN_ROOT}/core/workflows/review.md`. If that agent is not available, write the review yourself with `independence.independent: false`, and state clearly in the final report that **no independent review occurred**.
+- **`review`** (the classification flagged risk): run `factory-state transition <id> reviewing --reason "..."`, then follow `${CLAUDE_PLUGIN_ROOT}/core/workflows/review.md`. You implemented the change, so the review must go to `factory:code-reviewer`. If that agent cannot be used (for example, a denied permission), stop and tell the user. Do not review your own work and call it independent.
 - **`integrate`**: skip to step 6.
 
 ## 6. Integrate and finish

@@ -5,10 +5,16 @@
   "description": "Per-repository configuration: .factory/config.json. Every section is optional; omitted values fall back to plugins/factory/core/defaults.json.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion"],
+  "required": [
+    "schemaVersion"
+  ],
   "properties": {
-    "$schema": { "type": "string" },
-    "schemaVersion": { "$ref": "factory/common.schema.json#/$defs/schemaVersion" },
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "$ref": "factory/common.schema.json#/$defs/schemaVersion"
+    },
     "classification": {
       "type": "object",
       "additionalProperties": false,
@@ -18,19 +24,45 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "standard": { "type": "integer", "minimum": 1, "maximum": 20 },
-            "fullSpec": { "type": "integer", "minimum": 1, "maximum": 20 }
+            "standard": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            },
+            "fullSpec": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 20
+            }
           }
         },
         "escalateToFullSpecWhenMax": {
           "description": "Rubric dimensions that, when scored 2, suggest FULL-SPEC regardless of total.",
           "type": "array",
           "uniqueItems": true,
-          "items": { "enum": ["scope", "complexity", "architecturalImpact", "components", "dependencies", "risk", "uncertainty", "testing", "codebaseFamiliarity", "regressionRisk"] }
+          "items": {
+            "enum": [
+              "scope",
+              "complexity",
+              "architecturalImpact",
+              "components",
+              "dependencies",
+              "risk",
+              "uncertainty",
+              "testing",
+              "codebaseFamiliarity",
+              "regressionRisk"
+            ]
+          }
         },
         "confirmWithUser": {
           "description": "When to ask the user to confirm the selected mode.",
-          "enum": ["never", "when_low_confidence", "when_not_quick", "always"]
+          "enum": [
+            "never",
+            "when_low_confidence",
+            "when_not_quick",
+            "always"
+          ]
         }
       }
     },
@@ -42,9 +74,15 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "reasoning": { "$ref": "factory/common.schema.json#/$defs/modelAlias" },
-            "efficient": { "$ref": "factory/common.schema.json#/$defs/modelAlias" },
-            "light": { "$ref": "factory/common.schema.json#/$defs/modelAlias" }
+            "reasoning": {
+              "$ref": "factory/common.schema.json#/$defs/modelAlias"
+            },
+            "efficient": {
+              "$ref": "factory/common.schema.json#/$defs/modelAlias"
+            },
+            "light": {
+              "$ref": "factory/common.schema.json#/$defs/modelAlias"
+            }
           }
         }
       }
@@ -52,15 +90,30 @@
     "roles": {
       "description": "Role registry. Built-in roles can be overridden or disabled; custom roles may point at any agent available in the session, including the repository's own.",
       "type": "object",
-      "propertyNames": { "$ref": "factory/common.schema.json#/$defs/roleName" },
+      "propertyNames": {
+        "$ref": "factory/common.schema.json#/$defs/roleName"
+      },
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "agent": { "description": "Agent type name, e.g. 'factory:backend-worker' or a repo agent 'api-specialist'.", "type": "string", "minLength": 1 },
-          "model": { "$ref": "factory/common.schema.json#/$defs/modelRef" },
-          "enabled": { "type": "boolean" },
-          "kind": { "enum": ["worker", "reviewer"] }
+          "agent": {
+            "description": "Agent type name, e.g. 'factory:backend-worker' or a repo agent 'api-specialist'.",
+            "type": "string",
+            "minLength": 1
+          },
+          "model": {
+            "$ref": "factory/common.schema.json#/$defs/modelRef"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "kind": {
+            "enum": [
+              "worker",
+              "reviewer"
+            ]
+          }
         }
       }
     },
@@ -68,30 +121,66 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "maxIterations": { "type": "integer", "minimum": 1, "maximum": 10 },
-        "code": { "$ref": "#/$defs/perModePolicy" },
-        "architecture": { "$ref": "#/$defs/perModePolicy" },
-        "requireIndependentReviewer": { "type": "boolean" }
+        "maxIterations": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "code": {
+          "$ref": "#/$defs/perModePolicy"
+        },
+        "architecture": {
+          "$ref": "#/$defs/perModePolicy"
+        },
+        "requireIndependentReviewer": {
+          "type": "boolean"
+        }
       }
     },
     "execution": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "parallel": { "type": "boolean" },
-        "maxConcurrentTasks": { "type": "integer", "minimum": 1, "maximum": 10 },
-        "worktreeIsolation": { "enum": ["never", "opt_in"] },
-        "maxTaskAttempts": { "type": "integer", "minimum": 1, "maximum": 5 }
+        "parallel": {
+          "type": "boolean"
+        },
+        "maxConcurrentTasks": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10
+        },
+        "worktreeIsolation": {
+          "enum": [
+            "never",
+            "opt_in"
+          ],
+          "description": "never (v0.1 default): all tasks run in the shared checkout. opt_in is reserved; worktree integration is not implemented (ADR-0007)."
+        },
+        "maxTaskAttempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 5,
+          "description": "Failed attempts allowed per task before it is permanently failed and its dependants are blocked."
+        }
       }
     },
     "discovery": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "provider": { "enum": ["grill-with-docs", "native"] },
+        "provider": {
+          "enum": [
+            "grill-with-docs",
+            "native"
+          ]
+        },
         "whenUnavailable": {
           "description": "ask: explain and let the user choose. native: use the native fallback and record it. stop: halt the workflow.",
-          "enum": ["ask", "native", "stop"]
+          "enum": [
+            "ask",
+            "native",
+            "stop"
+          ]
         }
       }
     },
@@ -99,7 +188,14 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "provider": { "description": "auto: Spec Kit when .specify/ is present, otherwise local templates.", "enum": ["auto", "spec-kit", "local"] }
+        "provider": {
+          "description": "auto: Spec Kit when .specify/ is present, otherwise local templates.",
+          "enum": [
+            "auto",
+            "spec-kit",
+            "local"
+          ]
+        }
       }
     },
     "validation": {
@@ -111,16 +207,49 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "format": { "type": ["string", "null"] },
-            "lint": { "type": ["string", "null"] },
-            "typecheck": { "type": ["string", "null"] },
-            "test": { "type": ["string", "null"] },
-            "build": { "type": ["string", "null"] }
+            "format": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "lint": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "typecheck": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "test": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "build": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
           }
         },
-        "preReview": { "$ref": "#/$defs/commandKinds" },
-        "final": { "$ref": "#/$defs/commandKinds" },
-        "timeoutSeconds": { "type": "integer", "minimum": 10, "maximum": 3600 }
+        "preReview": {
+          "$ref": "#/$defs/commandKinds"
+        },
+        "final": {
+          "$ref": "#/$defs/commandKinds"
+        },
+        "timeoutSeconds": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 3600
+        }
       }
     },
     "hooks": {
@@ -128,26 +257,53 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "sessionResume": { "type": "boolean" },
-        "commandGuard": { "type": "boolean" },
-        "manifestValidation": { "type": "boolean" },
-        "postEditFormat": { "type": "boolean" }
+        "sessionResume": {
+          "type": "boolean"
+        },
+        "commandGuard": {
+          "type": "boolean"
+        },
+        "manifestValidation": {
+          "type": "boolean"
+        },
+        "postEditFormat": {
+          "type": "boolean"
+        }
       }
     },
     "security": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "protectedPaths": { "description": "Gitignore-style globs workers must not read or write.", "type": "array", "items": { "type": "string", "minLength": 1 } },
-        "blockedCommands": { "description": "Extra regex patterns the command guard blocks during workflows.", "type": "array", "items": { "type": "string", "minLength": 1 } },
-        "allowGitPush": { "type": "boolean" }
+        "protectedPaths": {
+          "description": "Gitignore-style globs workers must not read or write.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "blockedCommands": {
+          "description": "Extra regex patterns the command guard blocks during workflows.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "allowGitPush": {
+          "type": "boolean"
+        }
       }
     },
     "artifacts": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "commitWorkflows": { "description": "Whether .factory/workflows/ is meant to be committed (affects the .gitignore proposal only).", "type": "boolean" }
+        "commitWorkflows": {
+          "description": "Whether .factory/workflows/ is meant to be committed (affects the .gitignore proposal only).",
+          "type": "boolean"
+        }
       }
     }
   },
@@ -156,12 +312,37 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "quick": { "$ref": "#/$defs/policy" },
-        "standard": { "$ref": "#/$defs/policy" },
-        "full_spec": { "$ref": "#/$defs/policy" }
+        "quick": {
+          "$ref": "#/$defs/policy"
+        },
+        "standard": {
+          "$ref": "#/$defs/policy"
+        },
+        "full_spec": {
+          "$ref": "#/$defs/policy"
+        }
       }
     },
-    "policy": { "description": "on_risk: run when classification risk, regressionRisk or architecturalImpact scored 2.", "enum": ["never", "on_risk", "always"] },
-    "commandKinds": { "type": "array", "uniqueItems": true, "items": { "enum": ["format", "lint", "typecheck", "test", "build"] } }
+    "policy": {
+      "description": "on_risk: run when classification risk, regressionRisk or architecturalImpact scored 2.",
+      "enum": [
+        "never",
+        "on_risk",
+        "always"
+      ]
+    },
+    "commandKinds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "format",
+          "lint",
+          "typecheck",
+          "test",
+          "build"
+        ]
+      }
+    }
   }
 }

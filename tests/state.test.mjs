@@ -182,7 +182,7 @@ test("attempts are counted and bounded; exhausted failure blocks transitive depe
   assert.equal(m.tasks[0].attempts, 2);
   m = S.updateTask(m, "T1", { status: "failed" }, config);
   assert.deepEqual(m.tasks.map((t) => t.status), ["failed", "blocked", "blocked", "pending"]);
-  assert.match(m.tasks[2].blockedReason, /dependency T1 failed after 2/);
+  assert.match(m.tasks[2].blockedReason, /dependency T1 failed 2 time/);
   assert.throws(() => S.updateTask(m, "T1", { status: "pending" }, config), /exhausted/);
   assert.equal(S.nextAction(m, config).action, "run_tasks", "independent T4 still runs");
 });
@@ -201,6 +201,7 @@ test("replanning preserves attempts of kept tasks", () => {
   m = go(m, "replanning");
   m = S.setTasks(m, [{ ...task("T1"), status: "pending" }, task("T5")]);
   assert.equal(m.tasks[0].attempts, 1);
+  assert.equal(m.tasks[0].failures, 1);
   assert.equal(m.tasks[1].attempts, 0);
 });
 
@@ -301,4 +302,40 @@ test("full FULL-SPEC path end to end", () => {
   m = go(m, "completed");
   assert.deepEqual(m.history.map((h) => h.to), ["classifying", "discovering", "specifying", "planning", "executing", "reviewing", "integrating", "completed"]);
   assert.deepEqual(S.validateManifest(m), []);
+});
+
+test("review rework does not consume the failure budget", () => {
+  let m = go(completeAll(standardExecuting([task("T1")])), "reviewing");
+  for (let round = 1; round <= 2; round++) {
+    m = S.addReview(m, review(round, "NEEDS_CHANGES"));
+    m = go(m, "executing");
+    m = S.updateTask(m, "T1", { status: "pending" }, config);
+    m = S.updateTask(m, "T1", { status: "running" }, config);
+    m = S.updateTask(m, "T1", { status: "completed" }, config);
+    m = go(m, "reviewing");
+  }
+  assert.equal(m.tasks[0].attempts, 3);
+  assert.equal(m.tasks[0].failures, 0);
+});
+
+test("after escalation the user may accept unapproved reviews and integrate", () => {
+  let m = go(completeAll(standardExecuting([task("T1")])), "reviewing");
+  m = S.addReview(m, review(1, "BLOCKED"));
+  assert.throws(() => go(m, "integrating"), /not approved/);
+  const accepted = go(m, "integrating", { userApproved: true, reason: "user accepted risk of blocked review finding F1" });
+  assert.equal(accepted.status, "integrating");
+  let notDone = standardExecuting([task("T1")]);
+  assert.throws(() => go(notDone, "integrating", { userApproved: true }), /not all tasks are completed/, "approval never waives incomplete tasks");
+});
+
+test("next action distinguishes retry from replan", () => {
+  let m = standardExecuting([task("T1")]);
+  m = S.updateTask(m, "T1", { status: "running" }, config);
+  m = S.updateTask(m, "T1", { status: "failed" }, config);
+  assert.deepEqual(S.nextAction(m, config).tasks, ["T1"]);
+  assert.equal(S.nextAction(m, config).action, "retry_tasks");
+  m = S.updateTask(m, "T1", { status: "pending" }, config);
+  m = S.updateTask(m, "T1", { status: "running" }, config);
+  m = S.updateTask(m, "T1", { status: "failed" }, config);
+  assert.equal(S.nextAction(m, config).action, "replan", "budget exhausted");
 });

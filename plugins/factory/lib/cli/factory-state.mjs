@@ -5,7 +5,8 @@ import { readFileSync, rmSync, existsSync, readdirSync, rmdirSync } from "node:f
 import { dirname, join, resolve, sep } from "node:path";
 import * as S from "../state.mjs";
 import * as store from "../store.mjs";
-import { loadConfig, checkReviewReport, checkWorkerReport } from "../contracts.mjs";
+import { loadConfig, checkReviewReport, checkWorkerReport, resolveModel } from "../contracts.mjs";
+import { execFileSync } from "node:child_process";
 import { classify, needsConfirmation, ClassificationError } from "../classify.mjs";
 import { formatErrors } from "../schema.mjs";
 
@@ -29,10 +30,12 @@ Tasks
   tasks ID --file F                      replace task list (planning / replanning / classifying)
   task ID TASK [--status S] [--result R] [--agent A] [--model M] [--blocked-reason R]
   next ID                                deterministic next action and schedulable tasks
+  route ROLE                             agent and model alias for a role (omit model when none)
   report ID TASK --file F                validate + store a worker report (reports/TASK-ATTEMPT.json)
 
 Review, validation, records
   review ID --file F                     validate + store a review report, print the decision
+  plan-review ID --file F                validate + store the FULL-SPEC architecture review of the plan
   validation ID --kind K --status S [--command C] [--exit N] [--summary T]   (omit --command only for skipped)
   provider ID discovery|specification [--requested X] [--used X] [--status S] [--version V] [--evidence E] [--note N]
   artifact ID KIND PATH
@@ -72,7 +75,12 @@ let inputsRead = [];
 
 function readInput(path) {
   if (path !== "-") inputsRead.push(resolve(path));
-  const text = path === "-" ? readFileSync(0, "utf8") : readFileSync(path, "utf8");
+  let text;
+  try {
+    text = path === "-" ? readFileSync(0, "utf8") : readFileSync(path, "utf8");
+  } catch (e) {
+    throw new S.StateError(`cannot read input ${path}: ${e.code === "ENOENT" ? "file not found" : e.message}`);
+  }
   try {
     return JSON.parse(text);
   } catch (e) {
@@ -129,7 +137,8 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         const rf = flags["request-file"];
         const request = rf ? readFileSync(rf === "-" ? 0 : rf, "utf8").trim() : need(flags, "request");
         if (!request) throw new UsageError("empty request");
-        const m = S.createWorkflow({ title, request, config, existingIds: store.listWorkflowIds(root), baseRef: flags["base-ref"] });
+        const baseRef = typeof flags["base-ref"] === "string" ? flags["base-ref"] : gitHead(root);
+        const m = S.createWorkflow({ title, request, config, existingIds: store.listWorkflowIds(root), baseRef });
         save(m);
         out(m.id, { id: m.id, dir: store.workflowDir(root, m.id) });
         return 0;
@@ -175,6 +184,30 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
           return `${S.summary(m)} | next: ${n.action}`;
         });
         out(lines.join("\n"), { active: active.map((m) => ({ id: m.id, summary: S.summary(m), next: S.nextAction(m, config) })) });
+        return 0;
+      }
+      case "route": {
+        const role = args[0];
+        if (!role) throw new UsageError("usage: route ROLE");
+        const r = config.roles[role];
+        if (!r) throw new S.StateError(`unknown role ${role}`);
+        if (r.enabled === false) throw new S.StateError(`role ${role} is disabled in config`);
+        const model = resolveModel(config, role);
+        out(`agent ${r.agent}  model ${model ?? "(agent default: omit the model parameter)"}`, { role, agent: r.agent, kind: r.kind, model });
+        return 0;
+      }
+      case "plan-review": {
+        const m0 = load(requireId());
+        if (m0.status !== "planning") throw new S.StateError(`plan reviews happen while planning (current: ${m0.status})`);
+        const report = readInput(need(flags, "file"));
+        const errors = checkReviewReport(report);
+        if (report.kind !== "architecture") errors.push({ path: "$.kind", message: "plan review must be kind architecture" });
+        if (errors.length) throw new S.StateError("plan review rejected", errors);
+        const rel = `${store.FACTORY_DIR}/workflows/${m0.id}/plan-review.json`;
+        store.writeJsonAtomic(join(root, rel), report);
+        save(S.setArtifact(m0, "planReview", rel));
+        const required = report.findings.filter((f) => f.required).map((f) => f.id);
+        out(`plan review: ${report.outcome}${required.length ? ` — resolve required findings ${required.join(", ")} before approval` : ""}`, { path: rel, outcome: report.outcome, requiredFindings: required });
         return 0;
       }
       case "transition": {
@@ -319,6 +352,14 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
       return 1;
     }
     throw e;
+  }
+}
+
+function gitHead(root) {
+  try {
+    return execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  } catch {
+    return undefined; // not a git repo, or no commits yet
   }
 }
 

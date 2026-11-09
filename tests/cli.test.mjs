@@ -188,3 +188,24 @@ test("inbox files are consumed on success and kept on rejection", () => {
   assert.equal(fs(["classify", other, "--file", outside]).code, 0);
   assert.ok(existsSync(outside), "files outside an inbox are never deleted");
 });
+
+test("route resolves agent and model alias per role", () => {
+  assert.deepEqual(json(["route", "backend-worker"]).data, { role: "backend-worker", agent: "factory:backend-worker", kind: "worker", model: "sonnet" });
+  assert.equal(json(["route", "code-reviewer"]).data.model, "opus");
+  assert.equal(fs(["route", "nope"]).code, 1);
+});
+
+test("new records the git HEAD as baseRef when available", () => {
+  execFileSync("git", ["-c", "user.name=t", "-c", "user.email=t@example.invalid", "commit", "-q", "--allow-empty", "-m", "base"], { cwd: repo });
+  const head = execFileSync("git", ["rev-parse", "HEAD"], { cwd: repo, encoding: "utf8" }).trim();
+  const { data } = json(["new", "--title", "Base ref", "--request", "x"]);
+  assert.equal(json(["show", data.id]).data.manifest.baseRef, head);
+});
+
+test("a missing input file is a clean rejection, not a crash", () => {
+  const { data } = json(["new", "--title", "Missing input", "--request", "x"]);
+  const r = fs(["classify", data.id, "--file", join(repo, "nope.json")]);
+  assert.equal(r.code, 1);
+  assert.match(r.err, /cannot read input .*file not found/);
+  assert.doesNotMatch(r.err, /at readFileSync/);
+});

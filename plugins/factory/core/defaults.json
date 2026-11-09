@@ -26,7 +26,7 @@
   "execution": {
     "parallel": true,
     "maxConcurrentTasks": 3,
-    "worktreeIsolation": "opt_in",
+    "worktreeIsolation": "never",
     "maxTaskAttempts": 2
   },
   "discovery": { "provider": "grill-with-docs", "whenUnavailable": "ask" },

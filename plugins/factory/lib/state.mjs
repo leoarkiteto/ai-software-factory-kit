@@ -169,7 +169,7 @@ function latestRound(m) {
 }
 
 /** Guards beyond the transition table. Returns a list of reasons it is not allowed. */
-function guardFailures(m, to, config) {
+function guardFailures(m, to, config, { userApproved = false } = {}) {
   const failures = [];
   const tasks = m.tasks;
   const allDone = tasks.length > 0 && tasks.every((t) => t.status === "completed");
@@ -195,7 +195,8 @@ function guardFailures(m, to, config) {
   if (to === "reviewing" && !allDone) failures.push("not all tasks are completed");
   if (to === "integrating") {
     if (!allDone) failures.push("not all tasks are completed");
-    if (config) {
+    // The user may accept the risk of unapproved reviews after an escalation.
+    if (config && !userApproved) {
       const needed = ["code", "architecture"].filter((k) => reviewRequired(k, m.mode, m.classification, config));
       const round = latestRound(m);
       for (const kind of needed) {
@@ -239,7 +240,7 @@ export function transition(m, to, opts = {}, config) {
 
   const next = clone(m);
   next.mode = targetMode;
-  const failures = guardFailures(next, to, config);
+  const failures = guardFailures(next, to, config, { userApproved });
   if (failures.length) throw new StateError(`cannot move ${from} -> ${to}: ${failures.join("; ")}`, failures.map((message) => ({ path: "$", message })));
 
   next.status = to;
@@ -274,7 +275,7 @@ export function setTasks(m, tasks, now = nowIso()) {
   const previous = new Map(m.tasks.map((t) => [t.id, t]));
   const next = clone(m);
   // Completed work is preserved across replanning unless the task is redefined as pending explicitly.
-  next.tasks = tasks.map((t) => ({ attempts: previous.get(t.id)?.attempts ?? 0, ...t }));
+  next.tasks = tasks.map((t) => ({ attempts: previous.get(t.id)?.attempts ?? 0, failures: previous.get(t.id)?.failures ?? 0, ...t }));
   next.updatedAt = now;
   return assertValid(next);
 }
@@ -306,11 +307,12 @@ export function updateTask(m, taskId, patch, config, now = nowIso()) {
       if (next.status !== "executing") throw new StateError(`tasks run only while executing (current: ${next.status})`);
       const unmet = task.dependsOn.filter((d) => next.tasks.find((t) => t.id === d).status !== "completed");
       if (unmet.length) throw new StateError(`task ${taskId} has unmet dependencies: ${unmet.join(", ")}`);
-      if ((task.attempts ?? 0) >= maxAttempts) throw new StateError(`task ${taskId} exhausted ${maxAttempts} attempts`);
+      if ((task.failures ?? 0) >= maxAttempts) throw new StateError(`task ${taskId} exhausted ${maxAttempts} failed attempts`);
       task.attempts = (task.attempts ?? 0) + 1;
     }
-    if (patch.status === "pending" && task.status === "failed" && (task.attempts ?? 0) >= maxAttempts) {
-      throw new StateError(`task ${taskId} exhausted ${maxAttempts} attempts; replan instead`);
+    if (patch.status === "failed") task.failures = (task.failures ?? 0) + 1;
+    if (patch.status === "pending" && task.status === "failed" && (task.failures ?? 0) >= maxAttempts) {
+      throw new StateError(`task ${taskId} exhausted ${maxAttempts} failed attempts; replan instead`);
     }
     if (patch.status === "pending" && task.status === "completed" && !["executing", "replanning"].includes(next.status)) {
       throw new StateError("reopening a completed task requires executing or replanning");
@@ -326,12 +328,12 @@ export function updateTask(m, taskId, patch, config, now = nowIso()) {
   if (patch.report) task.reports = [...(task.reports ?? []), patch.report];
   if (patch.agent) task.assignment = { agent: patch.agent, model: patch.model ?? null };
 
-  if (task.status === "failed" && task.attempts >= maxAttempts) {
+  if (task.status === "failed" && (task.failures ?? 0) >= maxAttempts) {
     for (const id of dependantsOf(next.tasks, taskId)) {
       const d = next.tasks.find((t) => t.id === id);
       if (d.status === "pending") {
         d.status = "blocked";
-        d.blockedReason = `dependency ${taskId} failed after ${task.attempts} attempt(s)`;
+        d.blockedReason = `dependency ${taskId} failed ${task.failures} time(s)`;
       }
     }
   }
@@ -511,6 +513,9 @@ export function nextAction(m, config) {
       const { start, deferred } = schedule(m, config);
       if (start.length) return { action: "run_tasks", tasks: start, deferred, detail: `start ${start.join(", ")}` };
       if (interrupted.length) return { action: "await_tasks", tasks: interrupted.map((t) => t.id), detail: "tasks running (or interrupted: inspect git status before retrying)" };
+      const maxAttempts = config?.execution?.maxTaskAttempts ?? 2;
+      const retryable = failed.filter((t) => (t.failures ?? 0) < maxAttempts);
+      if (retryable.length) return { action: "retry_tasks", tasks: retryable.map((t) => t.id), detail: `set ${retryable.map((t) => t.id).join(", ")} to pending and re-run with the failure feedback` };
       if (failed.length || blocked.length) return { action: "replan", detail: `failed: ${failed.map((t) => t.id).join(", ") || "none"}; blocked: ${blocked.map((t) => t.id).join(", ") || "none"}` };
       return { action: "await_tasks", detail: "nothing ready" };
     }
