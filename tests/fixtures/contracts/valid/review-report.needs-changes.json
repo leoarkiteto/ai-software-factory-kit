@@ -1,0 +1,16 @@
+{
+  "schemaVersion": 1,
+  "kind": "code",
+  "reviewer": "factory:code-reviewer",
+  "attempt": 1,
+  "outcome": "NEEDS_CHANGES",
+  "independence": { "independent": true, "implementedBy": ["factory:backend-worker", "factory:frontend-worker"] },
+  "subject": { "taskIds": ["T1", "T2"], "baseRef": "a1b2c3d" },
+  "requirementsCoverage": [ { "ref": "FR-1", "status": "met" }, { "ref": "AC-3", "status": "not_met", "evidence": "No check for concurrent refunds" } ],
+  "findings": [
+    { "id": "F1", "severity": "high", "category": "correctness", "description": "Two concurrent refunds can exceed the order total.", "evidence": "src/api/refunds/routes.ts:42 reads remaining amount outside the transaction", "required": true, "suggestedChange": "Compute remaining amount inside the ledger transaction.", "taskId": "T1" },
+    { "id": "F2", "severity": "low", "category": "maintainability", "description": "Duplicated currency formatting.", "evidence": "web/src/refunds/Dialog.tsx:18", "required": false }
+  ],
+  "recommendations": ["Add a concurrency test to the QA suite."],
+  "validationStatus": { "status": "passed", "commands": [ { "kind": "test", "command": "npm test", "status": "passed", "exitCode": 0 } ] }
+}

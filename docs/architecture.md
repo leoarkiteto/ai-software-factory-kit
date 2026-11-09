@@ -107,8 +107,8 @@ flowchart TB
     GRILL --> CONTEXT
     CONTEXT --> SPEC
 
-    SPEC --> SPECKIT
-    SPECKIT --> PLAN
+    SPECKIT -. "optional provider" .-> SPEC
+    SPEC --> PLAN
     PLAN --> ORCHESTRATOR
 
     ORCHESTRATOR --> FRONTEND
@@ -307,7 +307,7 @@ flowchart TD
     A[User Request] --> B[Task Classification]
     B --> C[Repository Discovery]
 
-    C --> D["/grill-with-docs"]
+    C --> D["/grill-with-docs (typed by the user)"]
     D --> E[Interactive Discovery]
 
     E --> F[Domain Context]
@@ -376,7 +376,7 @@ The discovery provider is responsible for:
 
 Discovery may produce or update:
 
-- `CONTEXT.md`
+- `GLOSSARY.md` (or `GLOSSARY-MAP.md` for multi-context repositories). The current `/grill-with-docs` convention; earlier versions used `CONTEXT.md`.
 - Domain documentation.
 - Architecture Decision Records.
 - Existing project documentation.
@@ -774,4 +774,28 @@ It should be a **modular orchestration system** that coordinates specialized ski
 Its core value is the integration of these components into a coherent, safe, documented, and repeatable software development process.
 
 The architecture must remain understandable, maintainable, and extensible as the ecosystem evolves.
+
+---
+
+## 19. Physical Implementation Mapping
+
+How the logical components above map onto Claude Code mechanisms, as verified in `docs/research/claude-code-capabilities.md`. Details and data shapes are in `docs/contracts/`; decisions are in `docs/adr/`.
+
+| Logical component | Physical implementation | Decision |
+|---|---|---|
+| Kit distribution | Claude Code plugin `factory` in `plugins/factory/`, listed in this repo's `.claude-plugin/marketplace.json` | ADR-0001 |
+| Core (definitions, schemas, policies) | `plugins/factory/core/` (JSON schemas, `defaults.json`, templates) | — |
+| Deterministic logic (state, DAG, validation, installer planning) | Zero-dependency Node scripts in `plugins/factory/lib/`, exposed via `plugins/factory/bin/` | ADR-0002 |
+| Classifier, workflows, orchestrator, workflow scheduler | Skills running in the **main conversation**; no scheduler process | ADR-0003 |
+| Workers and reviewers | Plugin subagents without the `Agent` tool | ADR-0003 |
+| Model routing | Config tiers → alias passed per Agent call | ADR-0004 |
+| Discovery provider | User-invoked `/grill-with-docs`; native fallback skill | ADR-0005 |
+| Specification provider | Local templates or Spec Kit (specify/clarify/plan only) | ADR-0006 |
+| Parallel execution | Disjoint file scopes in the shared checkout; worktrees opt-in | ADR-0007 |
+| Workflow state and artifacts | `.factory/workflows/<id>/` in the target repo | ADR-0008 |
+| Rules / project instructions | Plugins cannot ship rules: optional `.claude/rules/factory-workflow.md` written by `init` | ADR-0001 |
+| Hooks | Plugin `hooks/hooks.json`; inert unless a Factory workflow is active | — |
+| Installer | `factory:init` skill + receipt `.factory/install.json` | ADR-0001 |
+
+Two corrections were made to this document after verification: discovery produces `GLOSSARY.md` rather than `CONTEXT.md`, and Spec Kit is an alternative specification provider rather than a sequential stage after the specification.
 

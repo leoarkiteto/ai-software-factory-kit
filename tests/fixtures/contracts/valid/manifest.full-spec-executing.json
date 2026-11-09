@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "id": "wf-20261109-order-partial-refunds",
+  "title": "Partial refunds for orders",
+  "request": "Allow support agents to refund part of an order.",
+  "mode": "full_spec",
+  "status": "executing",
+  "blockedOn": null,
+  "createdAt": "2026-11-09T10:00:00Z",
+  "updatedAt": "2026-11-09T12:30:00Z",
+  "baseRef": "a1b2c3d",
+  "classification": {
+    "mode": "full_spec",
+    "scores": { "scope": 2, "complexity": 2, "architecturalImpact": 2, "components": 2, "dependencies": 1, "risk": 2, "uncertainty": 2, "testing": 1, "codebaseFamiliarity": 1, "regressionRisk": 2 },
+    "total": 17,
+    "confidence": "high",
+    "discoveryJustified": true,
+    "rationale": "Touches payments, ledger and support UI; refund semantics are undefined."
+  },
+  "providers": {
+    "discovery": { "requested": "grill-with-docs", "used": "grill-with-docs", "status": "completed", "evidence": "User invoked /grill-with-docs; GLOSSARY.md and docs/adr/0004-refund-ledger-entries.md changed." },
+    "specification": { "requested": "auto", "used": "local", "status": "completed", "note": ".specify/ not present" }
+  },
+  "tasks": [
+    { "id": "T1", "title": "Refund API contract", "role": "backend-worker", "dependsOn": [], "status": "completed",
+      "scope": { "files": ["src/api/refunds/**"] }, "requirementRefs": ["FR-1"], "acceptanceCriteria": ["POST /orders/:id/refunds validates amount <= remaining"],
+      "assignment": { "agent": "factory:backend-worker", "model": "sonnet" }, "attempts": 1,
+      "reports": [".factory/workflows/wf-20261109-order-partial-refunds/reports/T1-1.json"], "result": "Endpoint and validation added" },
+    { "id": "T2", "title": "Refund dialog", "role": "frontend-worker", "dependsOn": ["T1"], "status": "running",
+      "scope": { "files": ["web/src/refunds/**"], "readOnly": ["src/api/refunds/types.ts"] }, "acceptanceCriteria": ["Dialog shows remaining refundable amount"],
+      "assignment": { "agent": "factory:frontend-worker", "model": null }, "attempts": 1 },
+    { "id": "T3", "title": "Refund test suite", "role": "qa-worker", "dependsOn": ["T1"], "status": "pending",
+      "scope": { "files": ["tests/refunds/**"] }, "acceptanceCriteria": ["Covers AC-1..AC-4"] }
+  ],
+  "review": { "attempts": 0, "maxIterations": 3, "history": [] },
+  "validation": [],
+  "issues": [],
+  "artifacts": {
+    "classification": ".factory/workflows/wf-20261109-order-partial-refunds/classification.md",
+    "discoverySummary": ".factory/workflows/wf-20261109-order-partial-refunds/discovery-summary.md",
+    "glossary": "GLOSSARY.md",
+    "adrs": ["docs/adr/0004-refund-ledger-entries.md"],
+    "spec": ".factory/workflows/wf-20261109-order-partial-refunds/spec.md",
+    "plan": ".factory/workflows/wf-20261109-order-partial-refunds/plan.md"
+  },
+  "history": [
+    { "at": "2026-11-09T10:00:00Z", "to": "classifying", "reason": "workflow created" },
+    { "at": "2026-11-09T10:02:00Z", "from": "classifying", "to": "discovering", "reason": "classified full_spec" },
+    { "at": "2026-11-09T11:10:00Z", "from": "discovering", "to": "specifying", "reason": "user confirmed shared understanding" },
+    { "at": "2026-11-09T11:40:00Z", "from": "specifying", "to": "planning", "reason": "spec completeness check passed" },
+    { "at": "2026-11-09T12:00:00Z", "from": "planning", "to": "executing", "reason": "plan approved" }
+  ]
+}

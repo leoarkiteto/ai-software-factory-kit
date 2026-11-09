@@ -1,0 +1,2 @@
+{ "_expect": "must be one of", "schemaVersion": 1, "kind": "code", "reviewer": "r", "attempt": 1, "outcome": "LGTM",
+  "independence": { "independent": true, "implementedBy": ["w"] }, "subject": { "taskIds": ["T1"] }, "findings": [], "validationStatus": { "status": "not_run" } }

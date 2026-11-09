@@ -1,0 +1,66 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "factory/worker-report.schema.json",
+  "title": "Worker report",
+  "description": "Structured result every worker returns for one task attempt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "taskId", "attempt", "agent", "status", "summary", "filesChanged", "tests", "scopeDeviations"],
+  "properties": {
+    "schemaVersion": { "$ref": "factory/common.schema.json#/$defs/schemaVersion" },
+    "workflowId": { "$ref": "factory/common.schema.json#/$defs/workflowId" },
+    "taskId": { "$ref": "factory/common.schema.json#/$defs/taskId" },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "agent": { "type": "string", "minLength": 1 },
+    "status": {
+      "description": "completed: all acceptance criteria believed met. partial: some work done, criteria not all met. failed: could not complete. blocked: cannot proceed without an external decision or dependency.",
+      "enum": ["completed", "partial", "failed", "blocked"]
+    },
+    "summary": { "description": "Work completed.", "type": "string", "minLength": 1 },
+    "filesChanged": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "change"],
+        "properties": {
+          "path": { "$ref": "factory/common.schema.json#/$defs/relativePath" },
+          "change": { "enum": ["added", "modified", "deleted", "renamed"] }
+        }
+      }
+    },
+    "acceptanceCriteria": {
+      "description": "Self-assessment per criterion. Not an independent review.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["criterion", "status"],
+        "properties": {
+          "criterion": { "type": "string", "minLength": 1 },
+          "status": { "enum": ["met", "partial", "not_met", "not_verifiable"] },
+          "evidence": { "type": "string" }
+        }
+      }
+    },
+    "tests": { "type": "array", "items": { "$ref": "factory/common.schema.json#/$defs/commandResult" } },
+    "validation": { "type": "array", "items": { "$ref": "factory/common.schema.json#/$defs/commandResult" } },
+    "scopeDeviations": {
+      "description": "Any file touched outside the declared scope, with the reason. Must be empty when the worker stayed in scope.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "reason"],
+        "properties": {
+          "path": { "$ref": "factory/common.schema.json#/$defs/relativePath" },
+          "reason": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "limitations": { "$ref": "factory/common.schema.json#/$defs/stringList" },
+    "remainingIssues": { "$ref": "factory/common.schema.json#/$defs/stringList" },
+    "recommendations": { "$ref": "factory/common.schema.json#/$defs/stringList" },
+    "blockedReason": { "type": "string" }
+  }
+}

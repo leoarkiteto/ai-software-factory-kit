@@ -1,0 +1,1 @@
+{ "_expect": "must be one of", "schemaVersion": 1, "models": { "tiers": { "reasoning": "claude-opus-5-5" } } }

@@ -1,0 +1,47 @@
+{
+  "$schema": "./schemas/config.schema.json",
+  "schemaVersion": 1,
+  "classification": {
+    "thresholds": { "standard": 5, "fullSpec": 12 },
+    "escalateToFullSpecWhenMax": ["architecturalImpact"],
+    "confirmWithUser": "when_low_confidence"
+  },
+  "models": {
+    "tiers": { "reasoning": "opus", "efficient": "sonnet", "light": "haiku" }
+  },
+  "roles": {
+    "frontend-worker":       { "agent": "factory:frontend-worker",       "kind": "worker",   "model": "efficient", "enabled": true },
+    "backend-worker":        { "agent": "factory:backend-worker",        "kind": "worker",   "model": "efficient", "enabled": true },
+    "qa-worker":             { "agent": "factory:qa-worker",             "kind": "worker",   "model": "efficient", "enabled": true },
+    "devops-worker":         { "agent": "factory:devops-worker",         "kind": "worker",   "model": "efficient", "enabled": true },
+    "code-reviewer":         { "agent": "factory:code-reviewer",         "kind": "reviewer", "model": "reasoning", "enabled": true },
+    "architecture-reviewer": { "agent": "factory:architecture-reviewer", "kind": "reviewer", "model": "reasoning", "enabled": true }
+  },
+  "review": {
+    "maxIterations": 3,
+    "code":         { "quick": "on_risk", "standard": "always",  "full_spec": "always" },
+    "architecture": { "quick": "never",   "standard": "on_risk", "full_spec": "always" },
+    "requireIndependentReviewer": true
+  },
+  "execution": {
+    "parallel": true,
+    "maxConcurrentTasks": 3,
+    "worktreeIsolation": "opt_in",
+    "maxTaskAttempts": 2
+  },
+  "discovery": { "provider": "grill-with-docs", "whenUnavailable": "ask" },
+  "specification": { "provider": "auto" },
+  "validation": {
+    "commands": { "format": null, "lint": null, "typecheck": null, "test": null, "build": null },
+    "preReview": ["lint", "typecheck", "test"],
+    "final": ["lint", "typecheck", "test", "build"],
+    "timeoutSeconds": 600
+  },
+  "hooks": { "sessionResume": true, "commandGuard": true, "manifestValidation": true, "postEditFormat": false },
+  "security": {
+    "protectedPaths": [".env", ".env.*", "**/*.pem", "**/*.key", "**/secrets/**", "**/credentials*"],
+    "blockedCommands": [],
+    "allowGitPush": false
+  },
+  "artifacts": { "commitWorkflows": false }
+}

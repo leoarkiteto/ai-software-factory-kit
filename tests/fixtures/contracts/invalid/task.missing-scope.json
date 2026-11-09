@@ -1,0 +1,1 @@
+{ "_expect": "missing required property \"scope\"", "id": "T1", "title": "x", "role": "backend-worker", "dependsOn": [], "status": "pending", "acceptanceCriteria": ["x"] }

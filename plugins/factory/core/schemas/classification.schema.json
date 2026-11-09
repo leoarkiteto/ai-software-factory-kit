@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "factory/classification.schema.json",
+  "title": "Classification result",
+  "description": "Rubric-based workflow classification. Each dimension is scored 0 (low) to 2 (high).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["mode", "scores", "total", "confidence", "rationale"],
+  "properties": {
+    "mode": { "$ref": "factory/common.schema.json#/$defs/workflowMode" },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scope", "complexity", "architecturalImpact", "components", "dependencies", "risk", "uncertainty", "testing", "codebaseFamiliarity", "regressionRisk"],
+      "properties": {
+        "scope": { "$ref": "#/$defs/score" },
+        "complexity": { "$ref": "#/$defs/score" },
+        "architecturalImpact": { "$ref": "#/$defs/score" },
+        "components": { "$ref": "#/$defs/score" },
+        "dependencies": { "$ref": "#/$defs/score" },
+        "risk": { "$ref": "#/$defs/score" },
+        "uncertainty": { "$ref": "#/$defs/score" },
+        "testing": { "$ref": "#/$defs/score" },
+        "codebaseFamiliarity": { "description": "0 = well understood, 2 = unfamiliar area", "$ref": "#/$defs/score" },
+        "regressionRisk": { "$ref": "#/$defs/score" }
+      }
+    },
+    "total": { "type": "integer", "minimum": 0, "maximum": 20 },
+    "suggestedMode": { "description": "Mode implied by the rubric before overrides.", "$ref": "factory/common.schema.json#/$defs/workflowMode" },
+    "confidence": { "enum": ["low", "medium", "high"] },
+    "discoveryJustified": { "description": "Whether uncertainty warrants structured discovery, rather than a quick repository lookup.", "type": "boolean" },
+    "rationale": { "type": "string", "minLength": 1 },
+    "evidence": { "description": "Repository facts used for scoring.", "$ref": "factory/common.schema.json#/$defs/stringList" },
+    "override": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["by", "from", "reason"],
+      "properties": {
+        "by": { "enum": ["user", "config", "escalation"] },
+        "from": { "$ref": "factory/common.schema.json#/$defs/workflowMode" },
+        "reason": { "type": "string", "minLength": 1 }
+      }
+    }
+  },
+  "$defs": {
+    "score": { "type": "integer", "minimum": 0, "maximum": 2 }
+  }
+}

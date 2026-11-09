@@ -1,0 +1,10 @@
+{
+  "mode": "standard",
+  "suggestedMode": "standard",
+  "scores": { "scope": 1, "complexity": 1, "architecturalImpact": 0, "components": 1, "dependencies": 1, "risk": 1, "uncertainty": 0, "testing": 1, "codebaseFamiliarity": 0, "regressionRisk": 1 },
+  "total": 7,
+  "confidence": "high",
+  "discoveryJustified": false,
+  "rationale": "Adds a filter to an existing list endpoint and its UI; touches API and frontend but no new architecture.",
+  "evidence": ["src/api/orders.ts exposes GET /orders", "web/src/pages/Orders.tsx renders the list"]
+}

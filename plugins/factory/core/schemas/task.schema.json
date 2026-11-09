@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "factory/task.schema.json",
+  "title": "Workflow task",
+  "description": "A node in the workflow's task DAG. Also the contract handed to a worker.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "title",
+    "role",
+    "dependsOn",
+    "status",
+    "scope",
+    "acceptanceCriteria"
+  ],
+  "properties": {
+    "id": {
+      "$ref": "factory/common.schema.json#/$defs/taskId"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 120
+    },
+    "description": {
+      "type": "string"
+    },
+    "role": {
+      "$ref": "factory/common.schema.json#/$defs/roleName"
+    },
+    "dependsOn": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "factory/common.schema.json#/$defs/taskId"
+      }
+    },
+    "status": {
+      "$ref": "factory/common.schema.json#/$defs/taskStatus"
+    },
+    "scope": {
+      "description": "Declared write scope. The scheduler only parallelises tasks whose file scopes are disjoint.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "files"
+      ],
+      "properties": {
+        "files": {
+          "description": "Repository-relative globs the task may modify.",
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "readOnly": {
+          "description": "Globs the task may read for context but must not modify.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "components": {
+          "$ref": "factory/common.schema.json#/$defs/stringList"
+        }
+      }
+    },
+    "requirementRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "factory/common.schema.json#/$defs/requirementId"
+      }
+    },
+    "acceptanceCriteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "constraints": {
+      "$ref": "factory/common.schema.json#/$defs/stringList"
+    },
+    "expectedArtifacts": {
+      "$ref": "factory/common.schema.json#/$defs/stringList"
+    },
+    "isolation": {
+      "enum": [
+        "shared",
+        "worktree"
+      ],
+      "default": "shared"
+    },
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent"
+      ],
+      "properties": {
+        "agent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "model": {
+          "$ref": "#/$defs/requestedModel"
+        }
+      }
+    },
+    "attempts": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reports": {
+      "description": "Worker report paths, oldest first.",
+      "type": "array",
+      "items": {
+        "$ref": "factory/common.schema.json#/$defs/relativePath"
+      }
+    },
+    "result": {
+      "description": "One-line outcome summary.",
+      "type": "string"
+    },
+    "blockedReason": {
+      "type": "string"
+    }
+  },
+  "$defs": {
+    "requestedModel": {
+      "description": "Alias actually requested on the Agent call, or null if the agent default was used.",
+      "enum": [
+        "opus",
+        "sonnet",
+        "haiku",
+        "fable",
+        null
+      ]
+    }
+  }
+}

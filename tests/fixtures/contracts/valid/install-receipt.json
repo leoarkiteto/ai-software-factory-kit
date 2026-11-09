@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "kitVersion": "0.1.0",
+  "installedAt": "2026-11-09T10:00:00Z",
+  "updatedAt": "2026-11-09T10:00:00Z",
+  "entries": [
+    { "path": ".factory/config.json", "component": "config", "ownership": "file", "sha256": "0000000000000000000000000000000000000000000000000000000000000000" },
+    { "path": ".gitignore", "component": "gitignore-block", "ownership": "block", "sha256": "1111111111111111111111111111111111111111111111111111111111111111" }
+  ]
+}

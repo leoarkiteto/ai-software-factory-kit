@@ -1,0 +1,11 @@
+{
+  "schemaVersion": 1,
+  "models": { "tiers": { "efficient": "haiku" } },
+  "roles": {
+    "frontend-worker": { "enabled": false },
+    "api-worker": { "agent": "api-specialist", "kind": "worker", "model": "sonnet" }
+  },
+  "review": { "maxIterations": 2, "architecture": { "standard": "always" } },
+  "validation": { "commands": { "test": "npm test", "lint": "npm run lint" }, "preReview": ["lint", "test"] },
+  "specification": { "provider": "spec-kit" }
+}

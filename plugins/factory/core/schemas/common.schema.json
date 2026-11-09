@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "factory/common.schema.json",
+  "title": "Shared definitions",
+  "$defs": {
+    "schemaVersion": { "const": 1 },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "stringList": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "relativePath": {
+      "description": "Repository-relative POSIX path. No absolute paths, no parent traversal.",
+      "type": "string",
+      "pattern": "^(?!/)(?!.*(^|/)\\.\\.(/|$))[^\\0]+$"
+    },
+    "workflowId": { "type": "string", "pattern": "^wf-[0-9]{8}-[a-z0-9][a-z0-9-]{0,47}$" },
+    "taskId": { "type": "string", "pattern": "^T[0-9]{1,3}$" },
+    "requirementId": { "type": "string", "pattern": "^(FR|NFR|AC|SC)-[0-9]{1,3}$" },
+    "workflowMode": { "enum": ["quick", "standard", "full_spec"] },
+    "workflowStatus": {
+      "enum": ["classifying", "discovering", "specifying", "planning", "executing", "reviewing", "replanning", "integrating", "completed", "failed"]
+    },
+    "taskStatus": { "enum": ["pending", "running", "completed", "failed", "blocked"] },
+    "severity": { "enum": ["critical", "high", "medium", "low", "info"] },
+    "modelAlias": {
+      "description": "Claude Code model aliases accepted by the Agent tool's per-call model parameter (verified 2.1.319). Single source of truth; update here when Claude Code adds aliases.",
+      "enum": ["opus", "sonnet", "haiku", "fable"]
+    },
+    "modelTier": { "enum": ["reasoning", "efficient", "light"] },
+    "modelRef": {
+      "description": "A tier name, a model alias, or null for the agent's frontmatter default.",
+      "enum": ["reasoning", "efficient", "light", "opus", "sonnet", "haiku", "fable", null]
+    },
+    "roleName": { "type": "string", "pattern": "^[a-z][a-z0-9-]{1,40}$" },
+    "commandResult": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["command", "status"],
+      "properties": {
+        "kind": { "enum": ["format", "lint", "typecheck", "test", "build", "custom"] },
+        "command": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["passed", "failed", "skipped", "not_run"] },
+        "exitCode": { "type": ["integer", "null"] },
+        "summary": { "type": "string" },
+        "at": { "$ref": "#/$defs/timestamp" }
+      }
+    }
+  }
+}

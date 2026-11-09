@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "workflowId": "wf-20261109-order-partial-refunds",
+  "taskId": "T1",
+  "attempt": 1,
+  "agent": "factory:backend-worker",
+  "status": "completed",
+  "summary": "Added POST /orders/:id/refunds with amount validation and ledger entry creation.",
+  "filesChanged": [
+    { "path": "src/api/refunds/routes.ts", "change": "added" },
+    { "path": "src/api/refunds/types.ts", "change": "added" }
+  ],
+  "acceptanceCriteria": [ { "criterion": "POST /orders/:id/refunds validates amount <= remaining", "status": "met", "evidence": "src/api/refunds/routes.ts:42" } ],
+  "tests": [ { "kind": "test", "command": "npm test -- refunds", "status": "passed", "exitCode": 0, "summary": "6 passed" } ],
+  "scopeDeviations": [],
+  "limitations": ["Currency rounding follows existing ledger helper; not re-verified."],
+  "remainingIssues": [],
+  "recommendations": []
+}

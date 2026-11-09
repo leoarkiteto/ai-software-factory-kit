@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "factory/install-receipt.schema.json",
+  "title": "Installation receipt",
+  "description": "Written by the init skill to .factory/install.json. Lists every repository file the Factory created or edited, so updates and removal touch only what the Factory owns and the user has not modified.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "kitVersion", "installedAt", "updatedAt", "entries"],
+  "properties": {
+    "schemaVersion": { "$ref": "factory/common.schema.json#/$defs/schemaVersion" },
+    "kitVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(-[0-9A-Za-z.-]+)?$" },
+    "installedAt": { "$ref": "factory/common.schema.json#/$defs/timestamp" },
+    "updatedAt": { "$ref": "factory/common.schema.json#/$defs/timestamp" },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "component", "ownership", "sha256"],
+        "properties": {
+          "path": { "$ref": "factory/common.schema.json#/$defs/relativePath" },
+          "component": { "enum": ["config", "rules", "claude-md-block", "gitignore-block", "settings-permissions"] },
+          "ownership": {
+            "description": "file: the Factory created the whole file. block: the Factory owns only a marked block inside a user file. entries: the Factory added specific JSON array entries.",
+            "enum": ["file", "block", "entries"]
+          },
+          "sha256": { "description": "Hash of the Factory-owned content at install time (whole file, block body, or sorted entries).", "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "addedEntries": { "$ref": "factory/common.schema.json#/$defs/stringList" }
+        }
+      }
+    }
+  }
+}
