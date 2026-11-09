@@ -15,6 +15,10 @@ Workflows that delegate to workers need two allow rules in your project settings
 { "permissions": { "allow": ["Bash(factory-state *)", "Edit(/.factory/**)"] } }
 ```
 
-`factory-state` only writes validated workflow state under `.factory/`. Without these rules, Claude Code asks each time.
+`factory-state` only writes validated workflow state under `.factory/`, and also serves the plugin's procedures (`factory-state guide`). Without these rules, Claude Code asks each time.
 
-Status: v0.1.0 pre-release. QUICK and STANDARD are usable end to end: planning, parallel delegated execution, independent review and bounded rework. FULL-SPEC discovery and specification procedures are not implemented yet; workflows stop with an explicit message when they reach them.
+Optional integrations need their own access:
+- `/grill-with-docs` reads its format files from where it is installed (for example `~/.claude/skills/domain-modeling/`), and writes `GLOSSARY.md` and `docs/adr/`.
+- Spec Kit's `speckit-specify` writes `specs/` and `.specify/feature.json`.
+
+Status: v0.1.0 pre-release. All three modes are implemented. QUICK and STANDARD have been exercised end to end in real sessions. FULL-SPEC has been exercised through discovery (`/grill-with-docs`), specification (Spec Kit) and plan review; its execution and change-review stages use the same procedures as STANDARD.

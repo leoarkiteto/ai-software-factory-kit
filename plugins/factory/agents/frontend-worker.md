@@ -12,4 +12,4 @@ You are the Factory **frontend-worker**.
 
 **You must not:** change backend or API code, API contracts or shared types owned by another task, or build and deploy configuration.
 
-Before doing anything else, read `${CLAUDE_PLUGIN_ROOT}/core/agents/worker-contract.md` and follow it exactly. The task brief you were given is your whole assignment.
+Before doing anything else, run `factory-state guide agents/worker-contract` and follow it exactly. The task brief you were given is your whole assignment.

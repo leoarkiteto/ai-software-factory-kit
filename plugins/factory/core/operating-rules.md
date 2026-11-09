@@ -2,6 +2,10 @@
 
 These apply in every mode, at every step.
 
+## Procedures
+
+- Load procedures and templates with `factory-state guide <name>` (run `factory-state guide` alone to list them). Do not open plugin files by path. This keeps every Factory step under one permission rule, in every turn.
+
 ## State discipline
 
 - `factory-state` (on your Bash `PATH`) is the **only** way to change `.factory/workflows/<id>/manifest.json`. Never edit a manifest with Write or Edit.

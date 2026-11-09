@@ -18,7 +18,7 @@ Request: $ARGUMENTS
 
 ## Steps
 
-1. **Load the rules.** Read `${CLAUDE_PLUGIN_ROOT}/core/operating-rules.md` and follow it throughout.
+1. **Load the rules.** Run `factory-state guide operating-rules` and follow it throughout.
 
 2. **Check prerequisites.**
    - If the state output above shows an error running `factory-state`, it is probably missing Node ≥18. Tell the user and stop.
@@ -40,7 +40,7 @@ Request: $ARGUMENTS
    - Locate the code the request touches, its tests, relevant `CLAUDE.md` and rules conventions, and existing domain docs.
    - Stop as soon as you can score the rubric with evidence. This step is not discovery.
 
-7. **Classify.** Read `${CLAUDE_PLUGIN_ROOT}/core/rubric.md` and score each dimension.
+7. **Classify.** Run `factory-state guide rubric` and score each dimension.
    - Write `.factory/workflows/<id>/inbox/classification.json`:
      `{ "scores": { …all ten dimensions… }, "confidence": "low|medium|high", "rationale": "…", "evidence": ["path: fact", …], "discoveryJustified": false }`
    - If the user forced a mode, add `"forceMode": "<mode>", "forceReason": "user requested --mode <mode>"`.
@@ -49,10 +49,10 @@ Request: $ARGUMENTS
    - Tell the user the mode and the one-line reason.
    - If the command printed "confirm the mode with the user", ask before continuing (`block --kind user_approval`).
 
-8. **Run the workflow.** Read and follow the playbook for the classified mode:
-   - QUICK: `${CLAUDE_PLUGIN_ROOT}/core/workflows/quick.md`
-   - STANDARD: `${CLAUDE_PLUGIN_ROOT}/core/workflows/standard.md`
-   - FULL-SPEC: `${CLAUDE_PLUGIN_ROOT}/core/workflows/full-spec.md`
+8. **Run the workflow.** Load and follow the playbook for the classified mode:
+   - QUICK: `factory-state guide workflows/quick`
+   - STANDARD: `factory-state guide workflows/standard`
+   - FULL-SPEC: `factory-state guide workflows/full-spec`
 
    Read referenced procedure files only when you reach that step.
 

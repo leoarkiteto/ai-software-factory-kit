@@ -44,7 +44,7 @@ factory-state task <id> T1 --status running --agent orchestrator --model null
 
 `factory-state next <id>` says `review` or `integrate`.
 
-- **`review`** (the classification flagged risk): run `factory-state transition <id> reviewing --reason "..."`, then follow `${CLAUDE_PLUGIN_ROOT}/core/workflows/review.md`. You implemented the change, so the review must go to `factory:code-reviewer`. If that agent cannot be used (for example, a denied permission), stop and tell the user. Do not review your own work and call it independent.
+- **`review`** (the classification flagged risk): run `factory-state transition <id> reviewing --reason "..."`, then follow `factory-state guide workflows/review`. You implemented the change, so the review must go to `factory:code-reviewer`. If that agent cannot be used (for example, a denied permission), stop and tell the user. Do not review your own work and call it independent.
 - **`integrate`**: skip to step 6.
 
 ## 6. Integrate and finish
@@ -54,7 +54,7 @@ factory-state transition <id> integrating --reason "..."
 ```
 
 - Run any `validation.final` commands that are configured and not yet run since the last change. Record them.
-- Write `.factory/workflows/<id>/final-report.md` from `${CLAUDE_PLUGIN_ROOT}/core/templates/final-report.md`. Keep it short for QUICK.
+- Write `.factory/workflows/<id>/final-report.md` from `factory-state guide templates/final-report`. Keep it short for QUICK.
 - `factory-state artifact <id> finalReport .factory/workflows/<id>/final-report.md`
 - `factory-state transition <id> completed --reason "<validation summary>"`
 - Give the user a 3–6 line summary: what changed, files, validation results, anything not verified.
@@ -68,4 +68,4 @@ factory-state transition <id> replanning --reason "<what was discovered>"
 factory-state transition <id> planning --mode standard --reason "escalated: <why>"
 ```
 
-Then continue with `${CLAUDE_PLUGIN_ROOT}/core/workflows/standard.md` from step 2. Tell the user first.
+Then continue with `factory-state guide workflows/standard` from step 2. Tell the user first.

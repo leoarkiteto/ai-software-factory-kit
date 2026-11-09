@@ -18,4 +18,4 @@ You are the Factory **code-reviewer**.
 - maintainability;
 - the repository's conventions.
 
-Read `${CLAUDE_PLUGIN_ROOT}/core/agents/reviewer-contract.md` first and follow it exactly. Use `"kind": "code"` in your report.
+Run `factory-state guide agents/reviewer-contract` first and follow it exactly. Use `"kind": "code"` in your report.

@@ -14,7 +14,7 @@ Runs an independent review round while the workflow is `reviewing`. It also cove
    - **Independence:** never send the work to an agent that implemented any of it. If you (`orchestrator`) implemented a task, the reviewer is still a fresh `factory:code-reviewer` context, which counts as independent.
    - Run `git status --porcelain` and keep the output: this is the **before snapshot**.
 
-4. **Brief and launch.** Fill `${CLAUDE_PLUGIN_ROOT}/core/templates/review-brief.md`. Then launch the required reviewers as **parallel Agent calls** in one message:
+4. **Brief and launch.** Fill `factory-state guide templates/review-brief`. Then launch the required reviewers as **parallel Agent calls** in one message:
    - `subagent_type` from `factory-state route code-reviewer` / `factory-state route architecture-reviewer`;
    - `model` from `route`, omitted when `route` says so.
 

@@ -15,9 +15,9 @@ Stages: `classifying → planning → executing ⇄ reviewing → integrating �
 
 ## 3. Technical plan
 
-Write `.factory/workflows/<id>/plan.md` from `${CLAUDE_PLUGIN_ROOT}/core/templates/plan.md`. In STANDARD the spec lives inside the plan, in its reduced form (Summary, Scope, FR, AC, Validation). Then record it with `factory-state artifact <id> plan .factory/workflows/<id>/plan.md`.
+Write `.factory/workflows/<id>/plan.md` from `factory-state guide templates/plan`. In STANDARD the spec lives inside the plan, in its reduced form (Summary, Scope, FR, AC, Validation). Then record it with `factory-state artifact <id> plan .factory/workflows/<id>/plan.md`.
 
-Decompose the work into tasks (`${CLAUDE_PLUGIN_ROOT}/core/workflows/decomposition.md`) and write them to `.factory/workflows/<id>/inbox/tasks.json` and record them with `factory-state tasks <id> --file .factory/workflows/<id>/inbox/tasks.json`.
+Decompose the work into tasks (`factory-state guide workflows/decomposition`) and write them to `.factory/workflows/<id>/inbox/tasks.json` and record them with `factory-state tasks <id> --file .factory/workflows/<id>/inbox/tasks.json`.
 
 ## 4. Approval
 
@@ -25,11 +25,11 @@ Show the user the plan summary and the task table, then `block --kind user_appro
 
 ## 5. Execute
 
-Follow `${CLAUDE_PLUGIN_ROOT}/core/workflows/execution.md`.
+Follow `factory-state guide workflows/execution`.
 
 ## 6. Review
 
-When `factory-state next <id>` says `review`: `factory-state transition <id> reviewing --reason "all tasks completed"`. Then follow `${CLAUDE_PLUGIN_ROOT}/core/workflows/review.md`. Code review is always required in STANDARD. Architecture review is required when the classification flagged risk.
+When `factory-state next <id>` says `review`: `factory-state transition <id> reviewing --reason "all tasks completed"`. Then follow `factory-state guide workflows/review`. Code review is always required in STANDARD. Architecture review is required when the classification flagged risk.
 
 ## 7. Integrate and finish
 

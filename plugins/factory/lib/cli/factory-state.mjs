@@ -3,14 +3,20 @@
 
 import { readFileSync, rmSync, existsSync, readdirSync, rmdirSync } from "node:fs";
 import { dirname, join, resolve, sep } from "node:path";
+import { fileURLToPath } from "node:url";
 import * as S from "../state.mjs";
 import * as store from "../store.mjs";
 import { loadConfig, checkReviewReport, checkWorkerReport, resolveModel } from "../contracts.mjs";
 import { execFileSync } from "node:child_process";
 import { classify, needsConfirmation, ClassificationError } from "../classify.mjs";
+import { detectGrillWithDocs, detectSpecKit, selectSpecProvider, discoveryEvidence } from "../providers.mjs";
+import { checkLocalSpec, checkSpecKitSpec, checkDiscoverySummary } from "../spec.mjs";
 import { formatErrors } from "../schema.mjs";
 
 const USAGE = `factory-state <command> [args] [--root DIR] [--json]
+
+Guides
+  guide [NAME]                           print a runtime procedure/template (e.g. workflows/quick); no NAME lists them
 
 Workflows
   new --title T (--request TEXT | --request-file F) [--base-ref REF]
@@ -36,6 +42,12 @@ Tasks
 Review, validation, records
   review ID --file F                     validate + store a review report, print the decision
   plan-review ID --file F                validate + store the FULL-SPEC architecture review of the plan
+
+Discovery and specification
+  providers                              detect /grill-with-docs and Spec Kit; selected spec provider
+  discovery-evidence ID                  GLOSSARY / ADR changes since the workflow base
+  discovery-check ID                     discovery-summary.md completeness (also enforced on discovering -> specifying)
+  spec-check ID                          spec completeness (also enforced on specifying -> planning)
   validation ID --kind K --status S [--command C] [--exit N] [--summary T]   (omit --command only for skipped)
   provider ID discovery|specification [--requested X] [--used X] [--status S] [--version V] [--evidence E] [--note N]
   artifact ID KIND PATH
@@ -186,6 +198,28 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         out(lines.join("\n"), { active: active.map((m) => ({ id: m.id, summary: S.summary(m), next: S.nextAction(m, config) })) });
         return 0;
       }
+      case "guide": {
+        // Serves the plugin's runtime procedures and templates, so reading them
+        // needs no permission beyond Bash(factory-state *) in any turn.
+        const coreDir = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "core");
+        const name = args[0];
+        if (!name) {
+          const list = [];
+          const walk = (d, prefix = "") => {
+            for (const e of readdirSync(d, { withFileTypes: true })) {
+              if (e.isDirectory()) { if (e.name !== "schemas") walk(join(d, e.name), `${prefix}${e.name}/`); }
+              else if (e.name.endsWith(".md")) list.push(`${prefix}${e.name.slice(0, -3)}`);
+            }
+          };
+          walk(coreDir);
+          out(list.sort().join("\n"), list.sort());
+          return 0;
+        }
+        const target = resolve(coreDir, `${name.replace(/\.md$/, "")}.md`);
+        if (!target.startsWith(coreDir + sep) || !existsSync(target)) throw new S.StateError(`no guide "${name}"; run factory-state guide to list them`);
+        stdout.write(readFileSync(target, "utf8"));
+        return 0;
+      }
       case "route": {
         const role = args[0];
         if (!role) throw new UsageError("usage: route ROLE");
@@ -210,10 +244,49 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         out(`plan review: ${report.outcome}${required.length ? ` — resolve required findings ${required.join(", ")} before approval` : ""}`, { path: rel, outcome: report.outcome, requiredFindings: required });
         return 0;
       }
+      case "providers": {
+        const discovery = detectGrillWithDocs(root);
+        const specKit = detectSpecKit(root);
+        const spec = selectSpecProvider(config.specification.provider, specKit);
+        const human = [
+          `discovery (configured: ${config.discovery.provider}, when unavailable: ${config.discovery.whenUnavailable})`,
+          `  grill-with-docs: ${discovery.available ? `available via ${discovery.invocation}` : "UNAVAILABLE"} (${discovery.note})`,
+          ...(discovery.install ? [`  install: ${discovery.install.join("  |  ")}`] : []),
+          `specification (configured: ${config.specification.provider}) -> ${spec.provider} (${spec.note})`,
+        ].join("\n");
+        out(human, { discovery: { configured: config.discovery.provider, whenUnavailable: config.discovery.whenUnavailable, grillWithDocs: discovery }, specification: { configured: config.specification.provider, specKit, selected: spec } });
+        return 0;
+      }
+      case "discovery-evidence": {
+        const m = load(requireId());
+        const ev = discoveryEvidence(root, m.baseRef);
+        out(`${ev.note}${ev.changed.map((c) => `\n  ${c.status} ${c.path}`).join("")}`, ev);
+        return 0;
+      }
+      case "spec-check": {
+        const m = load(requireId());
+        const r = specCheck(root, m);
+        out(r.ok ? `spec complete: ${r.ids.FR.length} FR, ${r.ids.NFR.length} NFR, ${r.ids.AC.length} AC, ${r.ids.SC.length} SC` : `spec INCOMPLETE:\n${r.errors.map((e) => `  - ${e}`).join("\n")}`, r);
+        return r.ok ? 0 : 1;
+      }
+      case "discovery-check": {
+        const r = summaryCheck(root, load(requireId()));
+        out(r.ok ? "discovery summary complete" : `discovery summary INCOMPLETE:\n${r.errors.map((e) => `  - ${e}`).join("\n")}`, r);
+        return r.ok ? 0 : 1;
+      }
       case "transition": {
         const to = args[1];
         if (!to) throw new UsageError("missing target status");
-        const m = S.transition(load(requireId()), to, { reason: need(flags, "reason"), mode: flags.mode, userApproved: flags["user-approved"] === true }, config);
+        const m0 = load(requireId());
+        if (m0.status === "discovering" && to === "specifying") {
+          const r = summaryCheck(root, m0);
+          if (!r.ok) throw new S.StateError("discovery summary incomplete", r.errors.map((message) => ({ path: "discoverySummary", message })));
+        }
+        if (m0.status === "specifying" && to === "planning") {
+          const r = specCheck(root, m0);
+          if (!r.ok) throw new S.StateError("spec completeness check failed", r.errors.map((message) => ({ path: "spec", message })));
+        }
+        const m = S.transition(m0, to, { reason: need(flags, "reason"), mode: flags.mode, userApproved: flags["user-approved"] === true }, config);
         save(m);
         out(S.summary(m), { manifest: m, next: S.nextAction(m, config) });
         return 0;
@@ -241,7 +314,8 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         const input = readInput(need(flags, "file"));
         const tasks = Array.isArray(input) ? input : input.tasks;
         const m = S.setTasks(m0, tasks);
-        const planErrors = S.validatePlan(m, config);
+        const requirementIds = m.mode === "full_spec" && m.artifacts.spec ? specCheck(root, m).ids.FR : [];
+        const planErrors = S.validatePlan(m, config, { requirementIds });
         if (planErrors.length) throw new S.StateError("plan invalid", planErrors);
         save(m);
         out(`${m.tasks.length} task(s) recorded`, { tasks: m.tasks });
@@ -319,7 +393,12 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         for (const k of ["requested", "used", "status", "version", "evidence", "note"]) {
           if (typeof flags[k] === "string") value[k] = flags[k] === "null" ? null : flags[k];
         }
-        const m = save(S.setProvider(load(requireId()), which, value));
+        const m0p = load(requireId());
+        const merged = { ...m0p.providers[which], ...value };
+        if (merged.status === "completed" && merged.used && !merged.evidence) {
+          throw new S.StateError(`recording ${which} provider "${merged.used}" as completed requires --evidence (what shows it actually ran)`);
+        }
+        const m = save(S.setProvider(m0p, which, value));
         out(`${which}: ${JSON.stringify(m.providers[which])}`, m.providers[which]);
         return 0;
       }
@@ -353,6 +432,33 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
     }
     throw e;
   }
+}
+
+function readArtifact(root, rel) {
+  try {
+    return readFileSync(join(root, rel), "utf8");
+  } catch {
+    return null;
+  }
+}
+
+/** Completeness check for the workflow's spec, by provider. */
+function specCheck(root, m) {
+  if (!m.artifacts.spec) return { ok: false, errors: ["no spec artifact recorded"], ids: { FR: [], NFR: [], AC: [], SC: [] } };
+  const spec = readArtifact(root, m.artifacts.spec);
+  if (spec === null) return { ok: false, errors: [`spec file ${m.artifacts.spec} not found`], ids: { FR: [], NFR: [], AC: [], SC: [] } };
+  if (m.providers.specification.used === "spec-kit") {
+    const plan = m.artifacts.plan ? readArtifact(root, m.artifacts.plan) ?? "" : "";
+    return checkSpecKitSpec(spec, plan);
+  }
+  return checkLocalSpec(spec);
+}
+
+function summaryCheck(root, m) {
+  if (!m.artifacts.discoverySummary) return { ok: false, errors: ["no discoverySummary artifact recorded"] };
+  const text = readArtifact(root, m.artifacts.discoverySummary);
+  if (text === null) return { ok: false, errors: [`${m.artifacts.discoverySummary} not found`] };
+  return checkDiscoverySummary(text);
 }
 
 function gitHead(root) {

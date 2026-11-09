@@ -18,7 +18,7 @@ Arguments: $ARGUMENTS
 
 ## Steps
 
-1. Read `${CLAUDE_PLUGIN_ROOT}/core/operating-rules.md` and follow it throughout.
+1. Run `factory-state guide operating-rules` and follow it throughout.
 
 2. **Pick the workflow.**
    - If the first argument is a workflow ID (`wf-…`), use it.
@@ -44,6 +44,6 @@ Arguments: $ARGUMENTS
    Never assume an interrupted task is complete.
 
 6. **Continue.** Run `factory-state next <id>`. Then continue the playbook for the workflow's mode from the step matching its status:
-   - QUICK: `${CLAUDE_PLUGIN_ROOT}/core/workflows/quick.md`
-   - STANDARD: `${CLAUDE_PLUGIN_ROOT}/core/workflows/standard.md`
-   - FULL-SPEC: `${CLAUDE_PLUGIN_ROOT}/core/workflows/full-spec.md`
+   - QUICK: `factory-state guide workflows/quick`
+   - STANDARD: `factory-state guide workflows/standard`
+   - FULL-SPEC: `factory-state guide workflows/full-spec`

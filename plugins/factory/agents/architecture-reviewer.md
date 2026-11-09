@@ -23,4 +23,4 @@ The brief says which mode you are in:
 - **Plan review:** review the spec and the plan before implementation. Judge whether the approach, the interfaces and the task DAG will meet the requirements. `subject.taskIds` lists the planned tasks.
 - **Change review:** review the implemented change, as in the reviewer contract.
 
-Read `${CLAUDE_PLUGIN_ROOT}/core/agents/reviewer-contract.md` first and follow it exactly. Use `"kind": "architecture"` in your report.
+Run `factory-state guide agents/reviewer-contract` first and follow it exactly. Use `"kind": "architecture"` in your report.

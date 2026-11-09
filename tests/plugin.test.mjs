@@ -90,6 +90,24 @@ test("every ${CLAUDE_PLUGIN_ROOT}/ reference in plugin markdown resolves", () =>
   assert.deepEqual(missing, []);
 });
 
+test("every `factory-state guide NAME` reference resolves to a core file", () => {
+  const missing = [];
+  let count = 0;
+  for (const file of walk(PLUGIN).filter((f) => f.endsWith(".md"))) {
+    for (const [, name] of readFileSync(file, "utf8").matchAll(/factory-state guide ([A-Za-z0-9_/-]+)/g)) {
+      count++;
+      if (!existsSync(join(PLUGIN, "core", `${name}.md`))) missing.push(`${relative(PLUGIN, file)} -> ${name}`);
+    }
+  }
+  assert.ok(count > 20, `expected many guide references, found ${count}`);
+  assert.deepEqual(missing, []);
+});
+
+test("orchestrator-facing files never read plugin files by path", () => {
+  const offenders = walk(PLUGIN).filter((f) => f.endsWith(".md") && !f.endsWith("README.md") && /\$\{CLAUDE_PLUGIN_ROOT\}\/core\//.test(readFileSync(f, "utf8")));
+  assert.deepEqual(offenders.map((f) => relative(PLUGIN, f)), []);
+});
+
 test("bin/ entries are executable", () => {
   for (const f of readdirSync(join(PLUGIN, "bin"))) {
     assert.ok(statSync(join(PLUGIN, "bin", f)).mode & 0o111, `${f} not executable`);

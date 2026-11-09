@@ -28,4 +28,4 @@ Status of enforcement (updated each phase):
 | Rubric total, thresholds, escalators, overrides, confirmation and review policy | `lib/classify.mjs` | Phase 3 |
 | Validated, atomic persistence; out-of-repo artifact paths rejected | `lib/store.mjs` | Phase 3 |
 | Single writer of manifests | `bin/factory-state` (CLI) | Phase 3 |
-| Spec completeness | `factory-spec check` | Phase 5 (planned) |
+| Spec completeness (local + Spec Kit with supplements), discovery summary completeness, provider evidence, FR coverage by tasks | `lib/spec.mjs`, `lib/providers.mjs`, `factory-state spec-check / discovery-check`, enforced on transitions | Phase 6 |

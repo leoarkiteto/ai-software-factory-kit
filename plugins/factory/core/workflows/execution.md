@@ -25,7 +25,7 @@ For each task ID:
 
 1. `factory-state route <role>` gives the agent name and the model alias, or tells you to omit the model.
 2. `factory-state task <id> <T> --status running --agent <agent> --model <alias|null>`
-3. Fill `${CLAUDE_PLUGIN_ROOT}/core/templates/worker-brief.md` for this task, using:
+3. Fill `factory-state guide templates/worker-brief` for this task, using:
    - the manifest and `plan.md`;
    - the spec excerpts for `requirementRefs`;
    - the dependency results, taken from their reports in `.factory/workflows/<id>/reports/`;

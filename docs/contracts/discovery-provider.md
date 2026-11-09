@@ -53,7 +53,7 @@ The Factory then records `used: "grill-with-docs"`, `status: "completed"`, and a
 
 ### 3.2 `native` (fallback)
 
-A Factory skill (`factory:discover`, Phase 5) that follows the same contract:
+A procedure the orchestrator runs inline (`plugins/factory/core/workflows/discovery.md` §3). It is not a separate skill, because it needs no separate entry point. It follows the same contract:
 
 - Progressive rounds of numbered questions, each with a recommended answer.
 - Facts are looked up in the repository, never asked of the user.

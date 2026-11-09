@@ -127,7 +127,7 @@ test("discovery pause is visible to resume-summary", () => {
   assert.match(s.out, /FULL-SPEC\] DISCOVERING .*waiting on discovery_session.*next: wait/);
   const refused = fs(["transition", data.id, "specifying", "--reason", "skip discovery"]);
   assert.equal(refused.code, 1);
-  assert.match(refused.err, /discovery is not completed/);
+  assert.match(refused.err, /discovery summary incomplete|discovery is not completed/);
 });
 
 test("a corrupted manifest is reported, never silently used", () => {
@@ -208,4 +208,53 @@ test("a missing input file is a clean rejection, not a crash", () => {
   assert.equal(r.code, 1);
   assert.match(r.err, /cannot read input .*file not found/);
   assert.doesNotMatch(r.err, /at readFileSync/);
+});
+
+test("FULL-SPEC gates: provider evidence, discovery summary, spec completeness, FR coverage", () => {
+  const { data } = json(["new", "--title", "Gates", "--request", "Partial refunds"]);
+  const id = data.id;
+  const dir = join(repo, ".factory", "workflows", id);
+  json(["classify", id, "--file", file("cg.json", { scores: scores({ architecturalImpact: 2 }), confidence: "high", rationale: "new model" })]);
+  fs(["transition", id, "discovering", "--reason", "full_spec"]);
+  const noEv = fs(["provider", id, "discovery", "--requested", "grill-with-docs", "--used", "grill-with-docs", "--status", "completed"]);
+  assert.equal(noEv.code, 1);
+  assert.match(noEv.err, /requires --evidence/);
+  assert.equal(fs(["provider", id, "discovery", "--requested", "grill-with-docs", "--used", "grill-with-docs", "--status", "completed", "--evidence", "GLOSSARY.md added"]).code, 0);
+  assert.match(fs(["transition", id, "specifying", "--reason", "x"]).err, /no discoverySummary/);
+  const summary = ["Provider", "Decisions", "Vocabulary", "Behaviour", "Constraints and assumptions", "Scope", "Non-blocking open questions", "Blocking open questions", "Docs changed"]
+    .map((h) => `## ${h}\n${h === "Blocking open questions" ? "None" : "- grill-with-docs: x"}\n`).join("\n");
+  writeFileSync(join(dir, "discovery-summary.md"), summary);
+  fs(["artifact", id, "discoverySummary", `.factory/workflows/${id}/discovery-summary.md`]);
+  assert.equal(fs(["discovery-check", id]).code, 0);
+  assert.equal(fs(["transition", id, "specifying", "--reason", "discovery completed"]).code, 0);
+  fs(["provider", id, "specification", "--requested", "auto", "--used", "local", "--status", "completed", "--evidence", "local template"]);
+  const spec = readFileSync(new URL("./fixtures/spec/local-complete.md", import.meta.url), "utf8");
+  writeFileSync(join(dir, "spec.md"), spec.replace("### Out of scope", "### Later"));
+  fs(["artifact", id, "spec", `.factory/workflows/${id}/spec.md`]);
+  const bad = fs(["transition", id, "planning", "--reason", "spec done"]);
+  assert.equal(bad.code, 1);
+  assert.match(bad.err, /spec completeness check failed[\s\S]*Out of scope/);
+  writeFileSync(join(dir, "spec.md"), spec);
+  assert.match(fs(["spec-check", id]).out, /spec complete: 2 FR, 1 NFR, 2 AC/);
+  assert.equal(fs(["transition", id, "planning", "--reason", "spec approved"]).code, 0);
+  const tasks = [{ id: "T1", title: "refund api", role: "backend-worker", dependsOn: [], status: "pending", scope: { files: ["src/**"] }, requirementRefs: ["FR-1"], acceptanceCriteria: ["AC-1"] }];
+  const r = fs(["tasks", id, "--file", file("tg.json", tasks)]);
+  assert.equal(r.code, 1);
+  assert.match(r.err, /FR-2 is not referenced by any task/);
+  tasks[0].requirementRefs.push("FR-2");
+  assert.equal(fs(["tasks", id, "--file", file("tg.json", tasks)]).code, 0);
+});
+
+test("providers command reports detection without side effects", () => {
+  const r = json(["providers"]);
+  assert.equal(r.code, 0);
+  assert.equal(r.data.specification.selected.provider, "local");
+  assert.ok("available" in r.data.discovery.grillWithDocs);
+});
+
+test("guide serves core procedures and refuses traversal", () => {
+  assert.match(fs(["guide"]).out, /workflows\/quick/);
+  assert.match(fs(["guide", "workflows/quick"]).out, /^# QUICK Workflow/);
+  assert.equal(fs(["guide", "../lib/state"]).code, 1);
+  assert.equal(fs(["guide", "schemas/task.schema.json"]).code, 1);
 });

@@ -133,6 +133,10 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 | Multiple Agent tool calls in one assistant message run plugin agents in parallel | runtime (Phase 5) |
 | `${CLAUDE_PLUGIN_ROOT}` is substituted inside plugin agent bodies (workers read the shared contract) | runtime (Phase 5) |
 | Per-call `model` on plugin agents is honoured (`sonnet` workers, `opus` reviewers) | runtime (Phase 5) |
+| A slash command is only invoked when the message **starts** with it; `text\n/factory:resume` runs no skill | runtime (Phase 6) |
+| Reads of plugin files (outside the project) are denied outside a skill's pre-approved turn, which is why the Factory serves them through `factory-state guide` | runtime (Phase 6) |
+| `/grill-with-docs @file` delivers the file to the skill | runtime (Phase 6) |
+| Spec Kit `speckit-specify` (1.0.1) is model-invocable via the Skill tool and writes `specs/NNN-<slug>/spec.md`, `checklists/` and `.specify/feature.json` | runtime (Phase 6) |
 | Subagent worktree: `.claude/worktrees/agent-<id>`, branch `worktree-agent-<id>`, reported as `worktreePath`/`worktreeBranch`; main-checkout uncommitted files absent; worker changes left uncommitted in the worktree | runtime (Phase 5) |
 
 ## 9. Implications carried into Phase 2

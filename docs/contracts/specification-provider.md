@@ -20,7 +20,7 @@ Whatever provider produces it, the spec must contain the sections below, with st
 | Validation requirements | How each AC will be verified: test type, command, or manual check |
 | Open questions | Must be empty, or each item marked *non-blocking* with a chosen default |
 
-### Completeness check (deterministic, `factory-spec check`, Phase 5)
+### Completeness check (deterministic: `factory-state spec-check`, enforced on `specifying → planning`)
 
 The spec **fails** the check when any of the following is true:
 
