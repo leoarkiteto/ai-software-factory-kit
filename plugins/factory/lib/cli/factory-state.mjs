@@ -1,8 +1,8 @@
 // factory-state: the only writer of .factory/workflows/<id>/manifest.json.
 // Exit codes: 0 ok, 1 rejected (validation/transition), 2 usage error.
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { readFileSync, rmSync, existsSync, readdirSync, rmdirSync } from "node:fs";
+import { dirname, join, resolve, sep } from "node:path";
 import * as S from "../state.mjs";
 import * as store from "../store.mjs";
 import { loadConfig, checkReviewReport, checkWorkerReport } from "../contracts.mjs";
@@ -33,12 +33,14 @@ Tasks
 
 Review, validation, records
   review ID --file F                     validate + store a review report, print the decision
-  validation ID --kind K --command C --status S [--exit N] [--summary T]
+  validation ID --kind K --status S [--command C] [--exit N] [--summary T]   (omit --command only for skipped)
   provider ID discovery|specification [--requested X] [--used X] [--status S] [--version V] [--evidence E] [--note N]
   artifact ID KIND PATH
   issue ID --severity S --description D --source SRC [--task T]
 
-Files given as F may be '-' for stdin.`;
+Files given as F may be '-' for stdin (plain text only in heredocs: Claude Code's
+permission checker refuses JSON in heredocs). For JSON, write the file to
+.factory/workflows/<id>/inbox/<name>.json; it is deleted once accepted.`;
 
 class UsageError extends Error {}
 
@@ -65,7 +67,11 @@ function need(flags, name) {
   return flags[name];
 }
 
+// Input files read during this invocation; inbox files are deleted on success.
+let inputsRead = [];
+
 function readInput(path) {
+  if (path !== "-") inputsRead.push(resolve(path));
   const text = path === "-" ? readFileSync(0, "utf8") : readFileSync(path, "utf8");
   try {
     return JSON.parse(text);
@@ -74,7 +80,30 @@ function readInput(path) {
   }
 }
 
-export function run(argv, { stdout = process.stdout, stderr = process.stderr } = {}) {
+/**
+ * Inbox convention: callers write JSON to .factory/workflows/<id>/inbox/<name>.json
+ * (JSON in heredocs is refused by Claude Code's permission checker) and pass it
+ * with --file. Accepted inbox files are deleted; rejected ones stay to be fixed.
+ */
+export function run(argv, io = {}) {
+  inputsRead = [];
+  const code = runCommand(argv, io);
+  if (code === 0) {
+    const { flags } = parseArgs(argv);
+    const workflows = resolve(store.workflowsDir(store.findRepoRoot(flags.root)));
+    for (const p of inputsRead) {
+      const parts = p.startsWith(workflows + sep) ? p.slice(workflows.length + 1).split(sep) : [];
+      if (parts.length === 3 && parts[1] === "inbox" && existsSync(p)) {
+        rmSync(p);
+        const dir = dirname(p);
+        if (readdirSync(dir).length === 0) rmdirSync(dir);
+      }
+    }
+  }
+  return code;
+}
+
+function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } = {}) {
   const { positional, flags } = parseArgs(argv);
   const [command, ...args] = positional;
   const out = (human, data) => stdout.write(`${flags.json ? JSON.stringify(data ?? human, null, 2) : human}\n`);
@@ -97,7 +126,9 @@ export function run(argv, { stdout = process.stdout, stderr = process.stderr } =
     switch (command) {
       case "new": {
         const title = need(flags, "title");
-        const request = flags["request-file"] ? readFileSync(flags["request-file"], "utf8").trim() : need(flags, "request");
+        const rf = flags["request-file"];
+        const request = rf ? readFileSync(rf === "-" ? 0 : rf, "utf8").trim() : need(flags, "request");
+        if (!request) throw new UsageError("empty request");
         const m = S.createWorkflow({ title, request, config, existingIds: store.listWorkflowIds(root), baseRef: flags["base-ref"] });
         save(m);
         out(m.id, { id: m.id, dir: store.workflowDir(root, m.id) });
@@ -231,7 +262,17 @@ export function run(argv, { stdout = process.stdout, stderr = process.stderr } =
         return 0;
       }
       case "validation": {
-        const result = { kind: need(flags, "kind"), command: need(flags, "command"), status: need(flags, "status") };
+        const kind = need(flags, "kind");
+        const status = need(flags, "status");
+        let command = typeof flags.command === "string" ? flags.command.trim() : "";
+        if (["null", "none", "undefined", "-"].includes(command.toLowerCase())) {
+          throw new UsageError(`--command "${command}" is not a command; omit --command for an unconfigured kind`);
+        }
+        if (!command) {
+          if (status !== "skipped") throw new UsageError("missing --command (only --status skipped may omit it)");
+          command = `${kind}: not configured`;
+        }
+        const result = { kind, command, status };
         if (flags.exit !== undefined) result.exitCode = Number(flags.exit);
         if (flags.summary) result.summary = flags.summary;
         const m = save(S.addValidation(load(requireId()), result));

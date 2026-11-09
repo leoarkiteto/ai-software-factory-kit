@@ -152,3 +152,39 @@ test("invalid repo config falls back to defaults and is reported", () => {
   assert.ok(r.data.errors.length > 0);
   rmSync(join(repo, ".factory", "config.json"));
 });
+
+test("validation records: unconfigured kinds need no command; 'null' is refused", () => {
+  const { data } = json(["new", "--title", "Validation records", "--request", "x"]);
+  assert.equal(fs(["validation", data.id, "--kind", "lint", "--command", "null", "--status", "skipped"]).code, 2);
+  assert.equal(fs(["validation", data.id, "--kind", "test", "--status", "passed"]).code, 2, "passed needs a command");
+  const r = json(["validation", data.id, "--kind", "lint", "--status", "skipped"]);
+  assert.equal(r.data.command, "lint: not configured");
+  json(["validation", data.id, "--kind", "build", "--status", "skipped"]);
+  const m = json(["show", data.id]).data.manifest;
+  assert.deepEqual(m.validation.map((v) => v.command), ["lint: not configured", "build: not configured"], "distinct entries");
+});
+
+test("request text is stored verbatim from stdin", () => {
+  const text = 'Keep "quotes", $vars and `ticks`\nsecond line';
+  const r = json(["new", "--title", "Verbatim", "--request-file", "-"], text);
+  assert.equal(json(["show", r.data.id]).data.manifest.request, text);
+  assert.equal(fs(["new", "--title", "Empty", "--request-file", "-"], "  ").code, 2);
+});
+
+test("inbox files are consumed on success and kept on rejection", () => {
+  const { data } = json(["new", "--title", "Inbox", "--request", "x"]);
+  const inbox = join(repo, ".factory", "workflows", data.id, "inbox");
+  mkdirSync(inbox, { recursive: true });
+  const bad = join(inbox, "classification.json");
+  writeFileSync(bad, JSON.stringify({ scores: { scope: 9 }, confidence: "high", rationale: "x" }));
+  assert.equal(fs(["classify", data.id, "--file", bad]).code, 1);
+  assert.ok(existsSync(bad), "rejected input is kept for fixing");
+  writeFileSync(bad, JSON.stringify({ scores: scores(), confidence: "high", rationale: "tiny" }));
+  assert.equal(fs(["classify", data.id, "--file", bad]).code, 0);
+  assert.ok(!existsSync(bad), "accepted input is deleted");
+  assert.ok(!existsSync(inbox), "empty inbox directory is removed");
+  const outside = file("keep.json", { scores: scores(), confidence: "high", rationale: "x" });
+  const other = json(["new", "--title", "Inbox other", "--request", "x"]).data.id;
+  assert.equal(fs(["classify", other, "--file", outside]).code, 0);
+  assert.ok(existsSync(outside), "files outside an inbox are never deleted");
+});

@@ -1,0 +1,7 @@
+{
+  "name": "factory",
+  "version": "0.1.0",
+  "description": "AI Software Factory: task classification, QUICK / STANDARD / FULL-SPEC workflows, dependency-aware orchestration and independent review, with deterministic state in .factory/.",
+  "author": { "name": "Leo Franca" },
+  "keywords": ["workflow", "orchestration", "spec-driven", "code-review", "subagents"]
+}

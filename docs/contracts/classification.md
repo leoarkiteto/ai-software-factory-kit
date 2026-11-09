@@ -4,20 +4,7 @@ Schema: `classification.schema.json`. Config: `classification.*` in `config.sche
 
 ## Rubric
 
-Before scoring, the classifier inspects the repository. It locates the affected files and components and checks for existing tests, so scores rest on evidence rather than on the wording of the request. Each dimension is scored 0, 1 or 2.
-
-| Dimension | 0 | 1 | 2 |
-|---|---|---|---|
-| `scope` | one function or file | a few related files | many files or a feature area |
-| `complexity` | mechanical | some logic | non-trivial algorithms, concurrency or state |
-| `architecturalImpact` | none | local pattern change | new component, boundary, data model or integration |
-| `components` | one | 2–3 | more than 3, or crosses frontend/backend/infra |
-| `dependencies` | none | internal | new external dependency or cross-team contract |
-| `risk` | cosmetic | user-visible behaviour | data, money, security, auth or migrations |
-| `uncertainty` | requirements clear | minor ambiguity resolvable from code | behaviour undefined; needs decisions |
-| `testing` | existing tests suffice | new unit tests | new test strategy or integration/e2e |
-| `codebaseFamiliarity` | well-known area | partly known | unfamiliar or undocumented |
-| `regressionRisk` | isolated | shared code paths | widely used core paths |
+The rubric is defined once, in the runtime file the skills load: [`plugins/factory/core/rubric.md`](../../plugins/factory/core/rubric.md). It has ten dimensions, each scored 0–2 from repository evidence. The repository is inspected before scoring.
 
 ## Mode selection (defaults)
 

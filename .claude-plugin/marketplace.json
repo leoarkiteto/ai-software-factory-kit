@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "ai-software-factory-kit",
+  "description": "AI Software Factory Kit: classified, spec-driven, independently reviewed development workflows for Claude Code.",
+  "owner": { "name": "Leo Franca" },
+  "plugins": [
+    {
+      "name": "factory",
+      "source": "./plugins/factory",
+      "description": "Classifies development requests into QUICK, STANDARD or FULL-SPEC workflows and orchestrates discovery, specification, planning, delegated implementation and independent review.",
+      "category": "development"
+    }
+  ]
+}

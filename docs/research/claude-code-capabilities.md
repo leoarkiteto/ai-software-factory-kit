@@ -119,7 +119,18 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 
 ---
 
-## 8. Implications carried into Phase 2
+## 8. Runtime findings from Phase 4 scenarios
+
+| Fact | Evidence |
+|---|---|
+| A user-invocable plugin skill runs in `claude -p` when the prompt starts with `/<plugin>:<skill> args` | runtime |
+| `!`factory-state …`` dynamic context injection works in plugin skills (plugin `bin/` is on PATH there too) | runtime |
+| Skill `allowed-tools: Edit(/.factory/**)` (and `Edit(.factory/**)`) auto-allows Write inside `.factory/` while other paths still prompt; `Write(.factory/**)` does **not** | runtime |
+| Heredoc bodies containing JSON are denied even with `Bash(factory-state *)` allowed; plain-text heredocs (quotes, `$`, backticks, globs, `===`) pass | runtime |
+| Compound commands (`X=…; cmd`, `cd … && cmd`, `cmd; echo $?`) are denied when any part is not allowed | runtime |
+| A fresh session can resume a workflow purely from `.factory/` state | runtime |
+
+## 9. Implications carried into Phase 2
 
 1. Kit = plugin; per-repo files (config, rules, CLAUDE.md snippet) need an explicit, approval-gated `init` step (ADR-0001).
 2. Deterministic logic ships in `bin/` (ADR-0002).
@@ -131,7 +142,7 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 8. Worktree isolation only suits tasks whose prerequisites are committed (ADR-0007).
 9. `architecture.md` corrections: `CONTEXT.md` → `GLOSSARY.md`; Spec Kit is an alternative spec provider, not a sequential step.
 
-## 9. Open verification items
+## 10. Open verification items
 
 - `enabledPlugins` / `extraKnownMarketplaces` shapes (needed for team rollout docs, Phase 8).
 - Hook exit-code/JSON semantics and Stop/SubagentStop stdin schema (re-check before Phase 7).
