@@ -1,6 +1,8 @@
 # Contract: Installation, Update and Removal
 
-Schema: `install-receipt.schema.json`. Decision record: ADR-0001. Implementation: `factory:init` skill + `factory-install` CLI (Phase 8).
+Schema: `install-receipt.schema.json`. Decision record: ADR-0001. Implementation: the `factory:init` skill, the `factory-install` CLI (`bin/`) and `lib/installer.mjs`, tested in `tests/installer.test.mjs`. User guide: [docs/guide/installation.md](../guide/installation.md).
+
+Approval binding: `factory-install plan` prints a hash of everything it would write. `apply` recomputes the plan from the same choices and refuses on a mismatch, so what runs is exactly what the user approved. `remove` works the same way.
 
 ## 1. Two layers
 

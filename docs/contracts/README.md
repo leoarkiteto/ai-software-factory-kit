@@ -31,3 +31,4 @@ Status of enforcement (updated each phase):
 | Single writer of manifests | `bin/factory-state` (CLI) | Phase 3 |
 | Spec completeness (local + Spec Kit with supplements), discovery summary completeness, provider evidence, FR coverage by tasks | `lib/spec.mjs`, `lib/providers.mjs`, `factory-state spec-check / discovery-check`, enforced on transitions | Phase 6 |
 | Inert-unless-active hooks: resume notice, command guard, protected paths, manifest write guard, config/manifest validation after edits, optional post-edit format | `lib/hooks.mjs`, `lib/hook-main.mjs`, `hooks/hooks.json` | Phase 7 |
+| Repository integration: read-only inspect, plan with hash-bound approval, atomic apply, receipt with per-entry hashes, idempotent re-run, update of unmodified owned content, removal of intact content only | `lib/installer.mjs`, `bin/factory-install`, `skills/init` | Phase 8 |

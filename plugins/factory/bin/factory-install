@@ -1,0 +1,5 @@
+#!/usr/bin/env node
+// Thin launcher; logic lives in lib/cli/factory-install.mjs (see bin/factory-state).
+import("../lib/cli/factory-install.mjs").then(async ({ run }) => {
+  process.exitCode = await run(process.argv.slice(2));
+});

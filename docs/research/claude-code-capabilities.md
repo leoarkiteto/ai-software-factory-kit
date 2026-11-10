@@ -80,6 +80,7 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 | PostToolUse `decision: "block"` + `reason` reports to Claude after the tool ran; `hookSpecificOutput.additionalContext` adds context | docs (re-checked) |
 | Stop/SubagentStop stdin: `stop_hook_active`, `last_assistant_message`, `agent_type` / `agent_transcript_path` (SubagentStop); consecutive-continuation cap | docs-summary (not needed in v0.1) |
 | Default command-hook timeout 600 s; `${CLAUDE_PLUGIN_ROOT}` substituted in hook commands and exported to the process | docs (re-checked) |
+| Plugin hooks load in `claude plugin eval` sessions; a PreToolUse JSON `deny` blocks `git push` and the model receives the reason; SessionStart stdout reaches the model | runtime (Phase 8 evals, permission mode `dontAsk`) |
 | Whether a hook `deny` holds under `bypassPermissions` | **not verified** |
 
 ## 5. Memory, rules, settings
@@ -91,7 +92,7 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 | Settings precedence: managed > CLI `--settings` > `.claude/settings.local.json` > `.claude/settings.json` > `~/.claude/settings.json`; permission arrays **combine** across scopes | docs |
 | Rule order deny → ask → allow; syntax `Bash(git push *)`, `Read(./.env)`; a Read deny also blocks Edit/Write | docs |
 | Project `permissions.allow` waits for workspace trust; deny/ask apply immediately | docs |
-| `enabledPlugins` / `extraKnownMarketplaces` exact shapes | **not verified** |
+| `enabledPlugins: {"<plugin>@<marketplace>": true}`; `extraKnownMarketplaces: {"<marketplace name>": {"source": {"source": "github", "repo": "owner/repo"}}}` (also `git`, `url`, `directory`, `file` sources); project-level marketplaces apply after folder trust; collaborators still run `claude plugin install … --scope project` | docs (2026-11-10); not exercised |
 
 ## 6. Worktrees (parallel isolation)
 
@@ -146,6 +147,8 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 | Reads of plugin files (outside the project) are denied outside a skill's pre-approved turn, which is why the Factory serves them through `factory-state guide` | runtime (Phase 6) |
 | `/grill-with-docs @file` delivers the file to the skill | runtime (Phase 6) |
 | Spec Kit `speckit-specify` (1.0.1) is model-invocable via the Skill tool and writes `specs/NNN-<slug>/spec.md`, `checklists/` and `.specify/feature.json` | runtime (Phase 6) |
+| `claude plugin eval` (2.1.321) does **not** put the plugin's `bin/` on the Bash PATH (installed plugins do); `env.PATH` in a scaffolded project settings file does not help; eval runs use permission mode `dontAsk` and need `--allow-tools Bash` | runtime (Phase 8) |
+| `claude plugin eval`: cases are `evals/<case>/prompt.md` + `graders/*.md` (+ optional `case.yaml` with `schema_version: "1.1"`); scaffold scripts must be inside the case dir and take no arguments; only the last `--case` flag counts (use `--tag`) | runtime (Phase 8) |
 | Subagent worktree: `.claude/worktrees/agent-<id>`, branch `worktree-agent-<id>`, reported as `worktreePath`/`worktreeBranch`; main-checkout uncommitted files absent; worker changes left uncommitted in the worktree | runtime (Phase 5) |
 
 ## 9. Implications carried into Phase 2
@@ -162,6 +165,6 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 
 ## 10. Open verification items
 
-- `enabledPlugins` / `extraKnownMarketplaces` shapes (needed for team rollout docs, Phase 8).
-- ~~Hook exit-code/JSON semantics and Stop/SubagentStop stdin schema~~: re-checked against the docs in Phase 7 (§4). A live check that the plugin hooks load and deny in a real session is still pending.
+- ~~`enabledPlugins` / `extraKnownMarketplaces` shapes~~: from the docs (§5); a team rollout is not exercised.
+- ~~Hook exit-code/JSON semantics and Stop/SubagentStop stdin schema~~: re-checked against the docs in Phase 7 (§4). Live check done through the Phase 8 evals (§8); `bypassPermissions` remains unverified.
 - Skill frontmatter table verbatim (re-check before Phase 4).

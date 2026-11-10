@@ -3,3 +3,4 @@ node_modules/
 *.log
 .claude/worktrees/
 .claude/settings.local.json
+plugins/factory/evals/results/

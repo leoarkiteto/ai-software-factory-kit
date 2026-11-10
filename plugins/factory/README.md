@@ -2,6 +2,14 @@
 
 Classifies development requests into **QUICK**, **STANDARD** or **FULL-SPEC** workflows and runs them with tracked, validated state in `.factory/` inside your repository.
 
+Install (from a clone of the kit, or `<owner>/<repo>` once published):
+
+```bash
+claude plugin marketplace add /path/to/ai-software-factory-kit
+claude plugin install factory@ai-software-factory-kit
+```
+
+- `/factory:init`: optional per-repository setup (config, `.gitignore`, permissions, rules). It writes only what you approve, and `--remove` undoes it.
 - `/factory:start <request>`: classify the request and run the matching workflow (`--mode` to force one).
 - `/factory:resume [workflow-id] [answer]`: continue a paused or interrupted workflow.
 
@@ -35,4 +43,4 @@ Each new session also gets a short notice listing workflows that can be resumed.
 
 The guards are a best-effort safety net, not a sandbox. Put hard limits in `permissions.deny`. See `docs/contracts/hooks.md` and ADR-0011.
 
-Status: v0.1.0 pre-release. All three modes are implemented and have each been exercised end to end in real sessions (single runs, not yet systematic evals).
+Status: v0.1.0 pre-release. All three modes are implemented and have each been exercised end to end in real sessions. A small behavioural eval suite lives in `evals/` (see the kit's docs/guide/testing.md).

@@ -795,7 +795,7 @@ How the logical components above map onto Claude Code mechanisms, as verified in
 | Workflow state and artifacts | `.factory/workflows/<id>/` in the target repo | ADR-0008 |
 | Rules / project instructions | Plugins cannot ship rules: optional `.claude/rules/factory-workflow.md` written by `init` | ADR-0001 |
 | Hooks | Plugin `hooks/hooks.json` → `hooks/factory-hook.mjs`; inert unless a Factory workflow is active (docs/contracts/hooks.md) | ADR-0011 |
-| Installer | `factory:init` skill + receipt `.factory/install.json` | ADR-0001 |
+| Installer | `factory:init` skill + `factory-install` CLI (`lib/installer.mjs`), receipt `.factory/install.json`, hash-bound approval | ADR-0001, ADR-0010 |
 
 Two corrections were made to this document after verification: discovery produces `GLOSSARY.md` rather than `CONTEXT.md`, and Spec Kit is an alternative specification provider rather than a sequential stage after the specification.
 
