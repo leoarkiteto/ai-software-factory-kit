@@ -72,6 +72,15 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 | SessionStart stdout on exit 0 is injected into context | runtime |
 | Exit 2 = blocking (stderr is reason); PreToolUse `hookSpecificOutput.permissionDecision` ∈ `allow/deny/ask/defer`; silence does not approve | docs-summary (exit codes), docs (silence) |
 | In worktrees, `CLAUDE_PROJECT_DIR` stays at the main checkout; use stdin `cwd` | docs |
+| Plugin `hooks/hooks.json` needs the top-level `"hooks"` wrapper (optional `description`); matchers made of letters, digits and `|` are exact names, anything else is an unanchored regex | docs (re-checked 2026-11-10) |
+| SessionStart matchers `startup`, `resume`, `clear`, `compact`, `fork`; exit-0 plain stdout is added to context | docs (re-checked) |
+| PreToolUse stdin has `tool_name`, `tool_input`, `tool_use_id` plus the common fields (`session_id`, `cwd`, `permission_mode`, `hook_event_name`); subagent calls also carry `agent_id` and `agent_type` | docs (re-checked) |
+| Plugin hooks also fire for tool calls made by subagents | docs (re-checked) |
+| Exit 2 blocks PreToolUse; other non-zero codes are non-blocking errors; JSON on exit 0 with `permissionDecision: "deny"` blocks and returns the reason to Claude | docs (re-checked) |
+| PostToolUse `decision: "block"` + `reason` reports to Claude after the tool ran; `hookSpecificOutput.additionalContext` adds context | docs (re-checked) |
+| Stop/SubagentStop stdin: `stop_hook_active`, `last_assistant_message`, `agent_type` / `agent_transcript_path` (SubagentStop); consecutive-continuation cap | docs-summary (not needed in v0.1) |
+| Default command-hook timeout 600 s; `${CLAUDE_PLUGIN_ROOT}` substituted in hook commands and exported to the process | docs (re-checked) |
+| Whether a hook `deny` holds under `bypassPermissions` | **not verified** |
 
 ## 5. Memory, rules, settings
 
@@ -154,5 +163,5 @@ Sources: `code.claude.com/docs/en/{plugins-reference, plugin-marketplaces, plugi
 ## 10. Open verification items
 
 - `enabledPlugins` / `extraKnownMarketplaces` shapes (needed for team rollout docs, Phase 8).
-- Hook exit-code/JSON semantics and Stop/SubagentStop stdin schema (re-check before Phase 7).
+- ~~Hook exit-code/JSON semantics and Stop/SubagentStop stdin schema~~: re-checked against the docs in Phase 7 (§4). A live check that the plugin hooks load and deny in a real session is still pending.
 - Skill frontmatter table verbatim (re-check before Phase 4).

@@ -21,4 +21,18 @@ Optional integrations need their own access:
 - `/grill-with-docs` reads its format files from where it is installed (for example `~/.claude/skills/domain-modeling/`), and writes `GLOSSARY.md` and `docs/adr/`.
 - Spec Kit's `speckit-specify` writes `specs/` and `.specify/feature.json`.
 
+## Safety hooks
+
+While a workflow is active, the plugin's hooks deny the following in the main session and in workers, with a reason the model has to report:
+- `git push` (unless `security.allowGitPush` is set; force pushes are always denied);
+- destructive git and `rm` commands, `sudo`;
+- package publishing, container pushes, deployments, and cluster or infrastructure changes;
+- destructive database statements;
+- files that match `security.protectedPaths` (`.env`, keys, `secrets/`, …);
+- direct edits of workflow manifests.
+
+Each new session also gets a short notice listing workflows that can be resumed. After an edit, the hooks validate `.factory/config.json` and the manifests. In repositories without `.factory/`, the hooks do nothing. Every hook can be switched off under `hooks` in `.factory/config.json`.
+
+The guards are a best-effort safety net, not a sandbox. Put hard limits in `permissions.deny`. See `docs/contracts/hooks.md` and ADR-0011.
+
 Status: v0.1.0 pre-release. All three modes are implemented and have each been exercised end to end in real sessions (single runs, not yet systematic evals).

@@ -10,6 +10,7 @@ Implementation-level contracts between the Factory's components. `docs/architect
 | [specification-provider.md](specification-provider.md) | Spec contract, completeness check, Spec Kit mapping, plan contract | — (Markdown, checked by `factory-spec`) |
 | [workers-and-reviewers.md](workers-and-reviewers.md) | Roles, worker I/O, reviewer I/O, independence, bounded feedback loop | `task`, `worker-report`, `review-report` |
 | [configuration.md](configuration.md) | Config resolution, sections, model routing | `config` |
+| [hooks.md](hooks.md) | Plugin hooks: resume notice, command/file guards, config and manifest validation, optional format | `config#/properties/hooks`, `config#/properties/security` |
 | [installation.md](installation.md) | Plugin vs repo layers, init procedure, update, removal | `install-receipt` |
 
 Status of enforcement (updated each phase):
@@ -29,3 +30,4 @@ Status of enforcement (updated each phase):
 | Validated, atomic persistence; out-of-repo artifact paths rejected | `lib/store.mjs` | Phase 3 |
 | Single writer of manifests | `bin/factory-state` (CLI) | Phase 3 |
 | Spec completeness (local + Spec Kit with supplements), discovery summary completeness, provider evidence, FR coverage by tasks | `lib/spec.mjs`, `lib/providers.mjs`, `factory-state spec-check / discovery-check`, enforced on transitions | Phase 6 |
+| Inert-unless-active hooks: resume notice, command guard, protected paths, manifest write guard, config/manifest validation after edits, optional post-edit format | `lib/hooks.mjs`, `lib/hook-main.mjs`, `hooks/hooks.json` | Phase 7 |

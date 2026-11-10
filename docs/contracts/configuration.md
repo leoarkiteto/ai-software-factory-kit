@@ -27,7 +27,7 @@ A repo config needs only `{ "schemaVersion": 1 }` plus the keys it changes.
 | `discovery` | provider, behaviour when unavailable | `grill-with-docs`, `ask` |
 | `specification` | provider | `auto` |
 | `validation` | repo commands and when they run | all commands `null` (unconfigured) |
-| `hooks` | per-hook toggles | resume, command guard and manifest validation on; post-edit format off |
+| `hooks` | per-hook toggles (see [hooks.md](hooks.md)) | resume, command guard and manifest validation on; post-edit format off. The format hook runs `validation.commands.format`, with `{file}` replaced by the edited path when present |
 | `security` | protected paths, extra blocked commands, push policy | `.env*`, keys, secrets; `allowGitPush: false` |
 | `artifacts` | whether workflows are committed | `false` |
 

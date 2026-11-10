@@ -1,0 +1,29 @@
+{
+  "description": "AI Software Factory: resume notice, command and file guards, and manifest/config validation. Inert unless the repository has a .factory/ directory; guards act only while a workflow is active.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/factory-hook.mjs\" session-start", "timeout": 15 }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read|Edit|Write|MultiEdit|NotebookEdit",
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/factory-hook.mjs\" pre-tool-use", "timeout": 15 }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          { "type": "command", "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/factory-hook.mjs\" post-tool-use", "timeout": 90 }
+        ]
+      }
+    ]
+  }
+}
