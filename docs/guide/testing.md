@@ -47,14 +47,17 @@ claude plugin eval . --tag smoke --allow-tools Bash Read Glob Grep \
 
 ## 3. Real-session scenarios
 
-Phases 4 to 6 ran the plugin as installed, in headless `claude -p` sessions, against scratch repositories. The logs, with costs, are in `docs/research/phase-{4,5,6}-scenarios.md`.
+Phases 4 to 6 ran the plugin as installed, in headless `claude -p` sessions, against scratch repositories. Phase 9 ran it on a real project (a Go + templ + HTMX + SQLite app) for a real feature. The logs, with costs, are in `docs/research/phase-{4,5,6}-scenarios.md` and `docs/research/phase-9-real-project.md`.
 
 | Exercised for real | Only in deterministic tests so far |
 |---|---|
 | QUICK end to end in default permission mode with no denials | an escalation after 3 review rounds |
 | STANDARD with parallel workers, an interrupted session and recovery | failure → retry → replan |
 | A review loop with a planted defect: NEEDS_CHANGES → rework → APPROVED | the native discovery fallback; `/grill-with-docs` unavailable |
-| FULL-SPEC: `/grill-with-docs` (2 rounds), Spec Kit spec, architecture plan review, QA worker, parallel code and architecture reviews | the local spec provider in a real session |
-| The guard, inertness and the resume notice (evals above) | frontend and devops workers; `/factory:init` in a real session; a hook deny under `bypassPermissions` |
+| FULL-SPEC: `/grill-with-docs` (2 rounds), Spec Kit spec, architecture plan review, QA worker, parallel code and architecture reviews | Spec Kit and the local provider in the same repository |
+| FULL-SPEC on a real project: local spec provider, plan review NEEDS_CHANGES → APPROVED, frontend worker, a guard denial resolved through the user | |
+| The guard, inertness and the resume notice (evals above) | the devops worker; `/factory:init` in a real session; a hook deny under `bypassPermissions` |
 
 These were single runs. They show that the procedures can work end to end, not how often they do.
+
+**Counting denials.** The `permission_denials` field of `claude -p --output-format json` lists only the main session's denials. Denials inside subagents (workers and reviewers) are not in it. To audit a run, scan the subagent transcripts in `~/.claude/projects/<project>/<session>/subagents/*.jsonl` for tool results that are errors.

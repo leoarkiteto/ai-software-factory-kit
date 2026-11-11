@@ -66,12 +66,37 @@ export function segments(command, depth = 0) {
   const out = [];
   let cur = "";
   let quote = null;
+  // Here-documents: the body is data for the command that owns it, not
+  // commands. Bodies are collected here and analysed only when something in
+  // the command would execute them (see the end of this function).
+  const heredocs = [];
+  let segDocs = []; // opened in the current segment
+  let lineDocs = []; // opened on the current line, body not read yet
   const push = () => {
     const s = cur.trim();
     if (s) out.push(s);
+    lineDocs.push(...segDocs);
+    segDocs = [];
     cur = "";
   };
+  /** Read the bodies of the heredocs opened on the line that ended before `pos`. */
+  const readBodies = (pos) => {
+    for (const h of lineDocs) {
+      for (;;) {
+        if (pos >= command.length) break;
+        const nl = command.indexOf("\n", pos);
+        const line = command.slice(pos, nl === -1 ? command.length : nl);
+        pos = nl === -1 ? command.length : nl + 1;
+        if ((h.strip ? line.replace(/^\t+/, "") : line) === h.delim) break;
+        h.body += `${line}\n`;
+      }
+      heredocs.push(h);
+    }
+    lineDocs = [];
+    return pos;
+  };
   const subs = [];
+  let arith = 0; // inside (( … )), where << is a shift, not a heredoc
   for (let i = 0; i < command.length; i++) {
     const c = command[i];
     const two = command.slice(i, i + 2);
@@ -87,6 +112,23 @@ export function segments(command, depth = 0) {
     }
     if (c === "\\") { cur += c + (command[i + 1] ?? ""); i++; continue; }
     if (c === "'" || c === '"') { quote = c; cur += c; continue; }
+    if (two === "((") { arith++; push(); i++; continue; }
+    if (two === "))" && arith > 0) { arith--; push(); i++; continue; }
+    if (two === "<<" && command[i + 2] !== "<" && arith === 0) {
+      // A bare delimiter starts with a letter or "_", so `x <<2` is not taken as one.
+      const m = command.slice(i).match(/^<<(-?)[ \t]*(?:'([^'\n]*)'|"([^"\n]*)"|\\?([A-Za-z_][^\s;&|()<>'"]*))/);
+      if (m) {
+        segDocs.push({ strip: m[1] === "-", delim: m[2] ?? m[3] ?? m[4], body: "" });
+        cur += m[0];
+        i += m[0].length - 1;
+        continue;
+      }
+    }
+    if (c === "\n") {
+      push();
+      if (lineDocs.length) i = readBodies(i + 1) - 1;
+      continue;
+    }
     if (two === "$(") {
       const end = matchParen(command, i + 1);
       subs.push(command.slice(i + 2, end));
@@ -102,7 +144,7 @@ export function segments(command, depth = 0) {
       continue;
     }
     if (two === "&&" || two === "||" || two === "|&") { push(); i++; continue; }
-    if (c === ";" || c === "|" || c === "\n" || c === "&" || c === "(" || c === ")") { push(); continue; }
+    if (c === ";" || c === "|" || c === "&" || c === "(" || c === ")") { push(); continue; }
     cur += c;
   }
   push();
@@ -112,9 +154,29 @@ export function segments(command, depth = 0) {
       const inner = innerScript(s);
       if (inner !== null) out.push(...segments(inner, depth + 1));
     }
+    // A heredoc body is executed when it reaches a shell, directly
+    // (`bash <<EOF`) or through a pipe (`cat <<EOF | sh`). Conservatively,
+    // analyse every body when any segment of the command runs a shell.
+    if (heredocs.length && out.some(runsShell)) {
+      for (const h of heredocs) out.push(...segments(h.body, depth + 1));
+    }
   }
   return out;
 }
+
+const basename = (w) => w.replace(/\/+$/, "").split("/").pop();
+const SHELLS = new Set(["sh", "bash", "zsh", "dash", "ksh", "ash", "fish", "ssh", "source", ".", "eval"]);
+const runsShell = (seg) => words(normalise(seg)).some((w) => SHELLS.has(basename(w)));
+
+// Destructive SQL is data until it reaches a database client, so it is
+// checked over the whole command (heredoc bodies and pipes included) and
+// denied only when some segment invokes a client.
+const DESTRUCTIVE_SQL = /\b(?:DROP\s+(?:DATABASE|SCHEMA|TABLE)|TRUNCATE\s+(?:TABLE\s+)?\w)/i;
+const SQL_CLIENTS = new Set([
+  "psql", "pgcli", "mysql", "mariadb", "mycli", "sqlite3", "sqlite", "litecli", "duckdb", "sqlcmd", "sqlplus",
+  "clickhouse", "clickhouse-client", "cockroach", "usql", "snowsql", "bq", "cqlsh", "turso",
+]);
+const invokesSqlClient = (seg) => words(normalise(seg)).some((w) => SQL_CLIENTS.has(basename(w)));
 
 function matchParen(s, open) {
   let depth = 0;
@@ -178,7 +240,7 @@ const RULES = [
   ["gcloud", /^gcloud\s+(?:.*\s)?(?:deploy|delete|create|update)\b/, "changing cloud resources"],
   ["aws", /^aws\s+(?:\S+\s+)(?:delete|terminate|remove|put|create|update|deploy|rb|rm)\S*\b|^aws\s+s3\s+(?:rm|rb|sync|mv|cp)\b/, "changing AWS resources"],
   ["az", /^az\s+(?:.*\s)?(?:delete|create|deploy|update)\b/, "changing Azure resources"],
-  ["database", /^(?:dropdb|dropuser)\b|\b(?:DROP\s+(?:DATABASE|SCHEMA|TABLE)|TRUNCATE\s+(?:TABLE\s+)?\w)/i, "destructive database statement"],
+  ["database", /^(?:dropdb|dropuser)\b/, "destructive database command"],
   ["disk", /^(?:mkfs(?:\.\w+)?|fdisk|diskutil\s+(?:erase|partition)|shred)\b|^dd\b.*\bof=\/dev\//, "disk-level destructive operation"],
   ["chmod-world", /^chmod\s+(?:-R\s+)?(?:0?777|a\+rwx)\b/, "world-writable permissions"],
 ];
@@ -214,6 +276,9 @@ export function guardCommand(command, config, { root } = {}) {
     return deny("remote-script", "piping a downloaded script into a shell");
   }
   const segs = segments(command);
+  if (DESTRUCTIVE_SQL.test(command) && segs.some(invokesSqlClient)) {
+    return deny("database", "destructive database statement sent to a database client");
+  }
   for (const raw of segs) {
     const seg = normalise(raw);
     const ws = words(seg);

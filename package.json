@@ -1,6 +1,6 @@
 {
   "name": "ai-software-factory-kit",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Development tooling for the AI Software Factory Kit (Claude Code plugin). No runtime dependencies.",
   "type": "module",

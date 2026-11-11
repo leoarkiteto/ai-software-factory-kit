@@ -59,6 +59,39 @@ test("command guard looks inside compound commands, substitutions and sh -c", ()
   ]) assert.ok(denied(cmd), `expected deny: ${cmd}`);
 });
 
+test("heredoc bodies are data unless a shell runs them", () => {
+  // Real-project regression: a worker wrote migration code containing
+  // DROP TABLE through `cat > file <<'EOF'`, and the guard denied it.
+  for (const cmd of [
+    "mkdir -p internal/database\ncat > internal/database/migrate.go <<'EOF'\npackage database\nconst q = `DROP TABLE tasks`\nEOF\ngo test ./...",
+    "cat > README.md <<EOF\nDeploy with:\ngit push origin main\nrm -rf /\nEOF",
+    "cat <<-EOF > notes.md\n\tgit push\n\tEOF",
+    'tee docs/x.md <<"END" >/dev/null\nkubectl apply -f prod.yaml\nEND',
+  ]) assert.ok(!denied(cmd, config, repo), `expected allow: ${JSON.stringify(cmd)}`);
+  for (const cmd of [
+    "bash <<EOF\ngit push\nEOF",
+    "cat <<EOF | sh\ngit push\nEOF",
+    "ssh host <<'EOF'\nrm -rf /\nEOF",
+    "cat > a.md <<EOF\nnotes\nEOF\ngit push",
+    "cat <<EOF > x && git push\nbody\nEOF",
+    // `<<` as an arithmetic shift must not hide the next line.
+    "cat <<A <<B\na\nA\nb\nB\ngit push", "x=$(cat <<EOF\nhi\nEOF\n); git push", "cat <<EOF | bash -s\nrm -rf /\nEOF",
+    "(( y = x << z ))\ngit push", "(( y = x << 2 ))\ngit push", "echo $(( 1 << n ))\ngit push",
+  ]) assert.ok(denied(cmd), `expected deny: ${JSON.stringify(cmd)}`);
+});
+
+test("destructive SQL is denied only when it reaches a database client", () => {
+  for (const cmd of [
+    "psql -c 'DROP TABLE users'", "echo 'DROP TABLE x;' | sqlite3 data.db", "sqlite3 data.db <<EOF\nDROP TABLE tasks;\nEOF",
+    'docker compose exec db psql -U app -c "TRUNCATE users"', "mysql -e 'drop database prod'", "/usr/bin/sqlite3 d.db 'DROP TABLE t'",
+    "dropdb prod", "dropuser app",
+  ]) assert.ok(denied(cmd), `expected deny: ${JSON.stringify(cmd)}`);
+  for (const cmd of [
+    "grep -rn 'DROP TABLE' internal", 'git commit -m "migrate: DROP TABLE legacy tasks"', "truncate app.log",
+    "go test ./internal/database/...", "sqlite3 data.db '.tables'",
+  ]) assert.ok(!denied(cmd, config, repo), `expected allow: ${JSON.stringify(cmd)}`);
+});
+
 test("command guard allows ordinary development commands and quoted mentions", () => {
   for (const cmd of [
     "npm test", "node --test tests/*.test.mjs", "git status", "git diff --stat", "git log --oneline -5", "git add src/a.ts",

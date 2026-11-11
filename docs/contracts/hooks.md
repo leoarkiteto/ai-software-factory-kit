@@ -38,7 +38,7 @@ Every handler **fails open**. An internal error turns into a `systemMessage` vis
 
 ### 3.1 Command guard rules
 
-The command is split into simple commands on `&&`, `||`, `;`, `|`, `&`, newlines and parentheses, outside quotes. The guard also looks inside `$(…)`, backticks, `sh -c` / `bash -c` / `zsh -c` and `eval`. It removes leading `VAR=value`, `env`, `command`, `nohup`, `time` and `exec`. Rules are anchored at the start of each simple command, so a mention inside a quoted argument does not trigger them: `git commit -m "never git push"` is allowed.
+The command is split into simple commands on `&&`, `||`, `;`, `|`, `&`, newlines and parentheses, outside quotes. The guard also looks inside `$(…)`, backticks, `sh -c` / `bash -c` / `zsh -c` and `eval`. It removes leading `VAR=value`, `env`, `command`, `nohup`, `time` and `exec`. Rules are anchored at the start of each simple command, so a mention inside a quoted argument does not trigger them: `git commit -m "never git push"` is allowed. Here-document bodies (`<<EOF`, `<<-EOF`, `<<'EOF'`) are data, not commands: `cat > README.md <<EOF` with a line `git push` is allowed. The bodies are analysed as commands only when some part of the command runs a shell (`bash <<EOF`, `cat <<EOF | sh`, `ssh host <<EOF`, `source`, `eval`).
 
 | Category | Examples denied | Still allowed |
 |---|---|---|
@@ -49,7 +49,7 @@ The command is split into simple commands on `&&`, `||`, `;`, `|`, `&`, newlines
 | Packages | `npm` / `yarn` / `pnpm` / `bun publish`, `cargo publish`, `twine upload`, `gem push`, `poetry publish`, `mvn deploy`, `gradle publish` | `npm test`, `npm run build` |
 | Containers and clusters | `docker` / `podman push`; `kubectl apply` / `create` / `delete` / `patch` / `scale` / `rollout` / …; `helm install` / `upgrade` / `uninstall` / `rollback` | `docker build`, `kubectl get`, `helm template` |
 | Infrastructure and cloud | `terraform` / `tofu apply` / `destroy` / `import` / `state rm`; `pulumi up` / `destroy`; `vercel`, `netlify`, `fly`, `firebase`, `serverless`, `cdk`, `wrangler`, … `deploy`; `vercel --prod`; `heroku …`; `gcloud … deploy` / `delete` / `create` / `update`; mutating `aws` and `az` commands; `aws s3 rm` / `rb` / `sync` / `mv` / `cp` | `terraform plan`, `aws s3 ls`, `gcloud config list` |
-| Databases | `dropdb`, `dropuser`, `DROP DATABASE` / `SCHEMA` / `TABLE`, `TRUNCATE` | `psql -c 'SELECT …'` |
+| Databases | `dropdb`, `dropuser`; `DROP DATABASE` / `SCHEMA` / `TABLE` or `TRUNCATE` anywhere in a command that invokes a database client (`psql`, `mysql`, `mariadb`, `sqlite3`, `duckdb`, `sqlcmd`, `sqlplus`, `clickhouse`, `cockroach`, `bq`, …), heredoc bodies and pipes included | `psql -c 'SELECT …'`, `grep -rn 'DROP TABLE' src`, writing a migration file that contains `DROP TABLE`, `truncate app.log` |
 | Disks and permissions | `mkfs`, `fdisk`, `diskutil erase`, `shred`, `dd of=/dev/…`, `chmod 777` / `a+rwx` | — |
 | Remote scripts | `curl … \| sh`, `wget … \| bash` | `curl -o file …` |
 | Repository rules | Any regex in `security.blockedCommands`, matched against each simple command. Invalid patterns are ignored | — |
