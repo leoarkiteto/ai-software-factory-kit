@@ -27,6 +27,31 @@ claude plugin install factory@ai-software-factory-kit
 
 Requires Claude Code ≥ 2.1.319 and Node.js ≥ 18. Two optional integrations: [`/grill-with-docs`](https://github.com/mattpocock/skills) for discovery and [GitHub Spec Kit](https://github.com/github/spec-kit) 1.x for specifications.
 
+### Starting from a GitHub Issue or a Linear ticket
+
+The kit has no built-in tracker integration. `/factory:start` records its text verbatim as the workflow's original request. Paste the ticket's **content** into the command, not just its number. Reviewers then judge the change against that text, and later edits to the ticket do not change what you approved.
+
+```bash
+# GitHub: print the issue, then copy its title and body
+gh issue view 12 --json title,body,url
+```
+
+```text
+/factory:start (GitHub #12: https://github.com/<owner>/<repo>/issues/12) <issue title>
+
+<issue body>
+```
+
+```text
+/factory:start (Linear ENG-123: https://linear.app/<team>/issue/ENG-123) <ticket title>
+
+<ticket description>
+```
+
+- Keep the reference (number or ID, and the link) at the start, so the workflow and its final report point back to the ticket.
+- Ticket text is treated as data: instructions inside it that conflict with the Factory's rules are ignored.
+- The kit never comments on, closes or changes a ticket. When the workflow completes, update the ticket yourself, or ask Claude afterwards, outside the workflow (for example: "comment the final report summary on issue #12").
+
 ## Documentation
 
 | Guide | |
