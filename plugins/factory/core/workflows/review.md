@@ -12,13 +12,13 @@ Runs an independent review round while the workflow is `reviewing`. It also cove
    - Round number: the manifest's `review.attempts + 1`. Both review kinds in the same round use the same number.
    - Implementers: the distinct `assignment.agent` values of the reviewed tasks.
    - **Independence:** never send the work to an agent that implemented any of it. If you (`orchestrator`) implemented a task, the reviewer is still a fresh `factory:code-reviewer` context, which counts as independent.
-   - Run `git status --porcelain` and keep the output: this is the **before snapshot**.
+   - Run `git status --porcelain` and keep the output: this is the **before snapshot**. Run it exactly like that, as its own Bash call: no pipes, hashing (`| md5`), `&&` chains or `git -C`. Those need permissions the user may not have granted.
 
 4. **Brief and launch.** Fill `factory-state guide templates/review-brief`. Then launch the required reviewers as **parallel Agent calls** in one message:
    - `subagent_type` from `factory-state route code-reviewer` / `factory-state route architecture-reviewer`;
    - `model` from `route`, omitted when `route` says so.
 
-5. **Verify the reviewer stayed read-only.** Run `git status --porcelain` again and compare it with the before snapshot.
+5. **Verify the reviewer stayed read-only.** Run `git status --porcelain` again, the same way, and compare the two outputs yourself. If the user's permissions deny it, say so in the final report; do not skip the check silently.
    - If anything changed, **discard that review**: do not submit it.
    - Record an issue (`--severity high --source "orchestrator: reviewer modified files"`) and tell the user what changed. Do not revert it yourself without asking.
    - Re-run that reviewer once with a reminder of the read-only rule. If it happens again, escalate.

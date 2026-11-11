@@ -53,6 +53,7 @@ The wait is recorded as `blockedOn` in the manifest.
 - Resume works in a new session, because the state lives in files, not in the conversation.
 - Interrupted tasks (`running` when a session ended) are checked against `git status` / `git diff` before being retried.
 - At session start, a hook lists unfinished workflows. Claude mentions them but does not resume on its own.
+- **To abandon a workflow,** for example to restate the request differently, ask Claude to cancel it, or run `factory-state transition <id> cancelled --reason "…" --user-approved`. Cancelled workflows are final and are no longer listed as active. Code already changed stays in the working tree.
 
 ## FULL-SPEC: discovery and specification
 

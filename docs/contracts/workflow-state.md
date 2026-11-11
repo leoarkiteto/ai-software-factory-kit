@@ -47,7 +47,8 @@ Statuses are stored lowercase (`full_spec`, `executing`) and displayed uppercase
 | `replanning` | Plan or DAG being revised after failure or review |
 | `integrating` | Final validation commands and acceptance check against the original request |
 | `completed` | Terminal: final report written |
-| `failed` | Terminal unless explicitly resumed into `replanning` |
+| `failed` | Terminal unless explicitly resumed into `replanning`: the work could not be done |
+| `cancelled` | Terminal and final: the user abandoned the workflow (needs `--user-approved`) |
 
 ### Waiting is not a status
 
@@ -65,6 +66,7 @@ reviewing    → executing | replanning | integrating | failed
 replanning   → planning | executing | failed
 integrating  → completed | executing | replanning | failed
 failed       → replanning              (explicit user-approved resume only)
+any non-terminal status, or failed → cancelled   (user-approved only; final)
 ```
 
 ### Stages per mode

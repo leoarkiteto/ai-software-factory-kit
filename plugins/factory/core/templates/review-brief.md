@@ -3,6 +3,7 @@
 - Workflow: `<workflowId>` · Mode: <QUICK|STANDARD|FULL-SPEC> · Your agent name: `<agent>`
 - Review kind: `<code|architecture>` · Review attempt: `<n>` · Architecture mode: <change review | plan review>
 - Base commit for the diff: `<baseRef>` · Tasks under review: <T1, T2>
+- See the change with `git diff <baseRef>` run as written from your working directory, which is the repository root (not `git -C <path>`).
 - Implemented by (copy into `independence.implementedBy`): <agents from task assignments>
 
 ## Original request (verbatim)
