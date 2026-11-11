@@ -56,6 +56,7 @@ Phases 4 to 6 ran the plugin as installed, in headless `claude -p` sessions, aga
 | A review loop with a planted defect: NEEDS_CHANGES → rework → APPROVED | the native discovery fallback; `/grill-with-docs` unavailable |
 | FULL-SPEC: `/grill-with-docs` (2 rounds), Spec Kit spec, architecture plan review, QA worker, parallel code and architecture reviews | Spec Kit and the local provider in the same repository |
 | FULL-SPEC on a real project: local spec provider, plan review NEEDS_CHANGES → APPROVED, frontend worker, a guard denial resolved through the user | |
+| STANDARD on a real project: the classifier moving from FULL-SPEC to STANDARD when the decisions are stated in the request | |
 | The guard, inertness and the resume notice (evals above) | the devops worker; `/factory:init` in a real session; a hook deny under `bypassPermissions` |
 
 These were single runs. They show that the procedures can work end to end, not how often they do.

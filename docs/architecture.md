@@ -585,7 +585,8 @@ type WorkflowStatus =
   | "replanning"
   | "integrating"
   | "completed"
-  | "failed";
+  | "failed"
+  | "cancelled";
 
 type TaskStatus = "pending" | "running" | "completed" | "failed" | "blocked";
 

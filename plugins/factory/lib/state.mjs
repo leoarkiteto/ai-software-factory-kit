@@ -13,27 +13,31 @@ export class StateError extends Error {
   }
 }
 
+// `cancelled` (the user abandoned the workflow) is reachable from every
+// non-terminal status, needs user approval, and is final. `failed` means the
+// work could not be done, and can be resumed with approval.
 export const TRANSITIONS = {
-  classifying: ["discovering", "planning", "executing", "failed"],
-  discovering: ["specifying", "failed"],
-  specifying: ["planning", "discovering", "failed"],
-  planning: ["executing", "specifying", "failed"],
-  executing: ["reviewing", "integrating", "replanning", "failed"],
-  reviewing: ["executing", "replanning", "integrating", "failed"],
-  replanning: ["planning", "executing", "failed"],
-  integrating: ["completed", "executing", "replanning", "failed"],
+  classifying: ["discovering", "planning", "executing", "failed", "cancelled"],
+  discovering: ["specifying", "failed", "cancelled"],
+  specifying: ["planning", "discovering", "failed", "cancelled"],
+  planning: ["executing", "specifying", "failed", "cancelled"],
+  executing: ["reviewing", "integrating", "replanning", "failed", "cancelled"],
+  reviewing: ["executing", "replanning", "integrating", "failed", "cancelled"],
+  replanning: ["planning", "executing", "failed", "cancelled"],
+  integrating: ["completed", "executing", "replanning", "failed", "cancelled"],
   completed: [],
-  failed: ["replanning"],
+  failed: ["replanning", "cancelled"],
+  cancelled: [],
 };
 
-const COMMON = ["classifying", "executing", "reviewing", "replanning", "integrating", "completed", "failed"];
+const COMMON = ["classifying", "executing", "reviewing", "replanning", "integrating", "completed", "failed", "cancelled"];
 export const MODE_STATUSES = {
   quick: new Set(COMMON),
   standard: new Set([...COMMON, "planning"]),
   full_spec: new Set([...COMMON, "planning", "discovering", "specifying"]),
 };
 
-export const TERMINAL = new Set(["completed", "failed"]);
+export const TERMINAL = new Set(["completed", "failed", "cancelled"]);
 const APPROVED = new Set(["APPROVED", "APPROVED_WITH_WARNINGS"]);
 
 const nowIso = () => new Date().toISOString();
@@ -228,6 +232,7 @@ export function transition(m, to, opts = {}, config) {
   if (!(to in TRANSITIONS)) throw new StateError(`unknown status ${to}`);
   if (!TRANSITIONS[from].includes(to)) throw new StateError(`transition ${from} -> ${to} is not allowed`);
   if (from === "failed" && !userApproved) throw new StateError("resuming a failed workflow requires user approval");
+  if (to === "cancelled" && !userApproved) throw new StateError("cancelling a workflow requires user approval (--user-approved)");
 
   let targetMode = m.mode;
   if (mode && mode !== m.mode) {
@@ -523,6 +528,7 @@ export function nextAction(m, config) {
     case "integrating": return { action: "integrate", detail: m.artifacts.finalReport ? "final report written; complete" : "run final validation and write the final report" };
     case "completed": return { action: "none", detail: "workflow completed" };
     case "failed": return { action: "none", detail: "workflow failed; resume only with user approval" };
+    case "cancelled": return { action: "none", detail: "workflow cancelled by the user" };
   }
   return { action: "none", detail: "" };
 }

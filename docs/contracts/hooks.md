@@ -7,7 +7,7 @@ The plugin declares its hooks in `plugins/factory/hooks/hooks.json`. Each one ru
 Plugin hooks fire in **every** session that has the plugin enabled, so:
 
 1. **No `.factory/` directory: every hook exits 0 with no output.** The hook looks for `.factory/` from the payload's `cwd` upwards, then from `$CLAUDE_PROJECT_DIR`. In repositories without it, this probe is the only cost (about 40 ms per call).
-2. **`.factory/` exists but no workflow is active** (every workflow `completed` or `failed`): the session notice and the guards stay silent. Only the validation of the Factory's own files runs (§4).
+2. **`.factory/` exists but no workflow is active** (every workflow `completed`, `failed` or `cancelled`): the session notice and the guards stay silent. Only the validation of the Factory's own files runs (§4).
 3. **An active workflow exists:** the guards apply to every matching tool call in the session, including calls made by subagents. Hooks fire inside subagents, and a subagent's payload carries `agent_id` and `agent_type`.
 
 Every handler **fails open**. An internal error turns into a `systemMessage` visible to the user, and the tool call goes ahead. A broken guard must not block every session that has the plugin enabled. See ADR-0011.

@@ -97,6 +97,22 @@ test("failed is terminal unless the user approves a resume", () => {
   assert.equal(go(m, "replanning", { userApproved: true }).status, "replanning");
 });
 
+test("cancelled needs user approval, is reachable from any open status, and is final", () => {
+  const blocked = S.block(go(classified("full_spec"), "discovering"), "discovery_session", "type /grill-with-docs");
+  assert.throws(() => go(blocked, "cancelled"), /requires user approval/);
+  const m = go(blocked, "cancelled", { userApproved: true });
+  assert.equal(m.status, "cancelled");
+  assert.equal(m.blockedOn, null);
+  assert.ok(S.TERMINAL.has("cancelled"));
+  assert.equal(S.nextAction(m, config).action, "none");
+  assert.throws(() => go(m, "replanning", { userApproved: true }), /not allowed/);
+  for (const [from, targets] of Object.entries(S.TRANSITIONS)) {
+    if (!S.TERMINAL.has(from) || from === "failed") assert.ok(targets.includes("cancelled"), `${from} -> cancelled`);
+  }
+  assert.equal(go(standardExecuting(), "cancelled", { userApproved: true }).status, "cancelled");
+  assert.equal(go(go(classified("quick"), "failed"), "cancelled", { userApproved: true }).status, "cancelled");
+});
+
 test("transitions clear blockedOn and append history", () => {
   let m = go(classified("full_spec"), "discovering");
   m = S.block(m, "discovery_session", "type /grill-with-docs");
