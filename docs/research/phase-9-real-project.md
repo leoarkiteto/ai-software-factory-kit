@@ -65,3 +65,25 @@ The orchestrator also improvised `git status --porcelain | md5 && …` for the r
 - a `cancelled` status: terminal and final, reachable from any open status and from `failed`, user-approved only. The operating rules forbid using it to escape a failure;
 - the reviewer and worker contracts, and the review brief, say to run `git` from the repository root, without `-C`;
 - `review.md` says to run the read-only snapshot as a plain `git status --porcelain`, as its own call.
+
+## QUICK run (kit 0.1.2)
+
+Same project, after the password recovery work was committed. Request, verbatim: an eye icon (opened/closed) on the "Senha" and "Confirma Senha" fields that reveals the password before the form is submitted.
+
+| Step | Prompt (as the user) | Result | Cost (USD) |
+|---|---|---|---|
+| 1 | `/factory:start <request>` | **QUICK** (score 3: scope 1, risk 1, uncertainty 1). Implemented in the main thread: a reusable templ `PasswordInput` component and a render test. The orchestrator **disclosed a scope extension** (all 5 password fields, not only the registration form). It noticed that the new Tailwind classes were missing from the compiled CSS, and paused for approval instead of reporting success | 0.83 |
+| 2 | `/factory:resume … rode make tailwind, mantenha nos 5 campos` | CSS rebuilt with `make tailwind`. vet, tests and build passed. No review: `review.code.quick` is `on_risk`, and the run said so after first promising one. Completed | 1.12 |
+
+**Independent check.** vet, tests and build passed. The switch to the component kept `required`, `autocomplete`, ids and names. In headless Chromium driven over CDP, each of the 5 fields went `password → text → password` on two clicks, the icons and the `aria-label` swapped, the form was not submitted, the button sat inside the input, and the two fields on a page toggled independently. A screenshot confirmed the layout. The CSS rebuild also fixed open issue I1 from the authentication run.
+
+**Found:**
+- **The orchestrator had no tool-use rule.** In QUICK it implements, and it tried `cat >> server_test.go <<EOF`, which was denied. Worker contract rule 6 does not reach the main thread.
+- **The orchestrator called `npx @tailwindcss/cli …` and `./node_modules/.bin/tailwindcss … && grep … && git diff`** instead of the project's `make tailwind`, which the session allowed. Both were denied.
+
+**Fixed in 0.1.3:**
+- The operating rules have a new **Working on code** section, for whenever the orchestrator itself reads or changes code. It applies the worker tool rules (Write/Edit, one command per call, no `git -C`), says to prefer the project's own entry points (Makefile targets, `package.json` scripts, `validation.commands`) over direct tool calls, and says to ask instead of retrying a denied command in another form.
+- `quick.md` points to that section.
+- The worker contract has the same entry-point rule.
+
+**Project-level advice.** A project whose CSS or other assets are compiled should include that step in `validation.commands.build` (here: `templ generate && make tailwind && go build ./...`). The kit then regenerates the assets during validation, instead of finding the gap at the end.

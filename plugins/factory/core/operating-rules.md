@@ -17,6 +17,15 @@ These apply in every mode, at every step.
 - When `factory-state` exits 1, it has rejected the change and printed why. **Fix the cause. Do not work around the rule** (by skipping a stage, faking a status, or hand-editing files). If the rule seems wrong for this situation, stop and tell the user.
 - After each stage, run `factory-state next <id>` and follow it, unless you have a concrete reason not to. If you deviate, state the reason.
 
+## Working on code
+
+These apply whenever you read or change code yourself: QUICK, a task you take on in STANDARD or FULL-SPEC, or a fix before review. Workers follow the same rules in their contract.
+
+- Read files with Read, Grep and Glob. Create and change files with Write and Edit, never with shell redirection or heredocs (`cat > f <<EOF`, `cat >> f`, `echo … > f`, `sed -i`). The `factory-state new --request-file -` heredoc above is the only exception.
+- Use Bash only to run programs. Run one command per call from the repository root, without `&&` chains, pipes into filters, shell variables or `git -C <path>`.
+- **Prefer the project's own entry points**: Makefile targets (`make tailwind`), `package.json` scripts (`npm run build`) and the configured `validation.commands`. Do not call the underlying tool directly (`npx …`, `./node_modules/.bin/…`). The project's entry points are how it expects to be built, and they are usually what the user has allowed.
+- If a needed command is denied, do not try another form of it. Tell the user which command you need and why, and wait.
+
 ## Honesty
 
 - Never report a check as passed unless you ran it and saw it pass. Record an unconfigured kind as `factory-state validation <id> --kind lint --status skipped`, with no command, and the CLI records it as "lint: not configured". To see a command's exit code, read it from the tool result rather than appending `; echo $?`.
