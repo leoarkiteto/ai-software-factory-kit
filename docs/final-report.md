@@ -54,18 +54,18 @@ Details: [installation](guide/installation.md), [usage](guide/usage.md), [config
 
 | Level | Result |
 |---|---|
-| Deterministic (`npm test`) | 136/136 pass: core logic, CLIs against an installed copy, hooks with synthetic payloads, installer, plugin structure |
+| Deterministic (`npm test`) | 138/138 pass: core logic, CLIs against an installed copy, hooks with synthetic payloads, installer, plugin structure |
 | `claude plugin validate .` | passes |
 | Behavioural evals, smoke (hooks) | 3/3 cases, 6/6 runs pass (Sonnet, Haiku judge, $0.29) |
 | Behavioural evals that need `bin/` | blocked by the eval harness: plugin `bin/` is not on PATH under `claude plugin eval` 2.1.321 |
 | Real sessions (Phases 4–6) | QUICK, STANDARD (parallel, recovery), review loop with a planted defect, and FULL-SPEC with `/grill-with-docs` and Spec Kit: each end to end, single runs, about $17 for the full FULL-SPEC run |
+| Real project (Phase 9) | FULL-SPEC on an existing Go + templ + HTMX + SQLite app (authentication and authorization): local spec provider, frontend worker, a plan review loop, a guard denial resolved through the user; $17.36. The result was checked independently by running the app. Three defects found and fixed in 0.1.1 ([log](research/phase-9-real-project.md)) |
 
 **Not yet exercised in a real session:**
 - an escalation;
 - failure → retry → replan;
 - the native discovery fallback, or `/grill-with-docs` unavailable;
-- the local spec provider;
-- the frontend and devops workers;
+- the devops worker;
 - `/factory:init` (only unit tests and a partial eval);
 - a hook deny under `bypassPermissions`;
 - a team rollout through `extraKnownMarketplaces`.
