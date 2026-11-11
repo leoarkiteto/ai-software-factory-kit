@@ -8,10 +8,12 @@ The kit has two layers (contract: [installation.md](../contracts/installation.md
 ## 1. Install the plugin
 
 ```bash
-claude plugin marketplace add /path/to/ai-software-factory-kit   # local clone
-# or, once published:  claude plugin marketplace add <owner>/<repo>
+claude plugin marketplace add leoarkiteto/ai-software-factory-kit             # from GitHub
+# or from a local clone:  claude plugin marketplace add /path/to/ai-software-factory-kit
 claude plugin install factory@ai-software-factory-kit             # add --scope project to share it with the repository
 ```
+
+Installing from GitHub uses your git credentials. If the repository is private, each person needs read access to it.
 
 Check it: `claude plugin list` shows `factory`, and `/factory:start` appears in the slash-command menu.
 
@@ -77,7 +79,7 @@ Commit `.factory/config.json`, plus `.claude/settings.json` and `.claude/rules/f
 ```json
 {
   "extraKnownMarketplaces": {
-    "ai-software-factory-kit": { "source": { "source": "github", "repo": "<owner>/<repo>" } }
+    "ai-software-factory-kit": { "source": { "source": "github", "repo": "leoarkiteto/ai-software-factory-kit" } }
   },
   "enabledPlugins": { "factory@ai-software-factory-kit": true }
 }

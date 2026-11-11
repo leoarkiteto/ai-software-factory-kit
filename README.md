@@ -14,7 +14,7 @@ A deterministic rubric classifies each request. Workflow state lives in `.factor
 
 ```bash
 # 1. Add the marketplace (this repository) and install the plugin
-claude plugin marketplace add /path/to/ai-software-factory-kit     # or <owner>/<repo> once it is on GitHub
+claude plugin marketplace add leoarkiteto/ai-software-factory-kit           # or a local clone: /path/to/ai-software-factory-kit
 claude plugin install factory@ai-software-factory-kit
 ```
 

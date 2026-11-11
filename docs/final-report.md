@@ -38,7 +38,7 @@ Contracts: `docs/contracts/`. Guides: `docs/guide/`.
 ## 3. Installation and use
 
 ```bash
-claude plugin marketplace add /path/to/ai-software-factory-kit
+claude plugin marketplace add leoarkiteto/ai-software-factory-kit
 claude plugin install factory@ai-software-factory-kit
 ```
 
@@ -97,6 +97,6 @@ See [security and limitations](guide/security.md). In short:
 1. Run the `needs-bin` evals once `claude plugin eval` exposes plugin `bin/` (or run them through an installed plugin in CI). Then add cases for escalation, retry and replan, and the native discovery fallback.
 2. Run `/factory:init` in a real session on an existing project, and do a team rollout with `extraKnownMarketplaces`.
 3. Verify the hook `deny` under `bypassPermissions`, and document the result.
-4. Publish the marketplace to a git host and replace `<owner>/<repo>` in the docs.
+4. ~~Publish the marketplace to a git host~~: done, at [github.com/leoarkiteto/ai-software-factory-kit](https://github.com/leoarkiteto/ai-software-factory-kit).
 5. Consider worktree isolation (ADR-0007) once base and merge semantics are documented.
 6. Measure: repeated runs per mode with costs, to calibrate the rubric thresholds and the model tiers.

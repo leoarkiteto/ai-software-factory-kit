@@ -2,10 +2,10 @@
 
 Classifies development requests into **QUICK**, **STANDARD** or **FULL-SPEC** workflows and runs them with tracked, validated state in `.factory/` inside your repository.
 
-Install (from a clone of the kit, or `<owner>/<repo>` once published):
+Install from GitHub (or pass the path of a local clone to `marketplace add`):
 
 ```bash
-claude plugin marketplace add /path/to/ai-software-factory-kit
+claude plugin marketplace add leoarkiteto/ai-software-factory-kit
 claude plugin install factory@ai-software-factory-kit
 ```
 
