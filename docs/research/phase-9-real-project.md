@@ -87,3 +87,14 @@ Same project, after the password recovery work was committed. Request, verbatim:
 - The worker contract has the same entry-point rule.
 
 **Project-level advice.** A project whose CSS or other assets are compiled should include that step in `validation.commands.build` (here: `templ generate && make tailwind && go build ./...`). The kit then regenerates the assets during validation, instead of finding the gap at the end.
+
+## User-run STANDARD (kit 0.1.3)
+
+The user ran the kit themselves, interactively: an edit icon and inline edit for todo items (ESC cancels). It was classified STANDARD (score 6), ran 3 tasks and 1 code review (APPROVED_WITH_WARNINGS, 3 low findings, none required), and completed.
+
+**Found:** the 3 findings appeared only in the final report's prose. The manifest's `issues` list was empty, because `review.md` recorded only unresolved *required* findings. Nothing told the user how to act on them. A completed workflow cannot be resumed, and the guide did not say whether to ask Claude directly or to start a new workflow.
+
+**Fixed in 0.1.4:**
+- `review.md` has a **Follow-ups** step: before `integrating`, every non-required `medium` or `low` finding of the last round is recorded as an open issue (`factory-state issue`).
+- The final report template lists open issues by ID and ends with a ready-to-paste `/factory:start` follow-up request.
+- The usage guide has an "After completion: follow-ups" section that explains both options and their trade-offs.

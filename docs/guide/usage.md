@@ -76,6 +76,14 @@ The wait is recorded as `blockedOn` in the manifest.
 
 The workflow never commits, pushes or deploys. It tells you what is ready and leaves it to you.
 
+## After completion: follow-ups
+
+A workflow can complete with open issues, for example review findings that were not required. They are recorded in the manifest (`factory-state show <id>`) and listed in the final report with a ready-to-paste request.
+
+- A `completed` workflow is final. `/factory:resume` does not reopen it.
+- **To fix the follow-ups with the Factory**, commit (or stash) the finished change first, so the new workflow's diff holds only the fixes. Then start a new workflow that names them, for example `/factory:start Corrigir as issues I1, I2 do workflow wf-…: …`. It is classified like any request, usually QUICK. You get validation, the guards and, when risk calls for it, a review.
+- **To fix them without the Factory**, ask Claude directly, without a slash command. That is fine for small changes, but no workflow is active, so nothing is tracked, the guards are inactive, and there is no independent review.
+
 ## Inspecting state yourself
 
 These are read-only, inside Claude Code or from a terminal via `<plugin>/bin/factory-state`:

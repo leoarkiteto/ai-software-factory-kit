@@ -33,4 +33,6 @@ Workflow: `<id>` · Mode: <QUICK|STANDARD|FULL-SPEC> · Status: <COMPLETED|FAILE
 - …
 
 ## Open issues and follow-ups
-- … (including out-of-scope problems noticed but not fixed)
+- `I<n>` (<severity>, <source>): <description> — one line per open issue from `factory-state show`. Then list out-of-scope problems that were noticed but not fixed.
+- If any are listed, end with the follow-up request the user can paste, because a completed workflow cannot be reopened:
+  `/factory:start Corrigir as issues I<n>, I<m> do workflow <id>: <one clause per issue>`
