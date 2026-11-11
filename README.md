@@ -33,6 +33,8 @@ Requires Claude Code ≥ 2.1.319 and Node.js ≥ 18. Two optional integrations: 
 |---|---|
 | [Installation](docs/guide/installation.md) | plugin, `/factory:init`, team rollout, update, removal |
 | [Usage](docs/guide/usage.md) | the three modes, pausing and resuming, discovery and spec providers, what the reports mean |
+| [Use cases](docs/guide/use-cases.md) | QUICK, STANDARD and FULL-SPEC examples with every command the developer types |
+| [Monorepo walkthrough](docs/guide/monorepo-walkthrough.md) | adopting the kit in a React Native + Go monorepo, then building an SSO feature step by step |
 | [Configuration](docs/guide/configuration.md) | `.factory/config.json`: models, review policy, validation commands, hooks, security |
 | [Security and limitations](docs/guide/security.md) | what the guards do and do not do, permissions, known limits |
 | [Troubleshooting](docs/guide/troubleshooting.md) | permission prompts, denied commands, invalid state, providers |
