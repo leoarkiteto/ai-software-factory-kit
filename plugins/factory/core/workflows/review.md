@@ -32,9 +32,17 @@ Runs an independent review round while the workflow is `reviewing`. It also cove
    | Decision | What to do |
    |---|---|
    | `await_reviews` | A required review kind is still missing. Run it now. |
-   | `integrate` | `factory-state transition <id> integrating --reason "review round <n>: <outcomes>"` |
+   | `integrate` | Record the follow-ups (below), then `factory-state transition <id> integrating --reason "review round <n>: <outcomes>"` |
    | `rework` | See "Rework" below |
    | `escalate` | See "Escalation" below |
+
+## Follow-ups (non-required findings)
+
+A review can pass with findings that were not required, for example in `APPROVED_WITH_WARNINGS`. They must not exist only in the final report's prose. Before moving to `integrating`, record each non-required finding of the **last round** with severity `medium` or `low` as an open issue, one call each:
+
+`factory-state issue <id> --severity <s> --source "<reviewer> round <n> <F-id>" --description "<the finding, with its file:line>"`
+
+Skip `info` findings, and findings that a later round shows as already fixed. The final report lists these issues by ID with a ready-to-use follow-up request (see the final report template).
 
 ## Rework
 
