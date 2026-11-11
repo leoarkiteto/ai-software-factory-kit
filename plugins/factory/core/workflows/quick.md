@@ -30,7 +30,7 @@ factory-state task <id> T1 --status running --agent orchestrator --model null
 
 ## 3. Implement (main thread, no delegation)
 
-- Make the change. Stay inside `scope.files`. If you must touch another file, update the scope through `replanning`, or note it in the final report as a scope deviation.
+- Make the change, following **Working on code** in the operating rules: Write/Edit for files, the project's own targets and scripts for builds. Stay inside `scope.files`. If you must touch another file, update the scope through `replanning`, or note it in the final report as a scope deviation.
 - Add or adjust tests when behaviour changes and the repository has tests for that area.
 
 ## 4. Validate

@@ -61,6 +61,7 @@ Details: [installation](guide/installation.md), [usage](guide/usage.md), [config
 | Real sessions (Phases 4–6) | QUICK, STANDARD (parallel, recovery), review loop with a planted defect, and FULL-SPEC with `/grill-with-docs` and Spec Kit: each end to end, single runs, about $17 for the full FULL-SPEC run |
 | Real project (Phase 9) | FULL-SPEC on an existing Go + templ + HTMX + SQLite app (authentication and authorization): local spec provider, frontend worker, a plan review loop, a guard denial resolved through the user; $17.36. The result was checked independently by running the app. Three defects found and fixed in 0.1.1 ([log](research/phase-9-real-project.md)) |
 | Real project, STANDARD (Phase 9) | Password recovery on the same app: classified FULL-SPEC as first worded (correctly), then STANDARD once the decisions were stated; 4 tasks, 2 reviews, all first-attempt; $5.69. Checked independently. Fixes in 0.1.2: `cancelled` status, no `git -C`, plain read-only snapshot |
+| Real project, QUICK (Phase 9) | Password visibility toggle: QUICK (score 3), main-thread implementation, disclosed scope extension, paused for a CSS rebuild; $1.95. Checked in headless Chromium. Fix in 0.1.3: tool-use and entry-point rules for the orchestrator |
 
 **Not yet exercised in a real session:**
 - an escalation;
