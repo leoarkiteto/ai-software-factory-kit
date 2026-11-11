@@ -32,9 +32,19 @@ Requires Claude Code ≥ 2.1.319 and Node.js ≥ 18. Two optional integrations: 
 The kit has no built-in tracker integration. `/factory:start` records its text verbatim as the workflow's original request. Paste the ticket's **content** into the command, not just its number. Reviewers then judge the change against that text, and later edits to the ticket do not change what you approved.
 
 ```bash
-# GitHub: print the issue, then copy its title and body
-gh issue view 12 --json title,body,url
+# GitHub: build the whole request (reference, link, title, body) and copy it to the clipboard
+gh issue view 12 --json number,title,body,url \
+  --jq '"(GitHub #\(.number): \(.url)) \(.title)\n\n\(.body)"' | pbcopy
+# then type `/factory:start ` in Claude Code and paste
 ```
+
+`pbcopy` is macOS. On Linux use `xclip -selection clipboard` or `wl-copy`; on Windows, `clip`. Issue comments are not included. Add `comments` to `--json` or paste the relevant ones yourself if they hold decisions.
+
+**Long tickets** (user stories, use cases, AC, DoD, DoR) work as they are, because the request has no length limit:
+- **Acceptance criteria** become the plan's criteria, which workers implement and reviewers check one by one, so make them testable.
+- **Definition of Done** items within the kit's reach (tests, validation, review, docs in the repository) are done. Merge, deploy or "PR approved" are not done, because the guards block push and deploy, and they show up in the final report as not done.
+- **Definition of Ready** is about the team's process and can be left in or removed.
+- A large ticket that settles its decisions usually runs as STANDARD. One that leaves behaviour open goes to FULL-SPEC, which asks before it implements.
 
 ```text
 /factory:start (GitHub #12: https://github.com/<owner>/<repo>/issues/12) <issue title>
