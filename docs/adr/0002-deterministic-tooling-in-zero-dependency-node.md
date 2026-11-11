@@ -9,3 +9,4 @@ State transitions, DAG scheduling, config/schema validation, hook logic and inst
 
 - Node ≥18 becomes a runtime prerequisite on the user's machine. `init` checks for it and reports clearly when it is missing.
 - JSON Schema validation is hand-written for the kit's own small schemas rather than coming from a library.
+- Why plain JavaScript rather than TypeScript or Go, and when to revisit: ADR-0012.
