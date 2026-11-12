@@ -68,6 +68,7 @@ gh issue view 12 --json number,title,body,url \
 |---|---|
 | [Installation](docs/guide/installation.md) | plugin, `/factory:init`, team rollout, update, removal |
 | [Usage](docs/guide/usage.md) | the three modes, pausing and resuming, discovery and spec providers, what the reports mean |
+| [Workflow diagrams](docs/guide/workflows.md) | classification, QUICK, STANDARD and FULL-SPEC flows, the execution and review loop, the status model |
 | [Use cases](docs/guide/use-cases.md) | QUICK, STANDARD and FULL-SPEC examples with every command the developer types |
 | [Monorepo walkthrough](docs/guide/monorepo-walkthrough.md) | adopting the kit in a React Native + Go monorepo, then building an SSO feature step by step |
 | [Configuration](docs/guide/configuration.md) | `.factory/config.json`: models, review policy, validation commands, hooks, security |

@@ -21,6 +21,8 @@ The slash command must be at the **start** of your message. Otherwise no skill r
 
 ## The three modes
 
+Step-by-step diagrams of each mode are in [workflow diagrams](workflows.md).
+
 | Mode | Flow | Reviews (default) |
 |---|---|---|
 | QUICK | implement → validate → report | code review only if a risk dimension scored 2 |
