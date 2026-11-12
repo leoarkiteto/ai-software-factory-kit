@@ -75,6 +75,8 @@ gh issue view 12 --json number,title,body,url \
 | [Troubleshooting](docs/guide/troubleshooting.md) | permission prompts, denied commands, invalid state, providers |
 | [Testing](docs/guide/testing.md) | unit tests and behavioural evals |
 
+**Release: 0.2.0-beta.** Fit for daily use under supervision; not yet a stable tool for a team. The [1.0 criteria](docs/final-report.md#8-release-status-020-beta-and-the-10-criteria) are tracked in the final report.
+
 Status: [final implementation report](docs/final-report.md) · Design: [architecture](docs/architecture.md) · [contracts](docs/contracts/README.md) · [decision records](docs/adr/) · [verification research](docs/research/claude-code-capabilities.md)
 
 ## Repository layout
