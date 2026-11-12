@@ -295,6 +295,33 @@ test("completion requires a final report and no failing validation", () => {
   assert.equal(go(m, "completed").status, "completed");
 });
 
+test("a pre-existing validation failure can be accepted by the user, recorded as accepted_risk", () => {
+  // Real-project regression: a test that already failed on the base commit
+  // made completion impossible, although the procedures forbid fixing
+  // unrelated tests without the user's approval.
+  let m = go(S.setTasks(classified("quick"), [task("T1")]), "executing");
+  m = go(completeAll(m), "integrating");
+  m = S.setArtifact(m, "finalReport", ".factory/workflows/x/final-report.md");
+  m = S.addValidation(m, { kind: "test", command: "make check", status: "failed", exitCode: 2 });
+  assert.throws(() => go(m, "completed"), /validation failing: make check.*--user-approved/);
+  assert.throws(() => go(m, "completed", { userApproved: true }), /accepted_risk/);
+  m = S.addIssue(m, { severity: "medium", source: "orchestrator: final validation", description: "pre-existing failure in finance tests" });
+  assert.throws(() => go(m, "completed", { userApproved: true }), /accepted_risk/);
+  m = S.setIssueStatus(m, "I1", "accepted_risk", "user accepted: fails on the base commit, unrelated");
+  assert.equal(go(m, "completed", { userApproved: true }).status, "completed");
+});
+
+test("issues can be resolved or accepted, with a reason", () => {
+  let m = S.addIssue(wf(), { severity: "low", source: "code-reviewer round 1 F2", description: "x" });
+  assert.throws(() => S.setIssueStatus(m, "I9", "resolved", "fixed"), /unknown issue I9/);
+  assert.throws(() => S.setIssueStatus(m, "I1", "resolved"), /--resolution/);
+  assert.throws(() => S.setIssueStatus(m, "I1", "bogus", "x"), /status/);
+  m = S.setIssueStatus(m, "I1", "resolved", "fixed in T6");
+  assert.deepEqual([m.issues[0].status, m.issues[0].resolution], ["resolved", "fixed in T6"]);
+  m = S.setIssueStatus(m, "I1", "open");
+  assert.equal(m.issues[0].status, "open");
+});
+
 test("full FULL-SPEC path end to end", () => {
   let m = go(classified("full_spec"), "discovering");
   m = S.setProvider(m, "discovery", { requested: "grill-with-docs", used: "grill-with-docs", status: "completed", evidence: "docs/adr/0004 added" });

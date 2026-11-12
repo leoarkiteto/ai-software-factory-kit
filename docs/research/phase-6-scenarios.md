@@ -14,7 +14,7 @@ This was a single conversation, continued with `claude -p --resume`, against a f
 | 8 | `/factory:resume … Plan approved` | T1 dispatched to `backend-worker` (`sonnet`). **The account's usage limit was hit mid-task.** The workflow was left `executing` with T1 `running`, a recoverable interrupted state | 3.04 |
 | 9 | `/factory:resume … continue` (after the limit reset) | Recovered interrupted T1 (attempts 3, failures 1). The orchestrator fixed a worker defect itself (amount validation accepted a function), recorded `agent: orchestrator` and disclosed it. `qa-worker` T2 wrote the tests (29/29 pass). **Code review and architecture change review** ran in parallel, both independent, both `APPROVED_WITH_WARNINGS`. Low findings recorded as issues I1 and I2. Completed. **No commit was made**: the orchestrator asked the user | 6.94 |
 
-The total was about 17 USD across the session steps, as reported by the CLI per invocation.
+The total was about 17 USD across the session steps, as reported by the CLI per invocation. *(Correction, 2026-11-12: `total_cost_usd` is cumulative for a resumed session, so adding the per-step values overstates the cost. The cost of each session is its last value. The runs are not reproducible now, so the corrected total is not stated here.)*
 
 ## Verified in this run
 

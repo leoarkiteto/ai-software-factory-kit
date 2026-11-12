@@ -43,4 +43,5 @@ Follow `factory-state guide workflows/review`. Code review and architecture revi
 
 - `transition integrating`. Run `validation.final` and record the results.
 - Walk every `FR`, `NFR`, `AC` and `SC` in the spec and mark it met, partial or not_met, with evidence, in the final report. Unmet items become issues and need the user's decision.
+- Failures that predate the workflow, and issues fixed during it, are handled as in QUICK step 6 (`factory-state guide workflows/quick`).
 - Write the final report and `transition completed`.

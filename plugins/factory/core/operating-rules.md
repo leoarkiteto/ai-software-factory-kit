@@ -10,6 +10,7 @@ These apply in every mode, at every step.
 
 - `factory-state` (on your Bash `PATH`) is the **only** way to change `.factory/workflows/<id>/manifest.json`. Never edit a manifest with Write or Edit.
 - **One `factory-state` command per Bash call**, starting with `factory-state` and using the literal workflow ID. Do not use variable assignments (`ID=…`), `cd`, `&&`, `;`, pipes or `echo` around it. Claude Code checks each part of a compound command separately, so those forms trigger permission prompts or denials. Run other commands (tests, git) as separate calls as well.
+- **Quote free text with single quotes** (`--description '…'`, `--reason '…'`, `--resolution '…'`). Inside double quotes the shell expands `$1`, `$(…)` and backticks, and Claude Code denies the call. If the text itself contains a single quote, rephrase it.
 - **JSON input goes through the workflow inbox.** Write it with the Write tool to `.factory/workflows/<id>/inbox/<name>.json`, then run `factory-state <command> <id> --file .factory/workflows/<id>/inbox/<name>.json`. The CLI deletes the file once accepted. A rejected file stays in place: fix it and resubmit. Do not put JSON in a heredoc, because Claude Code's permission checker refuses it.
 - **Plain text** (for example the request) may be passed with a quoted heredoc: `factory-state new --title "…" --request-file - <<'REQUEST'` … `REQUEST`.
 - Do not create other scratch files. The skills pre-authorise writes under `.factory/` only.
@@ -23,6 +24,7 @@ These apply whenever you read or change code yourself: QUICK, a task you take on
 
 - Read files with Read, Grep and Glob. Create and change files with Write and Edit, never with shell redirection or heredocs (`cat > f <<EOF`, `cat >> f`, `echo … > f`, `sed -i`). The `factory-state new --request-file -` heredoc above is the only exception.
 - Use Bash only to run programs. Run one command per call from the repository root, without `&&` chains, pipes into filters, shell variables or `git -C <path>`.
+- **Run validation commands exactly as configured**, with nothing around them: no `| tail`, `| grep`, `; echo $?` or `${PIPESTATUS[0]}`. The tool result already shows the exit code and the output, and the extra shell needs permissions the user may not have granted.
 - **Prefer the project's own entry points**: Makefile targets (`make tailwind`), `package.json` scripts (`npm run build`) and the configured `validation.commands`. Do not call the underlying tool directly (`npx …`, `./node_modules/.bin/…`). The project's entry points are how it expects to be built, and they are usually what the user has allowed.
 - If a needed command is denied, do not try another form of it. Tell the user which command you need and why, and wait.
 

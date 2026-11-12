@@ -52,6 +52,7 @@ Discovery and specification
   provider ID discovery|specification [--requested X] [--used X] [--status S] [--version V] [--evidence E] [--note N]
   artifact ID KIND PATH
   issue ID --severity S --description D --source SRC [--task T]
+  issue-status ID ISSUE --status open|resolved|accepted_risk|escalated [--resolution R]
 
 Files given as F may be '-' for stdin (plain text only in heredocs: Claude Code's
 permission checker refuses JSON in heredocs). For JSON, write the file to
@@ -414,6 +415,15 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         if (flags.task) issue.taskId = flags.task;
         const m = save(S.addIssue(load(requireId()), issue));
         out(`recorded ${m.issues.at(-1).id}`, m.issues.at(-1));
+        return 0;
+      }
+      case "issue-status": {
+        const issueId = args[1];
+        if (!issueId) throw new UsageError("missing issue ID");
+        const resolution = flags.resolution === true ? undefined : flags.resolution;
+        const m = save(S.setIssueStatus(load(requireId()), issueId, need(flags, "status"), resolution));
+        const i = m.issues.find((x) => x.id === issueId);
+        out(`${issueId} ${i.status}`, i);
         return 0;
       }
       default:
