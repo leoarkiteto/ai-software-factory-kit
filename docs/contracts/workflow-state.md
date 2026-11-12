@@ -99,6 +99,8 @@ any non-terminal status, or failed → cancelled   (user-approved only; final)
 - `review.maxIterations` is copied from config when the workflow is created, so changing config later does not change a running workflow.
 - When `attempts == maxIterations` and the latest outcome is still `NEEDS_CHANGES`, the workflow does not start another round. It sets `blockedOn.kind = "escalation"`, records the open findings as `issues[]` with status `escalated`, and asks the user to decide (accept risk, replan, or stop).
 - **Accepting risk:** `transition integrating --user-approved` waives the review-approval guard, but never the guard on all tasks being completed. The reason must name the accepted findings.
+- **Completing with a pre-existing failure:** `transition completed` is refused while the latest result of any validation command is `failed`. It is allowed only with `--user-approved` **and** at least one issue with status `accepted_risk`, which records the failure the user accepted.
+- **Issue status:** issues are created `open` (`factory-state issue`). `factory-state issue-status <id> <I> --status resolved|accepted_risk|escalated --resolution '…'` changes the status, and every status except `open` needs a resolution: the fixing task or file, or the user's decision.
 
 ## 5. Resumability
 

@@ -216,7 +216,13 @@ function guardFailures(m, to, config, { userApproved = false } = {}) {
   if (to === "completed") {
     if (!m.artifacts.finalReport) failures.push("no final report recorded");
     const failed = latestValidation(m).filter((v) => v.status === "failed");
-    if (failed.length) failures.push(`validation failing: ${failed.map((v) => v.command).join(", ")}`);
+    // A failure that predates the workflow may be accepted by the user, but
+    // only explicitly: with --user-approved and an issue recorded as accepted_risk.
+    if (failed.length && !userApproved) {
+      failures.push(`validation failing: ${failed.map((v) => v.command).join(", ")}; if it predates this workflow and the user accepts it, record an issue with status accepted_risk and repeat with --user-approved`);
+    } else if (failed.length && !m.issues.some((i) => i.status === "accepted_risk")) {
+      failures.push(`validation failing: ${failed.map((v) => v.command).join(", ")}; record the accepted failure as an issue with status accepted_risk (factory-state issue-status) before completing`);
+    }
   }
   return failures;
 }
@@ -484,6 +490,23 @@ export function setClassification(m, classification, now = nowIso()) {
   const next = clone(m);
   next.classification = classification;
   if (m.status === "classifying") next.mode = classification.mode;
+  next.updatedAt = now;
+  return assertValid(next);
+}
+
+const ISSUE_STATUSES = new Set(["open", "resolved", "accepted_risk", "escalated"]);
+
+/** Change an issue's status. Anything but reopening needs a resolution (what fixed it, or who accepted it). */
+export function setIssueStatus(m, issueId, status, resolution, now = nowIso()) {
+  if (!ISSUE_STATUSES.has(status)) throw new StateError(`unknown issue status ${status} (open, resolved, accepted_risk, escalated)`);
+  const next = clone(m);
+  const issue = next.issues.find((i) => i.id === issueId);
+  if (!issue) throw new StateError(`unknown issue ${issueId}`);
+  if (status !== "open" && !(resolution && String(resolution).trim())) {
+    throw new StateError(`setting ${issueId} to ${status} needs --resolution: the fix (task, file) or the user's decision`);
+  }
+  issue.status = status;
+  if (resolution && String(resolution).trim()) issue.resolution = String(resolution).trim();
   next.updatedAt = now;
   return assertValid(next);
 }

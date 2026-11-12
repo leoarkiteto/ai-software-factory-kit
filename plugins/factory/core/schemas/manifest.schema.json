@@ -218,6 +218,11 @@
           },
           "taskId": {
             "$ref": "factory/common.schema.json#/$defs/taskId"
+          },
+          "resolution": {
+            "description": "How the issue was resolved, or who accepted the risk and why.",
+            "type": "string",
+            "minLength": 1
           }
         }
       }

@@ -54,6 +54,10 @@ factory-state transition <id> integrating --reason "..."
 ```
 
 - Run any `validation.final` commands that are configured and not yet run since the last change. Record them.
+- **A failure that predates this workflow** (the failing test and the code it exercises are outside `git diff <baseRef>`) blocks completion until the user decides. Record it with `factory-state issue`, show the evidence, and offer two options:
+  - **fix it here**: a scope extension the user approves. Add a task, re-validate, then `factory-state issue-status <id> I<n> --status resolved --resolution 'fixed in T<k>'`;
+  - **accept it**: `factory-state issue-status <id> I<n> --status accepted_risk --resolution 'user accepted: <their words>'`, then complete with `--user-approved`. The CLI refuses completion with failing validation unless both are done.
+- Mark every issue this workflow fixed as `resolved` (`issue-status … --resolution '<task or file>'`), so the manifest matches the final report.
 - Write `.factory/workflows/<id>/final-report.md` from `factory-state guide templates/final-report`. Keep it short for QUICK.
 - `factory-state artifact <id> finalReport .factory/workflows/<id>/final-report.md`
 - `factory-state transition <id> completed --reason "<validation summary>"`
