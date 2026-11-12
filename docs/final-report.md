@@ -1,4 +1,6 @@
-# AI Software Factory Kit v0.1.0: final implementation report
+# AI Software Factory Kit: final implementation report
+
+**Current release: 0.2.0-beta (2026-11-12). See §8 for what beta means and the 1.0 criteria.** Sections 1–7 describe the v0.1.0 build, with the Phase 9 results added.
 
 Date: 2026-11-10. Built against Claude Code 2.1.319–2.1.321. Inputs: `docs/implementation-prompt.md` and `docs/architecture.md`.
 
@@ -102,3 +104,44 @@ See [security and limitations](guide/security.md). In short:
 4. ~~Publish the marketplace to a git host~~: done, at [github.com/leoarkiteto/ai-software-factory-kit](https://github.com/leoarkiteto/ai-software-factory-kit).
 5. Consider worktree isolation (ADR-0007) once base and merge semantics are documented.
 6. Measure: repeated runs per mode with costs, to calibrate the rubric thresholds and the model tiers.
+
+## 8. Release status: 0.2.0-beta and the 1.0 criteria
+
+**0.2.0-beta** means:
+- the kit is fit for daily use by someone who watches what it does;
+- it is not yet a stable tool to hand to a team.
+
+**Evidence for beta.** Phase 9 ([log](research/phase-9-real-project.md)) ran all three modes on a real project with real requests, plus one STANDARD workflow run by the user alone:
+- the classifier was right in every case, including moving a vague request up to FULL-SPEC and a fully specified one down to STANDARD;
+- each result was checked independently: tests, `curl`, and a real browser;
+- no worker worked around a guard, and the final reports stated what was not verified.
+
+**Why not 1.0.**
+- Every Phase 9 run still found new kit defects (3, 3, 2 and 1). They are fixed in 0.1.1–0.1.4, but the rate has not reached zero.
+- The 0.1.2–0.1.4 fixes change agent instructions, which unit tests do not exercise.
+- Important paths have never run in a real session.
+- The sample is one project in one stack (Go), single runs, and one user.
+
+### Criteria for 1.0
+
+Each item needs evidence in `docs/research/`: a session log with costs, and transcript audits for the instruction-level items.
+
+- [ ] **Five consecutive real workflows with no new kit defect,** across all three modes. At least one must be on a TypeScript/React project, and at least one on a monorepo.
+- [ ] **Failure paths exercised on purpose:**
+  - an escalation after `review.maxIterations` rounds, using a planted defect, as in Phase 5;
+  - a task failure followed by retry, then replan.
+- [ ] **The 0.1.2–0.1.4 instruction fixes confirmed in transcripts:**
+  - reviewers run `git` without `-C`;
+  - the read-only snapshot is a plain `git status --porcelain`;
+  - the orchestrator writes code with Write/Edit and uses the project's own targets;
+  - non-required review findings are recorded as issues, and the final report carries the follow-up request;
+  - `cancelled` is used only at the user's request.
+- [ ] **The remaining real-session gaps covered:**
+  - the devops worker;
+  - `/factory:init` run interactively;
+  - a hook deny under `bypassPermissions`;
+  - a repository without git (supported, or refused with a clear message).
+- [ ] **Someone other than the author installs and uses the kit** from the README and guides alone, including a team rollout through `extraKnownMarketplaces`. Every point where they get stuck is fixed in the docs.
+
+When all items are checked, release 1.0.0. Any new kit defect found along the way resets the five-run count.
+
