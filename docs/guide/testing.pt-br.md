@@ -19,6 +19,7 @@ O kit é testado em três níveis. Cada um diz algo diferente sobre se ele funci
 | `tests/installer.test.mjs` | inspect, plan, apply vinculado ao hash, conflitos, idempotência, atualização, remoção, CLI `factory-install` |
 | `tests/plugin.test.mjs` | frontmatter de skills e agentes, referências de guias, nenhum caminho do plugin fixo no código |
 | `tests/evals.test.mjs` | estrutura da suíte de evals e sincronização das fixtures |
+| `tests/docs-i18n.test.mjs` | cada guia tem sua versão pt-br, seletores de idioma, links relativos e âncoras nos dois idiomas |
 
 Execute também `claude plugin validate .` (manifest e marketplace) e `node scripts/sync-eval-fixtures.mjs --check`.
 

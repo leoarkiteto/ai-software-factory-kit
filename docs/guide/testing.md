@@ -19,6 +19,7 @@ The kit is tested at three levels. Each one says something different about wheth
 | `tests/installer.test.mjs` | inspect, plan, hash-bound apply, conflicts, idempotency, update, removal, `factory-install` CLI |
 | `tests/plugin.test.mjs` | skill and agent frontmatter, guide references, no hard-coded plugin paths |
 | `tests/evals.test.mjs` | eval suite structure and fixture sync |
+| `tests/docs-i18n.test.mjs` | every guide has its pt-br version, language switchers, relative links and anchors in both languages |
 
 Also run `claude plugin validate .` (manifest and marketplace) and `node scripts/sync-eval-fixtures.mjs --check`.
 
