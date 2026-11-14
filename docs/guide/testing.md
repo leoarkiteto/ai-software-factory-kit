@@ -47,7 +47,7 @@ claude plugin eval . --tag smoke --allow-tools Bash Read Glob Grep \
 
 ## 3. Real-session scenarios
 
-Phases 4 to 6 ran the plugin as installed, in headless `claude -p` sessions, against scratch repositories. Phase 9 ran it on a real project (a Go + templ + HTMX + SQLite app) for a real feature. The logs, with costs, are in `docs/research/phase-{4,5,6}-scenarios.md` and `docs/research/phase-9-real-project.md`.
+Phases 4 to 6 ran the plugin as installed, in headless `claude -p` sessions, against scratch repositories. Phase 9 ran it on a real project (a Go + templ + HTMX + SQLite app) for a real feature, Phase 10 compared providers on a second project, and Phase 11 ran it on a real monorepo (Expo/React Native + Go). The logs, with costs, are in `docs/research/`.
 
 | Exercised for real | Only in deterministic tests so far |
 |---|---|
