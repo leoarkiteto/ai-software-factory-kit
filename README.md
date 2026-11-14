@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](README.pt-br.md)
+
 # AI Software Factory Kit
 
 A Claude Code plugin that runs development requests through a workflow sized to the task:
@@ -63,6 +65,8 @@ gh issue view 12 --json number,title,body,url \
 - The kit never comments on, closes or changes a ticket. When the workflow completes, update the ticket yourself, or ask Claude afterwards, outside the workflow (for example: "comment the final report summary on issue #12").
 
 ## Documentation
+
+The guides below are also available in Brazilian Portuguese (`*.pt-br.md`, next to each English file).
 
 | Guide | |
 |---|---|

@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](security.pt-br.md)
+
 # Security and limitations
 
 ## What protects you, in order of strength
