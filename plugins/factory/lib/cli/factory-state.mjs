@@ -394,13 +394,23 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         for (const k of ["requested", "used", "status", "version", "evidence", "note"]) {
           if (typeof flags[k] === "string") value[k] = flags[k] === "null" ? null : flags[k];
         }
+        // "requested" is what the configuration asks for, read now: a value the
+        // model carried over from an earlier `providers` call can be stale.
         const m0p = load(requireId());
+        const configured = config[which].provider;
+        let requestedNote = "";
+        if (value.requested !== undefined || m0p.providers[which].requested == null) {
+          if (value.requested !== undefined && value.requested !== configured) {
+            requestedNote = ` (--requested ${value.requested} ignored: .factory/config.json sets ${which}.provider to ${configured})`;
+          }
+          value.requested = configured;
+        }
         const merged = { ...m0p.providers[which], ...value };
         if (merged.status === "completed" && merged.used && !merged.evidence) {
           throw new S.StateError(`recording ${which} provider "${merged.used}" as completed requires --evidence (what shows it actually ran)`);
         }
         const m = save(S.setProvider(m0p, which, value));
-        out(`${which}: ${JSON.stringify(m.providers[which])}`, m.providers[which]);
+        out(`${which}: ${JSON.stringify(m.providers[which])}${requestedNote}`, m.providers[which]);
         return 0;
       }
       case "artifact": {

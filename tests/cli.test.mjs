@@ -252,6 +252,28 @@ test("providers command reports detection without side effects", () => {
   assert.ok("available" in r.data.discovery.grillWithDocs);
 });
 
+test("provider records requested from the current config, not a stale --requested", () => {
+  // Phase 11: the config changed mid-session and the orchestrator reused an
+  // earlier `providers` output, recording "auto" while the config said "local".
+  const { data } = json(["new", "--title", "Stale provider", "--request", "x"]);
+  mkdirSync(join(repo, ".factory"), { recursive: true });
+  writeFileSync(join(repo, ".factory", "config.json"), JSON.stringify({ schemaVersion: 1, specification: { provider: "local" } }));
+  try {
+    const r = fs(["provider", data.id, "specification", "--requested", "auto", "--status", "in_progress"]);
+    assert.equal(r.code, 0);
+    assert.match(r.out, /--requested auto ignored/);
+    const m = JSON.parse(readFileSync(join(repo, ".factory", "workflows", data.id, "manifest.json"), "utf8"));
+    assert.equal(m.providers.specification.requested, "local");
+    // Omitting --requested on a later call keeps the recorded value.
+    fs(["provider", data.id, "specification", "--used", "local", "--status", "completed", "--evidence", "local template"]);
+    const m2 = JSON.parse(readFileSync(join(repo, ".factory", "workflows", data.id, "manifest.json"), "utf8"));
+    assert.equal(m2.providers.specification.requested, "local");
+    assert.equal(m2.providers.specification.used, "local");
+  } finally {
+    rmSync(join(repo, ".factory", "config.json"));
+  }
+});
+
 test("guide serves core procedures and refuses traversal", () => {
   assert.match(fs(["guide"]).out, /workflows\/quick/);
   assert.match(fs(["guide", "workflows/quick"]).out, /^# QUICK Workflow/);

@@ -57,6 +57,8 @@ When a worker returns:
    | `partial` or `failed` | `factory-state task <id> <T> --status failed --result "<summary>"` |
    | `blocked` | `factory-state task <id> <T> --status blocked --blocked-reason "<blockedReason>"`. If the reason is a decision only the user can make, ask them (`block --kind user_input`). |
 
+   When the user resolves a blocked task (grants a permission, makes the decision, fixes the environment), set it back with `factory-state task <id> <T> --status pending` and dispatch it **to its worker** again, with the user's answer in the brief. Do not run the blocked task's commands yourself: you would act outside its brief and its report.
+
 5. **Retry.** A failed task with failures left comes back from `next` as `retry_tasks`. The next brief must say what went wrong.
 
 ## Failures and replanning

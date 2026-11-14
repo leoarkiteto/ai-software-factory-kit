@@ -2,7 +2,7 @@
 
 This walkthrough adopts the kit in a monorepo that is already in development, then delivers an SSO authentication and authorization feature with it. For the commands you type in each mode, see [use cases](use-cases.md).
 
-> The kit has not yet been exercised on a monorepo like this one. The steps follow what the code and the procedures do. `/factory:init` is covered by unit tests but has not run in a real session yet; step A3 gives the manual fallback.
+> Phase 11 ran two FULL-SPEC workflows on a real monorepo of this shape (Expo/React Native + Go): see the [log](../research/phase-11-monorepo.md). Steps A2 and A5 include what it taught.
 
 Assumed layout:
 
@@ -44,6 +44,18 @@ build:
 ```
 
 `init` then detects `make test`, `make lint`, `make typecheck` and `make build`. If the root also has a `package.json` with scripts (workspaces), those take precedence over the Makefile. Check what is detected when `init` asks.
+
+Without a root Makefile, `init` detects nothing, because no manifest is at the root. Give it the commands yourself, using each tool's own option to reach a sub-project, never `cd`:
+
+```json
+"commands": {
+  "test": "go -C api test ./...",
+  "lint": "go -C api vet ./...",
+  "typecheck": "npm exec --workspace=mobile -- tsc --noEmit"
+}
+```
+
+Each kind holds one command, so with this layout `test` covers only `api/`. Add the mobile tests with a Makefile when they exist.
 
 ### A3. Set up the repository
 
@@ -94,7 +106,10 @@ Workers follow `CLAUDE.md`. Put the essentials at the root:
 - api/: Go 1.22, chi router, Postgres (sqlc). Tests: go test ./...
 - mobile/: React Native 0.76 + TypeScript, React Navigation, Jest.
 - Conventions: handlers in api/internal/http/, domain logic in api/internal/<domain>/; screens in mobile/src/screens/.
+- Dependencies: install from the sub-project, isolated (`npm install --workspaces=false` inside mobile/, `npx expo install …` likewise). The lockfile is mobile/package-lock.json; there is no root lockfile or node_modules.
 ```
+
+**Say how dependencies are installed.** This is the line that matters most. If the root `package.json` declares `workspaces`, npm and `expo install` treat the root as the workspace by themselves: they create a root `package-lock.json` and `node_modules` and empty the sub-project's `node_modules`. In Phase 11 that split the dependencies and broke the typecheck. Either state the install command as above, or remove `workspaces` from the root if the project does not really use them.
 
 With this, the plan can give each task its own set of files (`api/**` for backend, `mobile/**` for mobile). The scheduler runs tasks **in parallel** only when their files do not overlap.
 
