@@ -165,6 +165,36 @@ test("removal deletes a settings file the Factory created when nothing else is l
   assert.ok(!has(".factory/install.json"), "receipt removed once empty");
 });
 
+test("discovery-permissions: user-scope skill gets a read rule alongside settings-permissions; removal undoes both", () => {
+  const home = mkdtempSync(join(tmpdir(), "factory-install-home-"));
+  try {
+    const opts = { components: ["settings-permissions", "discovery-permissions"], home };
+    let p = I.plan(repo, opts);
+    assert.equal(p.actions.find((a) => a.component === "discovery-permissions").action, "skip", "skill absent: nothing to allow");
+    mkdirSync(join(home, ".claude/skills/domain-modeling"), { recursive: true });
+    writeFileSync(join(home, ".claude/skills/domain-modeling/SKILL.md"), "x");
+    assert.equal(I.discoverySkill(repo, home).rule, "Read(~/.claude/skills/domain-modeling/**)");
+
+    w(".claude/settings.local.json", JSON.stringify({ permissions: { allow: ["Bash(npm test)"] } }));
+    p = I.plan(repo, opts);
+    assert.deepEqual(p.actions.map((a) => a.action), ["add-entries", "add-entries"]);
+    I.apply(repo, p);
+    assert.deepEqual(JSON.parse(r(".claude/settings.local.json")).permissions.allow,
+      ["Bash(npm test)", ...I.ALLOW_RULES, "Read(~/.claude/skills/domain-modeling/**)"], "both components' entries survive in one file");
+    assert.ok(I.status(repo).entries.every((e) => e.state === "intact"));
+    assert.ok(I.plan(repo, opts).actions.every((a) => a.action === "skip"), "idempotent");
+
+    I.applyRemoval(repo, I.removalPlan(repo));
+    assert.deepEqual(JSON.parse(r(".claude/settings.local.json")), { permissions: { allow: ["Bash(npm test)"] } });
+
+    mkdirSync(join(repo, ".claude/skills/domain-modeling"), { recursive: true });
+    writeFileSync(join(repo, ".claude/skills/domain-modeling/SKILL.md"), "x");
+    assert.match(I.plan(repo, opts).actions.find((a) => a.component === "discovery-permissions").reason, /inside the repository/);
+  } finally {
+    rmSync(home, { recursive: true, force: true });
+  }
+});
+
 test("an invalid receipt is a clean rejection", () => {
   w(".factory/install.json", '{"schemaVersion":1}');
   assert.throws(() => I.plan(repo, ALL), I.InstallError);

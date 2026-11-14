@@ -52,6 +52,7 @@ Run `/factory:init` inside Claude Code in the target repository. It:
 | `gitignore-block` | marked block in `.gitignore` ignoring `.factory/workflows/` | recommended |
 | `settings-permissions` | adds `Bash(factory-state *)` and `Edit(/.factory/**)` to `.claude/settings.local.json` (or `.claude/settings.json`) | recommended |
 | `settings-permissions` with deny rules | adds `Read(./.env)`, `Read(./.env.*)`, `Read(./**/*.pem)`, `Read(./**/*.key)`, `Read(./**/secrets/**)` and `Bash(git push *)` to `permissions.deny`. They apply in **every** session | optional |
+| `discovery-permissions` | adds `Read(~/.claude/skills/domain-modeling/**)` to the same settings file, so `/grill-with-docs` can read its format files (`GLOSSARY-FORMAT.md`, `ADR-FORMAT.md`) without asking. Read only; writing `GLOSSARY.md` and `docs/adr/` still asks. Skipped when the skill is in the repository (no rule needed) or not in `~/.claude/skills/` | optional; offered when `/grill-with-docs` is installed in user scope |
 | `rules` | `.claude/rules/factory-workflow.md`: short standing instructions | optional |
 | `claude-md-block` | marked block in `CLAUDE.md` | optional; prefer `rules` |
 

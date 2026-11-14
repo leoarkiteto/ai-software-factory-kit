@@ -43,6 +43,7 @@ Run `factory-install status` and `factory-install verify`, report the result, an
      - `config` (recommended);
      - `gitignore-block`: ignores `.factory/workflows/`; recommended unless the team wants to commit workflow history;
      - `settings-permissions` (recommended);
+     - `discovery-permissions`: lets `/grill-with-docs` read its format files (`GLOSSARY-FORMAT.md`, `ADR-FORMAT.md`) in `~/.claude/skills/domain-modeling/` without a prompt. Offer it only when `inspect` says it would add a rule; read only;
      - `rules`: `.claude/rules/factory-workflow.md`, optional;
      - `claude-md-block`: a short block in `CLAUDE.md`, optional; the rules file is preferred.
    - **Where the permission rules go:**
@@ -60,6 +61,8 @@ Run `factory-install status` and `factory-install verify`, report the result, an
    Show the printed plan as it is, including its hash. State plainly that the plan adds these two allow rules, and why: "skill-level pre-approval ends when workers return, so recording results would otherwise prompt each time" (ADR-0010).
    - `Bash(factory-state *)`
    - `Edit(/.factory/**)`
+
+   If `discovery-permissions` was chosen, also state the rule it adds and that it only allows reading the domain-modeling skill's files.
 4. **Approve.** Ask whether to apply exactly this plan. If the user wants changes, go back to step 3.
 5. **Apply.** Run `factory-install apply --plan-hash <hash>` with **the same choices**. If it is rejected because the plan changed, show the new plan and ask again.
 6. **Report.**

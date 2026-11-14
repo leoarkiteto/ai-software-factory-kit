@@ -22,6 +22,7 @@ The plugin works without `init`. It falls back to the defaults and creates `.fac
 | `rules` | `.claude/rules/factory-workflow.md` | whole file | optional |
 | `claude-md-block` | `CLAUDE.md` | marked block | **off**; the rules file is preferred because it needs no edit to `CLAUDE.md` |
 | `settings-permissions` | `.claude/settings.json` (or `.local.json`, user's choice) | specific array entries: **allow** `Bash(factory-state *)` and `Edit(/.factory/**)` (needed for delegated workflows, ADR-0010), plus optional **deny** entries for protected paths and push/deploy | proposed (allow), optional (deny) |
+| `discovery-permissions` | same settings file as `settings-permissions` | one **allow** entry, `Read(~/.claude/skills/domain-modeling/**)`, so `/grill-with-docs` reads `GLOSSARY-FORMAT.md` and `ADR-FORMAT.md` without a prompt. Only when that skill is in user scope; a project-scope skill needs no rule, and a plugin install is skipped with a note | optional |
 
 Marked blocks use comment delimiters:
 

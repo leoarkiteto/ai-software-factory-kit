@@ -9,16 +9,18 @@
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, rmdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
+import { homedir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { execFileSync } from "node:child_process";
 import { schemas, schemaId, resolveConfig, loadDefaults } from "./contracts.mjs";
 
 const PLUGIN_ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 export const RECEIPT = ".factory/install.json";
-export const COMPONENTS = ["config", "gitignore-block", "settings-permissions", "rules", "claude-md-block"];
+export const COMPONENTS = ["config", "gitignore-block", "settings-permissions", "discovery-permissions", "rules", "claude-md-block"];
 export const DEFAULT_COMPONENTS = ["config", "gitignore-block", "settings-permissions"];
 export const ALLOW_RULES = ["Bash(factory-state *)", "Edit(/.factory/**)"];
 export const DENY_RULES = ["Read(./.env)", "Read(./.env.*)", "Read(./**/*.pem)", "Read(./**/*.key)", "Read(./**/secrets/**)", "Bash(git push *)"];
+const DISCOVERY_SKILL = "domain-modeling";
 const COMMAND_KINDS = ["format", "lint", "typecheck", "test", "build"];
 
 const MD_BEGIN = "<!-- factory:begin v1 -->";
@@ -125,7 +127,10 @@ function listNames(dir, ext) {
 }
 
 function parseJsonFile(root, rel) {
-  const text = read(root, rel);
+  return parseJsonText(read(root, rel));
+}
+
+function parseJsonText(text) {
   if (text === null) return { exists: false };
   try {
     const value = JSON.parse(text);
@@ -144,6 +149,22 @@ export function loadReceipt(root) {
   const errors = schemas().validate(schemaId("install-receipt"), receipt);
   if (errors.length) throw new InstallError(`${RECEIPT} is invalid: ${errors.map((e) => `${e.path} ${e.message}`).join("; ")}`);
   return receipt;
+}
+
+/**
+ * Where /grill-with-docs reads its format files from (GLOSSARY-FORMAT.md, ADR-FORMAT.md):
+ * the domain-modeling skill directory. Returns { scope, rule?, note }.
+ * Only the user scope needs a rule: reads inside the repository need no approval,
+ * and a plugin's install directory is not known here.
+ */
+export function discoverySkill(root, home = homedir()) {
+  if (existsSync(join(root, ".claude", "skills", DISCOVERY_SKILL, "SKILL.md"))) {
+    return { scope: "project", note: `.claude/skills/${DISCOVERY_SKILL}/ is inside the repository; reading it needs no rule` };
+  }
+  if (existsSync(join(home, ".claude", "skills", DISCOVERY_SKILL, "SKILL.md"))) {
+    return { scope: "user", rule: `Read(~/.claude/skills/${DISCOVERY_SKILL}/**)`, note: `found in ~/.claude/skills/${DISCOVERY_SKILL}/` };
+  }
+  return { scope: null, note: `${DISCOVERY_SKILL} skill not found in project or user skills; for a plugin install, add a Read rule for its directory by hand` };
 }
 
 export function inspect(root) {
@@ -170,6 +191,7 @@ export function inspect(root) {
     specKit: existsSync(join(root, ".specify")),
     glossary: existsSync(join(root, "GLOSSARY.md")),
     adrs: existsSync(join(root, "docs", "adr")),
+    discoverySkill: discoverySkill(root),
     factory: {
       exists: existsSync(join(root, ".factory")),
       config: existsSync(join(root, ".factory", "config.json")),
@@ -240,7 +262,7 @@ function indentOf(text) {
 
 /**
  * Build the change plan.
- * options: { components?, settings?: "local"|"shared", deny?: bool, commands?: {kind: cmd} }
+ * options: { components?, settings?: "local"|"shared", deny?: bool, commands?: {kind: cmd}, home? }
  * Each action: { component, path, ownership, action, reason, preview, next?, entries?, blockBody?, conflict? }
  * action ∈ create | insert-block | update-block | add-entries | update | skip
  */
@@ -263,6 +285,36 @@ export function plan(root, options = {}) {
     return actions.push({ component, path, ownership: "file", action: "update", reason: "Factory-owned and unmodified; the kit template changed", preview: content, next: content });
   };
 
+  // Several components may add entries to the same settings file: each builds on the
+  // previous one's result, so the last write carries all of them.
+  const pending = {};
+  const entries = (component, path, want, note) => {
+    const text = pending[path] ?? read(root, path);
+    const parsed = parseJsonText(text);
+    if (parsed.error) return actions.push({ component, path, ownership: "entries", action: "skip", conflict: "malformed-settings", reason: `cannot parse: ${parsed.error}`, preview: "" });
+    const settings = parsed.value ?? {};
+    const perms = settings.permissions ?? {};
+    if (typeof perms !== "object" || Array.isArray(perms)) return actions.push({ component, path, ownership: "entries", action: "skip", conflict: "malformed-settings", reason: "permissions is not an object", preview: "" });
+    const add = {};
+    for (const key of ["allow", "deny"]) {
+      const have = perms[key] ?? [];
+      if (!Array.isArray(have)) return actions.push({ component, path, ownership: "entries", action: "skip", conflict: "malformed-settings", reason: `permissions.${key} is not an array`, preview: "" });
+      add[key] = want[key].filter((r) => !have.includes(r));
+    }
+    const list = [...add.allow.map((r) => `allow:${r}`), ...add.deny.map((r) => `deny:${r}`)];
+    if (!list.length) return actions.push({ component, path, ownership: "entries", action: "skip", reason: "entries already present", preview: "" });
+    const next = structuredClone(settings);
+    next.permissions = { ...perms };
+    for (const key of ["allow", "deny"]) if (add[key].length) next.permissions[key] = [...(perms[key] ?? []), ...add[key]];
+    const preview = list.map((e) => `+ permissions.${e.replace(":", ": ")}`).join("\n");
+    pending[path] = `${JSON.stringify(next, null, indentOf(text))}\n`;
+    return actions.push({
+      component, path, ownership: "entries", action: "add-entries", entries: list,
+      reason: `${text !== null ? "add entries to the existing file; other keys unchanged" : "new settings file"}${note(perms)}`,
+      preview, next: pending[path],
+    });
+  };
+
   const block = (component, path, begin, end, body) => {
     const current = read(root, path);
     const entry = owned(path);
@@ -282,32 +334,18 @@ export function plan(root, options = {}) {
       case "gitignore-block": block(component, ".gitignore", GI_BEGIN, GI_END, gitignoreBody()); break;
       case "claude-md-block": block(component, "CLAUDE.md", MD_BEGIN, MD_END, claudeMdBody()); break;
       case "settings-permissions": {
-        const path = settingsPath(options.settings ?? "local");
-        const parsed = parseJsonFile(root, path);
-        if (parsed.error) { actions.push({ component, path, ownership: "entries", action: "skip", conflict: "malformed-settings", reason: `cannot parse: ${parsed.error}`, preview: "" }); break; }
-        const settings = parsed.value ?? {};
-        const perms = settings.permissions ?? {};
-        if (typeof perms !== "object" || Array.isArray(perms)) { actions.push({ component, path, ownership: "entries", action: "skip", conflict: "malformed-settings", reason: "permissions is not an object", preview: "" }); break; }
         const want = { allow: ALLOW_RULES, deny: options.deny ? DENY_RULES : [] };
-        const add = {};
-        for (const key of ["allow", "deny"]) {
-          const have = perms[key] ?? [];
-          if (!Array.isArray(have)) { add.error = `permissions.${key} is not an array`; break; }
-          add[key] = want[key].filter((r) => !have.includes(r));
-        }
-        if (add.error) { actions.push({ component, path, ownership: "entries", action: "skip", conflict: "malformed-settings", reason: add.error, preview: "" }); break; }
-        const entries = [...add.allow.map((r) => `allow:${r}`), ...add.deny.map((r) => `deny:${r}`)];
-        const conflictingDeny = (perms.deny ?? []).filter((r) => ALLOW_RULES.includes(r));
-        if (!entries.length) { actions.push({ component, path, ownership: "entries", action: "skip", reason: "entries already present", preview: "" }); break; }
-        const next = structuredClone(settings);
-        next.permissions = { ...perms };
-        for (const key of ["allow", "deny"]) if (add[key].length) next.permissions[key] = [...(perms[key] ?? []), ...add[key]];
-        const preview = entries.map((e) => `+ permissions.${e.replace(":", ": ")}`).join("\n");
-        actions.push({
-          component, path, ownership: "entries", action: "add-entries", entries,
-          reason: `${parsed.exists ? "add entries to the existing file; other keys unchanged" : "new settings file"}${conflictingDeny.length ? `; NOTE: your deny rules ${conflictingDeny.join(", ")} still win` : ""}`,
-          preview, next: `${JSON.stringify(next, null, indentOf(read(root, path)))}\n`,
+        entries(component, settingsPath(options.settings ?? "local"), want, (perms) => {
+          const conflictingDeny = (perms.deny ?? []).filter((r) => ALLOW_RULES.includes(r));
+          return conflictingDeny.length ? `; NOTE: your deny rules ${conflictingDeny.join(", ")} still win` : "";
         });
+        break;
+      }
+      case "discovery-permissions": {
+        const path = settingsPath(options.settings ?? "local");
+        const found = discoverySkill(root, options.home);
+        if (!found.rule) { actions.push({ component, path, ownership: "entries", action: "skip", reason: found.note, preview: "" }); break; }
+        entries(component, path, { allow: [found.rule], deny: [] }, () => `; lets /grill-with-docs read its format files (${found.note})`);
         break;
       }
     }
@@ -414,6 +452,7 @@ function entryState(root, e) {
 export function removalPlan(root) {
   const { installed, entries } = status(root);
   if (!installed) return { kind: "remove", actions: [], hash: planHash([]) };
+  const pending = {};
   const actions = entries.map((e) => {
     const base = { component: e.component, path: e.path, ownership: e.ownership };
     if (e.state === "missing") return { ...base, action: "forget", reason: "already gone; drop from the receipt", preview: "" };
@@ -425,7 +464,7 @@ export function removalPlan(root) {
       const next = withoutBlock(text, begin, end);
       return { ...base, action: next.trim() ? "remove-block" : "delete", reason: "remove the Factory block and its markers", preview: "", next: next.trim() ? next : null };
     }
-    const settings = JSON.parse(text);
+    const settings = JSON.parse(pending[e.path] ?? text);
     const removed = [];
     for (const x of e.addedEntries ?? []) {
       const [key, ...rest] = x.split(":");
@@ -439,6 +478,7 @@ export function removalPlan(root) {
     }
     if (settings.permissions && !Object.keys(settings.permissions).length) delete settings.permissions;
     const empty = !Object.keys(settings).length;
+    pending[e.path] = empty ? "{}" : `${JSON.stringify(settings, null, indentOf(text))}\n`;
     return { ...base, action: empty ? "delete" : "remove-entries", reason: `remove ${removed.join(", ")}`, preview: removed.map((x) => `- permissions.${x.replace(":", ": ")}`).join("\n"), next: empty ? null : `${JSON.stringify(settings, null, indentOf(text))}\n` };
   });
   return { kind: "remove", actions, hash: planHash(actions) };
