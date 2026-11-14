@@ -19,7 +19,7 @@
         "required": ["path", "component", "ownership", "sha256"],
         "properties": {
           "path": { "$ref": "factory/common.schema.json#/$defs/relativePath" },
-          "component": { "enum": ["config", "rules", "claude-md-block", "gitignore-block", "settings-permissions"] },
+          "component": { "enum": ["config", "rules", "claude-md-block", "gitignore-block", "settings-permissions", "discovery-permissions"] },
           "ownership": {
             "description": "file: the Factory created the whole file. block: the Factory owns only a marked block inside a user file. entries: the Factory added specific JSON array entries.",
             "enum": ["file", "block", "entries"]

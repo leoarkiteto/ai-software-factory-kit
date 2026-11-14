@@ -26,7 +26,7 @@ Workflows that delegate to workers need two allow rules in your project settings
 `factory-state` only writes validated workflow state under `.factory/`, and also serves the plugin's procedures (`factory-state guide`). Without these rules, Claude Code asks each time.
 
 Optional integrations need their own access:
-- `/grill-with-docs` reads its format files from where it is installed (for example `~/.claude/skills/domain-modeling/`), and writes `GLOSSARY.md` and `docs/adr/`.
+- `/grill-with-docs` reads its format files from where it is installed (for example `~/.claude/skills/domain-modeling/`), and writes `GLOSSARY.md` and `docs/adr/`. For a user-scope install, `/factory:init` offers the optional `discovery-permissions` component, which adds `Read(~/.claude/skills/domain-modeling/**)`.
 - Spec Kit's `speckit-specify` writes `specs/` and `.specify/feature.json`.
 
 ## Safety hooks

@@ -87,6 +87,7 @@ export async function run(argv) {
           `Settings: shared ${describe(r.settings.shared)}; local ${describe(r.settings.local)}`,
           `Repo agents named like Factory roles: ${r.agentNameCollisions.join(", ") || "none"} (Factory agents are namespaced factory:*, so this is informational)`,
           `Spec Kit: ${r.specKit ? "present" : "absent"}; GLOSSARY.md: ${r.glossary ? "present" : "absent"}; docs/adr/: ${r.adrs ? "present" : "absent"}`,
+          `Discovery format files (domain-modeling skill): ${r.discoverySkill.note}${r.discoverySkill.rule ? `; discovery-permissions would add ${r.discoverySkill.rule}` : ""}`,
           `.factory/: ${r.factory.exists ? `present (config ${r.factory.config ? "yes" : "no"}, ${r.factory.workflows} workflow(s), receipt ${r.factory.receipt ? "yes" : "no"})` : "absent"}`,
           `Kit version: ${r.kitVersion}`,
         ].join("\n");
