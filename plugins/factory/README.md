@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](README.pt-br.md)
+
 # factory: AI Software Factory plugin for Claude Code
 
 Classifies development requests into **QUICK**, **STANDARD** or **FULL-SPEC** workflows and runs them with tracked, validated state in `.factory/` inside your repository.

@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](testing.pt-br.md)
+
 # Testing
 
 The kit is tested at three levels. Each one says something different about whether it works.

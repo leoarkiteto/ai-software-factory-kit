@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](monorepo-walkthrough.pt-br.md)
+
 # Walkthrough: a React Native + Go monorepo, and an SSO feature
 
 This walkthrough adopts the kit in a monorepo that is already in development, then delivers an SSO authentication and authorization feature with it. For the commands you type in each mode, see [use cases](use-cases.md).

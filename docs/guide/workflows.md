@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](workflows.pt-br.md)
+
 # Workflow diagrams
 
 These diagrams follow the runtime procedures in `plugins/factory/core/workflows/` (`quick.md`, `standard.md`, `full-spec.md`, `execution.md`, `review.md`). If a diagram and a procedure disagree, the procedure is right.

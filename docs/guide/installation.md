@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](installation.pt-br.md)
+
 # Installation
 
 The kit has two layers (contract: [installation.md](../contracts/installation.md)).

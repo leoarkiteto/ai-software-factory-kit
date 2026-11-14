@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](configuration.pt-br.md)
+
 # Configuration
 
 Per repository: `.factory/config.json`. Every section is optional; omitted values come from `plugins/factory/core/defaults.json`. Schema: `plugins/factory/core/schemas/config.schema.json`. Reference contract: [configuration.md](../contracts/configuration.md).

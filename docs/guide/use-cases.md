@@ -1,3 +1,5 @@
+**English** · [Português (Brasil)](use-cases.pt-br.md)
+
 # Use cases: what the developer types in each mode
 
 The three examples below use the same React Native + Go monorepo as the [walkthrough](monorepo-walkthrough.md), already set up with `/factory:init`. Each one shows:
