@@ -475,9 +475,12 @@ export function setProvider(m, which, value, now = nowIso()) {
   return assertValid(next);
 }
 
+// Artifact kinds that accumulate several paths instead of being replaced.
+const LIST_ARTIFACTS = new Set(["adrs", "research"]);
+
 export function setArtifact(m, kind, path, now = nowIso()) {
   const next = clone(m);
-  if (kind === "adrs") next.artifacts.adrs = [...new Set([...(next.artifacts.adrs ?? []), ...[].concat(path)])];
+  if (LIST_ARTIFACTS.has(kind)) next.artifacts[kind] = [...new Set([...(next.artifacts[kind] ?? []), ...[].concat(path)])];
   else next.artifacts[kind] = path;
   next.updatedAt = now;
   return assertValid(next);

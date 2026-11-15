@@ -26,6 +26,7 @@
 
 ## Constraints and conventions
 - <task constraints>
+- Research: <for each research note the task relies on: `.factory/workflows/<id>/research/R<n>.md` and the answers it needs, quoted. These notes reflect the current docs for the pinned versions; follow them over your own memory of the API, and record in `limitations` anything that contradicts them. Or "none">
 - Follow: <pointers to CLAUDE.md / rules sections / style examples>
 
 ## Validation commands you may run

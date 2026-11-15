@@ -15,6 +15,9 @@
 ## Plan
 <path to plan.md, plus a 3–5 line summary of the approach>
 
+## Research notes
+<paths in `manifest.artifacts.research` (`.factory/workflows/<id>/research/R<n>.md`), each with its topic and the dependency versions it covers; check the change against them. Or "none">
+
 ## Change
 - Files changed per worker reports: <list>
 - New (untracked) files: <list from git status>; read these, since they are not in `git diff`

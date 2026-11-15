@@ -382,3 +382,14 @@ test("next action distinguishes retry from replan", () => {
   m = S.updateTask(m, "T1", { status: "failed" }, config);
   assert.equal(S.nextAction(m, config).action, "replan", "budget exhausted");
 });
+
+test("researchers cannot take DAG tasks, and research notes accumulate as a list", () => {
+  let m = go(classified("standard"), "planning");
+  m = S.setTasks(m, [task("T1", [], ["a/**"], "research-worker")]);
+  assert.match(S.validatePlan(m, config).map((e) => e.message).join("\n"), /research-worker is not a worker/);
+
+  m = S.setArtifact(m, "research", ".factory/workflows/x/research/R1.md");
+  m = S.setArtifact(m, "research", ".factory/workflows/x/research/R2.md");
+  m = S.setArtifact(m, "research", ".factory/workflows/x/research/R1.md");
+  assert.deepEqual(m.artifacts.research, [".factory/workflows/x/research/R1.md", ".factory/workflows/x/research/R2.md"]);
+});

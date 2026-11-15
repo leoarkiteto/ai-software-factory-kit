@@ -29,6 +29,7 @@ For each task ID:
    - the manifest and `plan.md`;
    - the spec excerpts for `requirementRefs`;
    - the dependency results, taken from their reports in `.factory/workflows/<id>/reports/`;
+   - the research notes the task relies on (`manifest.artifacts.research`), by path, with the answers it needs quoted;
    - for a rework attempt, the review findings for this task.
 
    Quote requirements verbatim. Do not paste whole files into the brief: point to paths.

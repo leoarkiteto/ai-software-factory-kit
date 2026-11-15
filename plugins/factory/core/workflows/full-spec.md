@@ -26,6 +26,7 @@ Follow `factory-state guide workflows/specification`. Choose a provider (Spec Ki
 
 `factory-state transition <id> planning --reason "spec approved by user"`
 
+- If the approach depends on an external framework or library whose current documentation matters, research it first: `factory-state guide workflows/research`.
 - Write `plan.md` from `factory-state guide templates/plan`. With Spec Kit, extend the `plan.md` you started in specification and keep its supplements and mapping sections. Define interfaces and contracts **before** the tasks that use them, so that parallel tasks have a stable contract.
 - Decompose the plan (`factory-state guide workflows/decomposition`). Every `FR` must be referenced by at least one task.
 - **Plan review:** follow "Plan review" in `factory-state guide workflows/review` (`factory-state plan-review`). Resolve required findings before asking for approval.

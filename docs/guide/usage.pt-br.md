@@ -39,6 +39,8 @@ Os **workers** rodam como subagentes, com um brief que lista seus arquivos, crit
 
 Por padrão usam Sonnet. Os **revisores** (`factory:code-reviewer`, `factory:architecture-reviewer`) usam Opus por padrão e nunca revisam o próprio trabalho. Altere os modelos em [configuração](configuration.pt-br.md).
 
+**Pesquisa.** Quando o trabalho depende de uma API de framework ou biblioteca que muda entre versões (por exemplo, cache no Next.js), o orquestrador pode antes enviar perguntas concretas ao `factory:research-worker`. Ele usa Haiku por padrão, apenas lê o repositório e a web, fixa as versões a partir do seu manifest e lockfile e devolve uma nota com as fontes. A nota é salva em `.factory/workflows/<id>/research/` e suas conclusões chegam aos workers pelos briefs; os próprios workers nunca usam a web. O Claude Code pede sua permissão para as buscas e acessos à web, como de costume. Se você usa o servidor MCP [Context7](https://github.com/upstash/context7), registre-o com o nome `context7` e o pesquisador o usa para achar a API certa mais rápido; ele ainda confirma cada resposta na documentação oficial, porque o conteúdo do Context7 é mantido pela comunidade. O kit não instala o Context7. Para desligar a pesquisa, defina `"roles": { "research-worker": { "enabled": false } }`.
+
 ## Pausar e retomar
 
 Um workflow para e diz exatamente o que precisa quando:
