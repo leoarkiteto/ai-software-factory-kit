@@ -158,3 +158,17 @@ test("reviewer contract shows exactly the schema's keys for coverage items and f
     assert.deepEqual(proseKeys(name), schemaKeys(name), `${name}: prose keys`);
   }
 });
+
+test("the research-worker is a read-only researcher on the light tier", () => {
+  const defaults = loadDefaults();
+  const role = defaults.roles["research-worker"];
+  assert.deepEqual(role, { agent: "factory:research-worker", kind: "researcher", model: "light", enabled: true });
+  assert.equal(resolveModel(defaults, "research-worker"), "haiku");
+  const { errors } = resolveConfig({ schemaVersion: 1, roles: { "docs-researcher": { agent: "docs-researcher", kind: "researcher" } } });
+  assert.deepEqual(errors, [], "custom researcher roles validate");
+
+  const agent = readFileSync(new URL("../plugins/factory/agents/research-worker.md", import.meta.url), "utf8");
+  const tools = agent.match(/^tools: (.+)$/m)[1].split(/,\s*/);
+  assert.deepEqual(tools.sort(), ["Glob", "Grep", "Read", "WebFetch", "WebSearch"], "web tools, no write or shell tools");
+  assert.match(agent, /^model: haiku$/m);
+});

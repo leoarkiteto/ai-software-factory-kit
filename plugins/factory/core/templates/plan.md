@@ -19,6 +19,9 @@ Workflow: `<id>` · Mode: <STANDARD|FULL-SPEC> · Spec: <link, or "inline below"
 ## Components affected
 - `path/or/module`: what changes
 
+## Research (optional)
+<Delete when no research was done. Otherwise one line per note: `research/R<n>.md`, the topic, the versions covered, and its status.>
+
 ## Technical decisions
 | Decision | Rationale | ADR-worthy? |
 |---|---|---|

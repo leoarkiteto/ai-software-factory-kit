@@ -75,7 +75,7 @@ export function checkConfigSemantics(config) {
   for (const [name, role] of Object.entries(config.roles ?? {})) {
     if (role.enabled === false) continue;
     if (!role.agent) errors.push({ path: `$.roles.${name}`, message: "enabled role needs an agent" });
-    if (!role.kind) errors.push({ path: `$.roles.${name}`, message: "enabled role needs a kind (worker|reviewer)" });
+    if (!role.kind) errors.push({ path: `$.roles.${name}`, message: "enabled role needs a kind (worker|reviewer|researcher)" });
   }
   const enabledReviewers = Object.values(config.roles ?? {}).filter((r) => r.enabled !== false && r.kind === "reviewer");
   if (enabledReviewers.length === 0) {

@@ -32,6 +32,14 @@
 - **They fail open.** If a guard crashes, the call goes ahead with a visible warning (ADR-0011).
 - **They have not been tested under `bypassPermissions`.** Whether a hook denial holds in that mode is unverified (see testing).
 
+## Web research
+
+- Only `factory:research-worker` has `WebSearch` and `WebFetch`. It cannot edit files or run commands, and workers have no web access (ADR-0013).
+- `init` does not pre-authorise web tools. Claude Code asks you, as in any session, and your allow and deny rules for domains apply.
+- Search queries leave your machine. The researcher is told to use only public names (packages, APIs, versions) and never repository code, internal names or secrets. That rule lives in the prompt; it is not enforced by a hook.
+- Fetched pages are treated as untrusted data, by the researcher and by the orchestrator that reads its note.
+- Turn it off with `"roles": { "research-worker": { "enabled": false } }`.
+
 ## Secrets
 
 - The default `protectedPaths` cover `.env`, `.env.*` (except `.env.example` and similar templates), `*.pem`, `*.key`, `secrets/` and `credentials*`.

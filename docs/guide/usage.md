@@ -39,6 +39,8 @@ Step-by-step diagrams of each mode are in [workflow diagrams](workflows.md).
 
 They default to Sonnet. **Reviewers** (`factory:code-reviewer`, `factory:architecture-reviewer`) default to Opus and never review their own work. Change the models in [configuration](configuration.md).
 
+**Research.** When the work depends on a framework or library API that changes between versions (for example caching in Next.js), the orchestrator may first send concrete questions to `factory:research-worker`. It defaults to Haiku, only reads the repository and the web, pins the versions from your manifest and lockfile, and returns a note with sources. The note is saved in `.factory/workflows/<id>/research/` and its conclusions reach the workers through their briefs; the workers themselves never use the web. Claude Code asks your permission for its web searches and fetches as usual. To turn it off, set `"roles": { "research-worker": { "enabled": false } }`.
+
 ## Pausing and resuming
 
 A workflow stops and tells you exactly what it needs when:

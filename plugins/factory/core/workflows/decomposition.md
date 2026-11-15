@@ -5,7 +5,7 @@ Turn the plan into a DAG that `factory-state tasks` accepts (`schemas/task.schem
 ## Rules
 
 - **Size:** one task is one coherent change a single worker can finish and verify in one go. Aim for 2–8 tasks in STANDARD. Splitting further is justified by distinct roles or by real parallelism, not by habit.
-- **Role:** pick the worker role whose boundary fits (`factory-state config` → `roles`, kind `worker`). Do not give one task both frontend and backend changes; split it, with a contract task first if needed.
+- **Role:** pick the worker role whose boundary fits (`factory-state config` → `roles`, kind `worker`). Researchers (kind `researcher`) never get DAG tasks. Do not give one task both frontend and backend changes; split it, with a contract task first if needed.
 - **Scope:** `scope.files` lists the globs the task may modify, as narrow as you can honestly make them. Put context-only paths in `scope.readOnly`. The scheduler only runs two tasks in parallel when their `scope.files` cannot overlap, so vague scopes like `src/**` serialise everything.
 - **Dependencies:** `dependsOn` only real prerequisites: an interface it consumes, a file it builds on, a fixture it needs. QA test-writing can often depend only on the contract task, not on the implementation.
 - **Acceptance criteria:** observable and checkable, traceable to `FR`/`AC` through `requirementRefs`.

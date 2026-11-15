@@ -15,6 +15,8 @@ Stages: `classifying → planning → executing ⇄ reviewing → integrating �
 
 ## 3. Technical plan
 
+If the approach depends on an external framework or library whose current documentation matters (for example a version-specific caching or routing API), research it first: `factory-state guide workflows/research`.
+
 Write `.factory/workflows/<id>/plan.md` from `factory-state guide templates/plan`. In STANDARD the spec lives inside the plan, in its reduced form (Summary, Scope, FR, AC, Validation). Then record it with `factory-state artifact <id> plan .factory/workflows/<id>/plan.md`.
 
 Decompose the work into tasks (`factory-state guide workflows/decomposition`) and write them to `.factory/workflows/<id>/inbox/tasks.json` and record them with `factory-state tasks <id> --file .factory/workflows/<id>/inbox/tasks.json`.
