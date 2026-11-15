@@ -169,6 +169,6 @@ test("the research-worker is a read-only researcher on the light tier", () => {
 
   const agent = readFileSync(new URL("../plugins/factory/agents/research-worker.md", import.meta.url), "utf8");
   const tools = agent.match(/^tools: (.+)$/m)[1].split(/,\s*/);
-  assert.deepEqual(tools.sort(), ["Glob", "Grep", "Read", "WebFetch", "WebSearch"], "web tools, no write or shell tools");
+  assert.deepEqual(tools.sort(), ["Glob", "Grep", "Read", "WebFetch", "WebSearch", "mcp__context7__*"], "web tools and optional Context7, no write or shell tools");
   assert.match(agent, /^model: haiku$/m);
 });

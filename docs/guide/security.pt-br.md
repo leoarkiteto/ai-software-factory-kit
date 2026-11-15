@@ -36,6 +36,7 @@
 
 - Apenas o `factory:research-worker` tem `WebSearch` e `WebFetch`. Ele não pode editar arquivos nem executar comandos, e os workers não têm acesso à web (ADR-0013).
 - O `init` não pré-autoriza ferramentas web. O Claude Code pergunta a você, como em qualquer sessão, e suas regras de allow e deny para domínios valem.
+- Se você tem o servidor MCP Context7 registrado como `context7`, o pesquisador também pode usá-lo. As consultas vão para o serviço hospedado da Upstash, e o conteúdo é mantido pela comunidade, então o pesquisador confirma as respostas na documentação oficial antes que o trabalho dependa delas.
 - As buscas saem da sua máquina. O pesquisador é instruído a usar apenas nomes públicos (pacotes, APIs, versões) e nunca código do repositório, nomes internos ou segredos. Essa regra está no prompt; não é aplicada por um hook.
 - As páginas acessadas são tratadas como dados não confiáveis, pelo pesquisador e pelo orquestrador que lê a nota.
 - Desligue com `"roles": { "research-worker": { "enabled": false } }`.

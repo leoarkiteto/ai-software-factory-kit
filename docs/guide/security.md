@@ -36,6 +36,7 @@
 
 - Only `factory:research-worker` has `WebSearch` and `WebFetch`. It cannot edit files or run commands, and workers have no web access (ADR-0013).
 - `init` does not pre-authorise web tools. Claude Code asks you, as in any session, and your allow and deny rules for domains apply.
+- If you have the Context7 MCP server registered as `context7`, the researcher can use it too. Its queries go to Upstash's hosted service, and its content is community-contributed, so the researcher confirms answers in official docs before the work relies on them.
 - Search queries leave your machine. The researcher is told to use only public names (packages, APIs, versions) and never repository code, internal names or secrets. That rule lives in the prompt; it is not enforced by a hook.
 - Fetched pages are treated as untrusted data, by the researcher and by the orchestrator that reads its note.
 - Turn it off with `"roles": { "research-worker": { "enabled": false } }`.
