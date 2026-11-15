@@ -135,3 +135,26 @@ test("task DAG references in fixtures use known task IDs", () => {
   const ids = new Set(manifest.tasks.map((t) => t.id));
   for (const t of manifest.tasks) for (const d of t.dependsOn) assert.ok(ids.has(d), `${t.id} -> ${d}`);
 });
+
+// The reviewer contract shows the report as one JSON example (not parseable:
+// it holds placeholders). Keep the keys of its requirementsCoverage and
+// findings items, and the prose that spells them out, equal to the schema.
+test("reviewer contract shows exactly the schema's keys for coverage items and findings", () => {
+  const contract = readFileSync(new URL("../plugins/factory/core/agents/reviewer-contract.md", import.meta.url), "utf8");
+  const props = load(join(SCHEMA_DIR, "review-report.schema.json")).properties;
+  const schemaKeys = (name) => Object.keys(props[name].items.properties).sort();
+  const exampleKeys = (name) => {
+    const line = contract.split("\n").find((l) => l.trim().startsWith(`"${name}": [{`));
+    assert.ok(line, `example line for ${name}`);
+    return [...line.matchAll(/"(\w+)":/g)].map((m) => m[1]).filter((k) => k !== name).sort();
+  };
+  const proseKeys = (marker) => {
+    const line = contract.split("\n").find((l) => l.startsWith(`- a \`${marker}\` item has`));
+    assert.ok(line, `prose line for ${marker}`);
+    return [...line.split(". It never")[0].matchAll(/`(\w+)`/g)].map((m) => m[1]).filter((k) => k !== marker).sort();
+  };
+  for (const name of ["requirementsCoverage", "findings"]) {
+    assert.deepEqual(exampleKeys(name), schemaKeys(name), `${name}: example keys`);
+    assert.deepEqual(proseKeys(name), schemaKeys(name), `${name}: prose keys`);
+  }
+});

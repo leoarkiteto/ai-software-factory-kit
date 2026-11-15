@@ -58,4 +58,8 @@ End your final message with **exactly one** fenced `json` block, and put nothing
 }
 ```
 
+Every object holds only the keys shown above, and the report is rejected for any other key. Two arrays are easy to mix up:
+- a `requirementsCoverage` item has `ref`, `status` and optionally `evidence`;
+- a `findings` item has `id`, `severity`, `category`, `description`, `evidence`, `required`, and optionally `suggestedChange` and `taskId`. It never has `ref` or `status`. To tie a finding to a requirement, name the requirement in its `description` or `evidence`.
+
 `category` is one of: correctness, requirements, security, testing, error-handling, maintainability, conventions, regression, architecture, performance, scope. When a finding belongs to a specific task, set `taskId`.

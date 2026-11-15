@@ -25,7 +25,7 @@ Runs an independent review round while the workflow is `reviewing`. It also cove
 
 6. **Submit each report.** Write the last fenced `json` block, unchanged, to `.factory/workflows/<id>/inbox/review-<kind>.json`. Then run `factory-state review <id> --file .factory/workflows/<id>/inbox/review-<kind>.json`.
    - The command validates the report and prints the **decision**.
-   - It rejects a report whose outcome contradicts its findings, or that claims independence while the reviewer is also an implementer. Send that reviewer the errors and ask for a corrected report. Do not correct its judgement yourself.
+   - It rejects a report that does not match the schema (for example a missing or unknown key), whose outcome contradicts its findings, or that claims independence while the reviewer is also an implementer. Send that reviewer the errors as printed and ask for a corrected report. Do not edit the report yourself, not even to drop a stray key, and do not correct its judgement. If the corrected report is rejected again, escalate to the user.
 
 7. **Act on the decision.** Use the decision printed after the last required review:
 
@@ -70,6 +70,6 @@ This happens when a reviewer returns `BLOCKED`, when the review is not independe
    - the planned task IDs as `subject.taskIds`;
    - `attempt: 1` (or `n` on a re-review);
    - `implementedBy: ["orchestrator"]`, because you wrote the plan.
-2. Write its report to the inbox, then run `factory-state plan-review <id> --file .factory/workflows/<id>/inbox/plan-review.json`.
+2. Write its report to the inbox, then run `factory-state plan-review <id> --file .factory/workflows/<id>/inbox/plan-review.json`. If it rejects the report, handle that as in step 6 of the review round.
 3. Address the required findings by revising the plan, and re-run the plan review. Do this at most `review.maxIterations` times. After that, escalate to the user.
 4. Only then ask the user to approve the plan.

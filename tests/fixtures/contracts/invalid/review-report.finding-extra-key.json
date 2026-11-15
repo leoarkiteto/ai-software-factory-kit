@@ -1,0 +1,5 @@
+{ "_expect": "is not an allowed property", "schemaVersion": 1, "kind": "architecture", "reviewer": "architecture-reviewer", "attempt": 1, "outcome": "NEEDS_CHANGES",
+  "independence": { "independent": true, "implementedBy": ["orchestrator"] }, "subject": { "taskIds": ["T1"] },
+  "requirementsCoverage": [{ "ref": "FR-1", "status": "met", "evidence": "plan.md Approach" }],
+  "findings": [{ "ref": "", "id": "F1", "severity": "medium", "category": "scope", "description": "d", "evidence": "plan.md Diagrams", "required": true }],
+  "validationStatus": { "status": "not_run" } }
