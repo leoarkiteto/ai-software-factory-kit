@@ -1,6 +1,6 @@
 # AI Software Factory Kit: final implementation report
 
-**Current release: 0.2.2-beta (2026-11-14). See §8 for what beta means and the 1.0 criteria.** Sections 1–7 describe the v0.1.0 build, with the Phase 9 results added.
+**Current release: 0.3.0-beta (2026-11-15), which adds the read-only `research-worker` (ADR-0013). See §8 for what beta means and the 1.0 criteria.** Sections 1–7 describe the v0.1.0 build, with the Phase 9 results added.
 
 Date: 2026-11-10. Built against Claude Code 2.1.319–2.1.321. Inputs: `docs/implementation-prompt.md` and `docs/architecture.md`.
 
@@ -140,6 +140,7 @@ Each item needs evidence in `docs/research/`: a session log with costs, and tran
   - `cancelled` is used only at the user's request.
 - [ ] **The remaining real-session gaps covered:**
   - the devops worker;
+  - the research worker, with and without the Context7 MCP server;
   - `/factory:init` run interactively; *run by a project owner before Phase 11 (receipt present), transcript not audited;*
   - a hook deny under `bypassPermissions`; *Phase 11 had the first guard deny in a real session, under `acceptEdits`;*
   - a repository without git (supported, or refused with a clear message).
