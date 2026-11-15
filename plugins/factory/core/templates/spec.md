@@ -25,6 +25,10 @@ Workflow: `<id>` · Provider: local · Discovery: <provider used>, see discovery
 ## Edge cases
 - <case>: <expected behaviour>
 
+## Diagrams (optional)
+<Include this section when a behaviour is easier to check as a picture: states and their transitions, a multi-step interaction, or a data model. Otherwise delete it. One to three fenced `mermaid` blocks, using only `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `erDiagram` or `classDiagram`, without styling. Cite the FR/AC each one illustrates. Keep the next line as written.>
+Illustrative only: the requirements and acceptance criteria above are the spec of record. If a diagram disagrees with them, the text wins and the diagram is fixed.
+
 ## Constraints and assumptions
 - <constraint or assumption> (confirmed | assumed)
 
