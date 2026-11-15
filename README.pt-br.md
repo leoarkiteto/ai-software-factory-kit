@@ -78,7 +78,7 @@ gh issue view 12 --json number,title,body,url \
 | [Solução de problemas](docs/guide/troubleshooting.pt-br.md) | pedidos de permissão, comandos negados, estado inválido, provedores |
 | [Testes](docs/guide/testing.pt-br.md) | testes unitários e evals comportamentais |
 
-**Versão: 0.2.2-beta.** Adequado para uso diário com supervisão; ainda não é uma ferramenta estável para um time. Os [critérios para a 1.0](docs/final-report.md#8-release-status-beta-and-the-10-criteria) são acompanhados no relatório final.
+**Versão: 0.3.0-beta.** Adequado para uso diário com supervisão; ainda não é uma ferramenta estável para um time. Os [critérios para a 1.0](docs/final-report.md#8-release-status-beta-and-the-10-criteria) são acompanhados no relatório final.
 
 A documentação de design e referência está disponível apenas em inglês: [relatório final de implementação](docs/final-report.md) · [arquitetura](docs/architecture.md) · [contratos](docs/contracts/README.md) · [registros de decisão (ADRs)](docs/adr/) · [pesquisa de verificação](docs/research/claude-code-capabilities.md)
 
