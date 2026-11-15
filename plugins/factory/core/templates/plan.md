@@ -26,6 +26,10 @@ Workflow: `<id>` · Mode: <STANDARD|FULL-SPEC> · Spec: <link, or "inline below"
 ## Interfaces and contracts
 <APIs, types or schemas that other tasks depend on. These are defined first.>
 
+## Diagrams (optional)
+<Include this section when the change spans several components, or changes an interface between them, a state machine or a data model. Otherwise delete it. One to three fenced `mermaid` blocks, each showing only what changes, using only `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `erDiagram` or `classDiagram`. Name nodes as in "Components affected" and "Interfaces and contracts". No styling (`style`, `classDef`, themes). Keep the next line as written.>
+Illustrative only: the text of this plan is the plan of record. If a diagram disagrees with it, the text wins and the diagram is fixed.
+
 ## Tasks
 | ID | Title | Role | Depends on | Scope |
 |---|---|---|---|---|

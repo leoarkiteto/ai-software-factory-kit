@@ -69,6 +69,20 @@ A espera é registrada como `blockedOn` no manifest.
   - Caso contrário, usa seu template local (`spec.md` com IDs `FR-n`, `NFR-n` e `AC-n`).
   - Em ambos os casos, `factory-state spec-check` precisa passar antes do planejamento, e todo requisito funcional precisa ser coberto por uma tarefa.
 
+## Diagramas no plano e na spec
+
+Quando uma mudança abrange vários componentes, ou altera uma interface, uma máquina de estados ou um modelo de dados, o `plan.md` e o `spec.md` local ganham uma seção opcional `## Diagrams` com um a três diagramas [Mermaid](https://mermaid.js.org/). O GitHub, o VS Code e a maioria dos visualizadores de Markdown os exibem já desenhados. Mudanças pequenas não têm diagramas, e o QUICK não tem plano.
+
+- Os diagramas são ilustrativos. O texto continua sendo o plano oficial: se um diagrama discordar dele, o texto vale e o diagrama é corrigido. No FULL-SPEC, o revisor de arquitetura confere cada diagrama com o texto durante a revisão do plano.
+- Só são usados `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `erDiagram` e `classDiagram`, sem estilização, para que os diagramas também sirvam de entrada para outras ferramentas.
+
+**Versão interativa (opcional).** O [Archify](https://github.com/tt-a1i/archify) é uma skill de agente que transforma Mermaid em HTML interativo e autocontido. O kit não o instala nem o chama. Se você o tiver instalado, peça ao Claude **fora de um workflow ativo** (depois que o workflow terminar, ou antes de retomar um pausado), para que os arquivos dele não entrem na mudança do workflow. Por exemplo: "Use o Archify para transformar o diagrama de sequência de `.factory/workflows/<id>/plan.md` em um diagrama interativo." Antes disso:
+
+- O Archify escreve em `.archify/` no seu repositório. Adicione essa pasta ao `.gitignore`.
+- A checagem de entrega dele usa um navegador real, então precisa do Chrome ou do Chromium instalado.
+- Toda entrega verifica atualizações do Archify pela rede. Defina `ARCHIFY_UPDATE_CHECK_DISABLED=1` para desligar isso.
+- O Archify refaz o diagrama a partir do Mermaid em vez de convertê-lo mecanicamente. Compare o resultado com o plano antes de compartilhá-lo.
+
 ## O que você recebe no final
 
 `.factory/workflows/<id>/final-report.md`, que cobre:

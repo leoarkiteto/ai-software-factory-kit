@@ -69,7 +69,7 @@ gh issue view 12 --json number,title,body,url \
 | Guia | |
 |---|---|
 | [Instalação](docs/guide/installation.pt-br.md) | plugin, `/factory:init`, adoção pelo time, atualização, remoção |
-| [Uso](docs/guide/usage.pt-br.md) | os três modos, pausar e retomar, provedores de discovery e de spec, o que os relatórios significam |
+| [Uso](docs/guide/usage.pt-br.md) | os três modos, pausar e retomar, provedores de discovery e de spec, diagramas no plano, o que os relatórios significam |
 | [Diagramas de workflow](docs/guide/workflows.pt-br.md) | classificação, fluxos QUICK, STANDARD e FULL-SPEC, o ciclo de execução e revisão, o modelo de status |
 | [Casos de uso](docs/guide/use-cases.pt-br.md) | exemplos de QUICK, STANDARD e FULL-SPEC com cada comando que o desenvolvedor digita |
 | [Passo a passo em monorepo](docs/guide/monorepo-walkthrough.pt-br.md) | adotando o kit em um monorepo React Native + Go e construindo uma funcionalidade de SSO passo a passo |

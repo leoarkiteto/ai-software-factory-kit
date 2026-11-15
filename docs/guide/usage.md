@@ -69,6 +69,20 @@ The wait is recorded as `blockedOn` in the manifest.
   - Otherwise it uses its local template (`spec.md` with `FR-n`, `NFR-n` and `AC-n` IDs).
   - Either way, `factory-state spec-check` must pass before planning, and every functional requirement must be covered by a task.
 
+## Diagrams in the plan and the spec
+
+When a change spans several components, or changes an interface, a state machine or a data model, `plan.md` and the local `spec.md` get an optional `## Diagrams` section with one to three [Mermaid](https://mermaid.js.org/) diagrams. GitHub, VS Code and most Markdown viewers render them in place. Small changes have none, and QUICK has no plan.
+
+- The diagrams are illustrative. The text stays the plan of record: if a diagram disagrees with it, the text wins and the diagram is fixed. In FULL-SPEC, the architecture reviewer checks every diagram against the text during plan review.
+- Only `flowchart`, `sequenceDiagram`, `stateDiagram-v2`, `erDiagram` and `classDiagram` are used, without styling, so the diagrams also work as input for other tools.
+
+**Interactive version (optional).** [Archify](https://github.com/tt-a1i/archify) is an agent skill that turns Mermaid into explorable standalone HTML. The kit does not install or call it. If you have it installed, ask Claude for it **outside an active workflow** (after the workflow completes, or before you resume a paused one), so its files do not end up in the workflow's change. For example: "Use Archify to turn the sequence diagram in `.factory/workflows/<id>/plan.md` into an interactive diagram." Before you do:
+
+- Archify writes to `.archify/` in your repository. Add it to `.gitignore`.
+- Its delivery check runs a real browser, so it needs Chrome or Chromium installed.
+- Every delivery checks for Archify updates over the network. Set `ARCHIFY_UPDATE_CHECK_DISABLED=1` to turn that off.
+- Archify rebuilds the diagram from the Mermaid rather than converting it mechanically. Compare the result with the plan before you share it.
+
 ## What you get at the end
 
 `.factory/workflows/<id>/final-report.md`, which covers:
