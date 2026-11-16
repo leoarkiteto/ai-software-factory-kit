@@ -30,6 +30,7 @@ Workflow: `<id>` · Mode: <QUICK|STANDARD|FULL-SPEC> · Status: <COMPLETED|FAILE
 - Specification: <provider used / not applicable>
 
 ## Not verified / assumptions
+- <when design notes exist> Visual check pending: compare the running app with `design/D<n>.md` (states: …). No agent ran the app.
 - …
 
 ## Open issues and follow-ups

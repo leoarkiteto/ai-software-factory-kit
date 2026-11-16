@@ -7,7 +7,7 @@ Stages: `classifying → executing → [reviewing] → integrating → completed
 ## 1. Focused analysis (still `classifying`)
 
 - Read only what the change needs: the target code, its direct callers, and its tests.
-- If the change hinges on an external API whose current documentation matters and the repository has no working example of it, you may dispatch one short research brief (`factory-state guide workflows/research`). This is the only delegation QUICK allows before review.
+- If the change hinges on an external API whose current documentation matters and the repository has no working example of it, you may dispatch one short research brief (`factory-state guide workflows/research`). If the request cites a Figma link or an image of the UI, you may likewise dispatch one short design brief (`factory-state guide workflows/design`). These are the only delegations QUICK allows before review.
 - If the change turns out to be bigger than QUICK (more components, architectural impact, behaviour decisions needed), stop. Re-classify with the new evidence (`factory-state classify`), or tell the user and escalate (see "Escalation" below).
 
 ## 2. Define the single task

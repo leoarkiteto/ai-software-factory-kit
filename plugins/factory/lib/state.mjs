@@ -476,7 +476,7 @@ export function setProvider(m, which, value, now = nowIso()) {
 }
 
 // Artifact kinds that accumulate several paths instead of being replaced.
-const LIST_ARTIFACTS = new Set(["adrs", "research"]);
+const LIST_ARTIFACTS = new Set(["adrs", "research", "design"]);
 
 export function setArtifact(m, kind, path, now = nowIso()) {
   const next = clone(m);

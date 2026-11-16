@@ -15,6 +15,7 @@
     "qa-worker":             { "agent": "factory:qa-worker",             "kind": "worker",   "model": "efficient", "enabled": true },
     "devops-worker":         { "agent": "factory:devops-worker",         "kind": "worker",   "model": "efficient", "enabled": true },
     "research-worker":       { "agent": "factory:research-worker",       "kind": "researcher", "model": "light",   "enabled": true },
+    "design-worker":         { "agent": "factory:design-worker",         "kind": "researcher", "model": "efficient", "enabled": true },
     "code-reviewer":         { "agent": "factory:code-reviewer",         "kind": "reviewer", "model": "reasoning", "enabled": true },
     "architecture-reviewer": { "agent": "factory:architecture-reviewer", "kind": "reviewer", "model": "reasoning", "enabled": true }
   },

@@ -109,7 +109,7 @@
             "type": "boolean"
           },
           "kind": {
-            "description": "worker: implements DAG tasks. reviewer: reviews plans and changes. researcher: read-only web research before planning; never assigned DAG tasks.",
+            "description": "worker: implements DAG tasks. reviewer: reviews plans and changes. researcher: read-only research before planning (external docs, or a cited visual design); never assigned DAG tasks.",
             "enum": [
               "worker",
               "reviewer",

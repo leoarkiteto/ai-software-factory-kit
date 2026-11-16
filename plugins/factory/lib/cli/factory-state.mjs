@@ -12,6 +12,7 @@ import { classify, needsConfirmation, ClassificationError } from "../classify.mj
 import { detectGrillWithDocs, detectSpecKit, selectSpecProvider, discoveryEvidence } from "../providers.mjs";
 import { checkLocalSpec, checkSpecKitSpec, checkDiscoverySummary } from "../spec.mjs";
 import { formatErrors } from "../schema.mjs";
+import { checkDesignId, nodeSlug, fetchDesignImage, writeBytesAtomic } from "../design.mjs";
 
 const USAGE = `factory-state <command> [args] [--root DIR] [--json]
 
@@ -51,6 +52,8 @@ Discovery and specification
   validation ID --kind K --status S [--command C] [--exit N] [--summary T]   (omit --command only for skipped)
   provider ID discovery|specification [--requested X] [--used X] [--status S] [--version V] [--evidence E] [--note N]
   artifact ID KIND PATH
+  fetch-design-image ID DESIGN --node N --url U   download a Figma render (Figma hosts only, PNG/JPEG,
+                                         ≤ 10 MB) to design/DESIGN-N.png and record it as a design artifact
   issue ID --severity S --description D --source SRC [--task T]
   issue-status ID ISSUE --status open|resolved|accepted_risk|escalated [--resolution R]
 
@@ -108,7 +111,10 @@ function readInput(path) {
  */
 export function run(argv, io = {}) {
   inputsRead = [];
-  const code = runCommand(argv, io);
+  const result = runCommand(argv, io);
+  // Only fetch-design-image is asynchronous; it reads no input files.
+  if (result && typeof result.then === "function") return result;
+  const code = result;
   if (code === 0) {
     const { flags } = parseArgs(argv);
     const workflows = resolve(store.workflowsDir(store.findRepoRoot(flags.root)));
@@ -420,6 +426,19 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         out(`${kind}: ${JSON.stringify(m.artifacts[kind])}`, m.artifacts);
         return 0;
       }
+      case "fetch-design-image": {
+        const m0 = load(requireId());
+        const design = checkDesignId(args[1]);
+        const slug = nodeSlug(need(flags, "node"));
+        const url = need(flags, "url");
+        return fetchDesignImage(url).then(({ bytes, type }) => {
+          const rel = `${store.FACTORY_DIR}/workflows/${m0.id}/design/${design}-${slug}.${type}`;
+          writeBytesAtomic(join(root, rel), bytes);
+          save(S.setArtifact(load(m0.id), "design", rel));
+          out(`stored ${rel} (${bytes.length} bytes)`, { path: rel, bytes: bytes.length, type });
+          return 0;
+        }, (e) => handleError(e, flags, stdout, stderr));
+      }
       case "issue": {
         const issue = { severity: need(flags, "severity"), description: need(flags, "description"), source: need(flags, "source") };
         if (flags.task) issue.taskId = flags.task;
@@ -440,18 +459,22 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         throw new UsageError(`unknown command ${command}`);
     }
   } catch (e) {
-    if (e instanceof UsageError) {
-      stderr.write(`usage error: ${e.message}\n\n${USAGE}\n`);
-      return 2;
-    }
-    if (e instanceof S.StateError || e instanceof ClassificationError) {
-      const detail = e.errors?.length ? `\n${formatErrors(e.errors)}` : "";
-      if (flags.json) stdout.write(`${JSON.stringify({ error: e.message, errors: e.errors ?? [] }, null, 2)}\n`);
-      else stderr.write(`rejected: ${e.message}${detail}\n`);
-      return 1;
-    }
-    throw e;
+    return handleError(e, flags, stdout, stderr);
   }
+}
+
+function handleError(e, flags, stdout, stderr) {
+  if (e instanceof UsageError) {
+    stderr.write(`usage error: ${e.message}\n\n${USAGE}\n`);
+    return 2;
+  }
+  if (e instanceof S.StateError || e instanceof ClassificationError) {
+    const detail = e.errors?.length ? `\n${formatErrors(e.errors)}` : "";
+    if (flags.json) stdout.write(`${JSON.stringify({ error: e.message, errors: e.errors ?? [] }, null, 2)}\n`);
+    else stderr.write(`rejected: ${e.message}${detail}\n`);
+    return 1;
+  }
+  throw e;
 }
 
 function readArtifact(root, rel) {
