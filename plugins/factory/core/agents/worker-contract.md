@@ -36,14 +36,18 @@ End your final message with **exactly one** fenced `json` block, and put nothing
   "filesChanged": [{ "path": "<repo-relative>", "change": "added | modified | deleted | renamed" }],
   "acceptanceCriteria": [{ "criterion": "<text>", "status": "met | partial | not_met | not_verifiable", "evidence": "<file:line or test name>" }],
   "tests": [{ "kind": "test", "command": "<cmd>", "status": "passed | failed | skipped | not_run", "exitCode": 0, "summary": "<e.g. 12 passed>" }],
-  "validation": [],
-  "scopeDeviations": [],
+  "validation": [{ "kind": "lint", "command": "<cmd>", "status": "passed | failed | skipped | not_run", "exitCode": 0, "summary": "<e.g. no findings>" }],
+  "scopeDeviations": [{ "path": "<repo-relative file outside May modify>", "reason": "<why it was small and necessary>" }],
   "limitations": [],
   "remainingIssues": [],
   "recommendations": []
 }
 ```
 
+Every object holds only the keys shown above, and the report is rejected for any other key. Leave an array empty (`[]`) when it has nothing to report.
+- a `scopeDeviations` item has `path` and `reason`. It is never a plain string and never has `description` or `change`. Keep it empty when you stayed in scope.
+- a `validation` item has the same keys as a `tests` item.
+- `limitations`, `remainingIssues` and `recommendations` are lists of plain strings.
 - `status: completed` means every acceptance criterion is met, as far as you can verify. Use `partial` or `failed` honestly; an honest failure is better than a false completion.
 - When `status` is `blocked`, include a `blockedReason` field.
 - List **every** file you created, modified or deleted in `filesChanged`.

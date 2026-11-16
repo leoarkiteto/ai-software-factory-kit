@@ -159,6 +159,26 @@ test("reviewer contract shows exactly the schema's keys for coverage items and f
   }
 });
 
+// The worker contract's report example must show the item shape of each
+// object array, so a worker never has to guess it (an empty `[]` left
+// scopeDeviations undocumented and workers sent strings or extra keys).
+test("worker contract shows exactly the schema's keys for object array items", () => {
+  const contract = readFileSync(new URL("../plugins/factory/core/agents/worker-contract.md", import.meta.url), "utf8");
+  const props = load(join(SCHEMA_DIR, "worker-report.schema.json")).properties;
+  const exampleKeys = (name) => {
+    const line = contract.split("\n").find((l) => l.trim().startsWith(`"${name}": [{`));
+    assert.ok(line, `example line for ${name}`);
+    return [...line.matchAll(/"(\w+)":/g)].map((m) => m[1]).filter((k) => k !== name).sort();
+  };
+  for (const name of ["filesChanged", "acceptanceCriteria", "scopeDeviations"]) {
+    assert.deepEqual(exampleKeys(name), Object.keys(props[name].items.properties).sort(), `${name}: example keys`);
+  }
+  const prose = contract.split("\n").find((l) => l.startsWith("- a `scopeDeviations` item has"));
+  assert.ok(prose, "prose line for scopeDeviations");
+  assert.deepEqual([...prose.split(". It is never")[0].matchAll(/`(\w+)`/g)].map((m) => m[1]).filter((k) => k !== "scopeDeviations").sort(),
+    Object.keys(props.scopeDeviations.items.properties).sort(), "scopeDeviations: prose keys");
+});
+
 test("the research-worker is a read-only researcher on the light tier", () => {
   const defaults = loadDefaults();
   const role = defaults.roles["research-worker"];
