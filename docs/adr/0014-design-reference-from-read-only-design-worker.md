@@ -24,7 +24,7 @@ The kit adds a design reference step, modelled on external research (ADR-0013). 
 
 ## Consequences
 
-- The kit does not install or bundle a Figma MCP server. It needs a Figma account with a Dev or Full seat on a paid plan. With a View or Collab seat (20 calls a month) the PNG path is the practical one.
-- The allowed download hosts and the tool-name prefixes are inferred from Figma's documentation and from how Claude Code names other servers. Both are to be confirmed by a real-session probe and recorded in `docs/research/phase-12-figma-design.md`; until then the host list in `lib/design.mjs` is provisional.
+- The kit does not install or bundle a Figma MCP server. It needs a Figma account with a Dev or Full seat. The phase-12 probe ran on a Starter plan with a Full seat, but the Starter quota is small, so the PNG path is the practical one for heavy use, and for View or Collab seats.
+- The allowed download hosts and the tool-name prefixes are inferred from Figma's documentation and from how Claude Code names other servers. The real-session probe (`docs/research/phase-12-figma-design.md`) confirmed the `mcp__figma__…` prefix and the `www.figma.com` screenshot host. The other prefixes, the S3 host and the loopback origin remain unconfirmed.
 - The behavioural evals cover the repository-image path only: the eval sandbox has no Figma. `fetch-design-image` is covered by `node:test` against a local HTTP server.
 - Figma content is data. The agent prompt and the procedure tell it and the orchestrator to ignore instructions found in layer names, texts or descriptions; this is a prompt-level rule, not an enforced one.

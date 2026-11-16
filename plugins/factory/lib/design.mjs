@@ -10,8 +10,9 @@ export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const MAX_REDIRECTS = 3;
 const TIMEOUT_MS = 30_000;
 
-// Provisional until the phase-12 probe records the hosts the Figma MCP
-// server actually returns (docs/research/phase-12-figma-design.md).
+// www.figma.com (get_screenshot on the remote server) is confirmed by the
+// phase-12 probe; the S3 host and the loopback origin are still unconfirmed
+// (docs/research/phase-12-figma-design.md).
 const HTTPS_HOST_SUFFIXES = ["figma.com"];
 const HTTPS_HOSTS = ["figma-alpha-api.s3.us-west-2.amazonaws.com"];
 // The Figma desktop MCP server serves assets on loopback, port 3845.
