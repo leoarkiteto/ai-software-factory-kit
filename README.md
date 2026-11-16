@@ -80,7 +80,7 @@ The guides below are also available in Brazilian Portuguese (`*.pt-br.md`, next 
 | [Troubleshooting](docs/guide/troubleshooting.md) | permission prompts, denied commands, invalid state, providers |
 | [Testing](docs/guide/testing.md) | unit tests and behavioural evals |
 
-**Release: 0.3.0-beta.** Fit for daily use under supervision; not yet a stable tool for a team. The [1.0 criteria](docs/final-report.md#8-release-status-beta-and-the-10-criteria) are tracked in the final report.
+**Release: 0.4.0-beta.** Fit for daily use under supervision; not yet a stable tool for a team. The [1.0 criteria](docs/final-report.md#8-release-status-beta-and-the-10-criteria) are tracked in the final report.
 
 Status: [final implementation report](docs/final-report.md) · Design: [architecture](docs/architecture.md) · [contracts](docs/contracts/README.md) · [decision records](docs/adr/) · [verification research](docs/research/claude-code-capabilities.md)
 
@@ -90,7 +90,7 @@ Status: [final implementation report](docs/final-report.md) · Design: [architec
 .claude-plugin/marketplace.json   marketplace "ai-software-factory-kit"
 plugins/factory/                  the plugin
   skills/{start,resume,init}/     entry points (/factory:start, /factory:resume, /factory:init)
-  agents/                         4 workers + 2 reviewers
+  agents/                         4 workers + 2 researchers + 2 reviewers
   hooks/                          hooks.json + factory-hook.mjs
   bin/                            factory-state, factory-install (on the Bash PATH)
   lib/                            deterministic core (state machine, DAG, classifier, installer, guards)

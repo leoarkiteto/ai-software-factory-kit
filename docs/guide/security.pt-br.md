@@ -41,6 +41,14 @@
 - As páginas acessadas são tratadas como dados não confiáveis, pelo pesquisador e pelo orquestrador que lê a nota.
 - Desligue com `"roles": { "research-worker": { "enabled": false } }`.
 
+## Figma e imagens de design
+
+- Apenas o `factory:design-worker` tem ferramentas MCP do Figma. Ele não pode editar arquivos, executar comandos nem usar a web, e os workers não têm acesso ao Figma (ADR-0014).
+- Ele lê apenas os frames e as imagens que o seu pedido cita. Nomes de layers, textos e anotações de um design são tratados como dados não confiáveis, pelo design worker e pelo orquestrador que lê a nota.
+- Os screenshots são baixados pelo `factory-state fetch-design-image`, que aceita apenas URLs HTTPS de domínios da Figma (ou o servidor desktop em `127.0.0.1:3845`), confere cada redirecionamento, mantém apenas arquivos PNG ou JPEG (SVG é recusado), para em 10 MB e nunca exibe a query string assinada da URL. Ele roda sob a permissão `Bash(factory-state *)` que já existe, então nenhuma regra para `curl` é necessária.
+- O kit não instala um servidor do Figma. As chamadas ao Figma contam nos limites do seu seat.
+- Desligue com `"roles": { "design-worker": { "enabled": false } }`.
+
 ## Segredos
 
 - Os `protectedPaths` padrão cobrem `.env`, `.env.*` (exceto `.env.example` e templates semelhantes), `*.pem`, `*.key`, `secrets/` e `credentials*`.

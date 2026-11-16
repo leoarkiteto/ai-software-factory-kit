@@ -2,7 +2,7 @@
 
 # Casos de uso: o que o desenvolvedor digita em cada modo
 
-Os três exemplos abaixo usam o mesmo monorepo React Native + Go do [passo a passo](monorepo-walkthrough.pt-br.md), já configurado com `/factory:init`. Cada um mostra:
+Os exemplos abaixo usam o mesmo monorepo React Native + Go do [passo a passo](monorepo-walkthrough.pt-br.md), já configurado com `/factory:init`. Cada um mostra:
 - por que o kit escolhe o modo;
 - as etapas;
 - **cada comando que você digita, e quando**.
@@ -153,6 +153,32 @@ Se o `/grill-with-docs` não estiver instalado, o passo 3 muda. O kit oferece tr
 - instalá-lo e retomar;
 - `/factory:resume use o fallback nativo`: o próprio orquestrador entrevista você, em rodadas, e cada resposta é um `/factory:resume <respostas>`;
 - parar.
+
+---
+
+## 4. STANDARD com design no Figma: chips de filtro por status
+
+**Situação.** O designer desenhou no Figma chips de filtro por status para a lista de pedidos do app, com estado selecionado e estado vazio. Você tem o plugin da Figma instalado (`claude plugin install figma@claude-plugins-official`) e um seat Dev.
+
+```text
+/factory:start Adicionar chips de filtro por status na tela OrdersList do app, como em https://www.figma.com/design/AbC123/Orders?node-id=12-34 (padrão e selecionado) e node-id=12-56 (estado vazio). O filtro acontece no cliente; sem mudança na API.
+```
+
+**O que acontece.** Classificação como no caso 2, e então:
+
+1. **Referência de design.** No planejamento, o orquestrador envia ao `factory:design-worker` um brief de design `D1` com os nodes `12:34` e `12:56`, o tema (`mobile/src/theme/**`) e os componentes de UI (`mobile/src/components/ui/**`). A nota volta com o layout, uma tabela de tokens, os componentes a reutilizar (o `Chip` existente tem a variante `selected`), os textos e as lacunas:
+   - "Os estados de loading e de erro não estão no design."
+   - "`radius/pill` (999) não tem token no tema."
+
+   O orquestrador baixa os screenshots dos frames com `factory-state fetch-design-image` para `.factory/workflows/<id>/design/`.
+2. **Perguntas sobre as lacunas, numa rodada.** Por exemplo:
+   - "1. O design não tem estado de loading. Reutilizar o skeleton atual da lista? (recomendado: sim)"
+   - "2. Não há raio pill no tema. Adicionar `radii.pill` ao tema numa task própria? (recomendado: sim)"
+3. **Plano.** As tasks citam `design/D1.md` nas constraints ("chip selecionado usa `theme.colors.primary` e a variante `selected` do `Chip`; sem hex literal") e os critérios de aceite podem ser verificados no código: estados implementados, tokens usados, textos literais.
+4. **Execução e revisão.** O frontend worker implementa a partir da nota e dos screenshots; o code reviewer confere a mudança contra a mesma nota.
+5. **Relatório final.** Ele lista "Conferência visual pendente: compare o app rodando com `design/D1.md` (estados: padrão, selecionado, vazio, loading)". Rode o app no simulador e compare.
+
+**O que você digita:** como no caso 2, mais as respostas às perguntas sobre as lacunas. Se as ferramentas do Figma não estiverem disponíveis, o workflow pausa e pede que você exporte os frames como PNG para o repositório (por exemplo `docs/design/orders-chips-default.png`) e responda com os caminhos.
 
 ---
 

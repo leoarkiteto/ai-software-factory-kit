@@ -790,6 +790,7 @@ How the logical components above map onto Claude Code mechanisms, as verified in
 | Classifier, workflows, orchestrator, workflow scheduler | Skills running in the **main conversation**; no scheduler process | ADR-0003 |
 | Workers and reviewers | Plugin subagents without the `Agent` tool | ADR-0003 |
 | External documentation | Optional read-only `research-worker` (WebSearch/WebFetch, Haiku) before planning; workers stay offline | ADR-0013 |
+| Visual design reference | Read-only `design-worker` (Figma MCP or repository images, Sonnet) when the request cites a design; images downloaded by `factory-state fetch-design-image`; workers never call Figma | ADR-0014 |
 | Model routing | Config tiers → alias passed per Agent call | ADR-0004 |
 | Discovery provider | User-invoked `/grill-with-docs`; native fallback skill | ADR-0005 |
 | Specification provider | Local templates or Spec Kit (specify/clarify/plan only) | ADR-0006 |
