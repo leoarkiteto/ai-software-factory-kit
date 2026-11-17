@@ -205,10 +205,12 @@ Setup: same repository, server and permission mode. The plugin was reinstalled a
    - **Wrong place for unchecked values.** The worker still used a table row for values it did not check. The rule may need to appear in the table template itself, not only in the procedure. The template comment already says so, so this may just be model drift.
    - **No review.** No independent review ran: QUICK mode with no risk flag. With a design conflict settled by the implementer, a reviewer would have been the only second look.
 
+**Fixed after session 5:** design gaps in QUICK. `workflows/quick.md` now says that a design note's conflicts and behaviour-changing gaps go to the user in one round, before the task is defined. `workflows/design.md` step 8 now applies in every mode, before any code is written, and forbids settling a design-versus-request conflict and reporting it later as an assumption.
+
 **Still open after session 5:**
 - `download_assets` and the S3 host;
 - URL lifetime;
 - the plugin, connector and desktop prefixes;
 - a planted missing-asset gap;
 - whether the orchestrator may edit source code in STANDARD mode (session 3);
-- design conflicts settled without asking in QUICK mode (session 5).
+- a real session that confirms QUICK now stops on design gaps.
