@@ -1,6 +1,6 @@
 # Phase 12: Figma design reference, real-session probe
 
-**Status: partial (2026-11-17).** The remote-server path is confirmed for tool names and screenshot hosts, token mapping was correct against a real theme in two sessions, the ❌ path was exercised once, and storing an inline render with `fetch-design-image --image` worked in a real session. The planted-gap model check (item 3), `download_assets` and the other server variants are still open. ADR-0014 rests on two facts inferred from Figma's documentation and from how Claude Code names other MCP servers. This probe confirms them in a real session before the Figma path is called verified. Until then, the repository-image path is the tested one (evals `design-repo-image-note`, `design-pasted-image-asks-to-save`).
+**Status: partial (2026-11-17).** The remote-server path is confirmed for tool names and screenshot hosts, token mapping was correct against a real theme in two sessions, the ❌ path was exercised once, and both halves of the inline-render fix ran in real sessions (`excludeScreenshot` plus `get_screenshot` in session 4, `fetch-design-image --image` in session 3). The planted-gap model check (item 3), `download_assets` and the other server variants are still open. ADR-0014 rests on two facts inferred from Figma's documentation and from how Claude Code names other MCP servers. This probe confirms them in a real session before the Figma path is called verified. Until then, the repository-image path is the tested one (evals `design-repo-image-note`, `design-pasted-image-asks-to-save`).
 
 ## What to confirm
 
@@ -127,3 +127,44 @@ Setup: same repository, server and permission mode as session 2. Source: a carou
 - `download_assets` and the S3 host;
 - URL lifetime;
 - the plugin, connector and desktop prefixes.
+
+### Session 4 (2026-11-17)
+
+Setup: same repository, server and permission mode. This time the plugin was reinstalled at the commit that holds the inline-render fix. Source: a contact side panel from the same design-system file, a wrapper frame with four variants (one or two contacts × mobile or desktop). The request asked for a new panel component. The workflow ran in QUICK mode, so the orchestrator implemented the single task itself. It was waiting in `integrating` when this was written.
+
+1. **Tool names:** `mcp__figma__…` again. No permission prompt.
+2. **Inline-render fix: the design-worker half is confirmed.**
+   - The worker called `get_design_context` with `excludeScreenshot: true` and took the render with `get_screenshot`.
+   - `get_screenshot` returned a `https://www.figma.com/api/mcp/asset/<uuid>.png` URL. The orchestrator stored it with `fetch-design-image --url`: an 838×922 PNG of about 120 KB. No inline image came back, and nothing was saved to `tool-results/`.
+   - The design-context asset URLs used the same host. `download_assets` was not called, and no new host appeared.
+   - Together with session 3, both halves of the fix have now run in real sessions.
+3. **Note quality.**
+   - **Status `complete`.**
+   - **Figma calls: 4** (`get_metadata`, `get_design_context`, `get_screenshot`, `get_variable_defs`). The note's count was right. No Code Connect prompt came back, although `disableCodeConnect` was not passed: this frame has no unmapped component set at its root.
+   - **Tokens:**
+     - 4 colours and 5 type styles map to theme tokens with exact values (✅).
+     - Letter spacing was marked ≈ with a correct explanation: Figma states it as a percentage and the theme in `em`, and the two agree.
+     - The spacing steps were marked ✅ "by the 8 px-step rule" instead of from a grep. The values are right (checked in session 2).
+     - One colour was marked "❓ not verified", which is again outside the ✅/≈/❌ marks.
+     - No ❌: every value had a token.
+   - **Gaps found:**
+     - The request's contact count ("up to one") conflicts with the design's two-contact variants.
+     - The design never shows an office-only panel.
+     - The shared actions block conflicts with the existing component, which puts buttons under each contact.
+     - A frame height that is smaller than the sum of its contents.
+     - Two address lines against a component prop that takes a single string.
+     - Missing states: no label, no actions, a single action, no phone, loading, empty, error, long text, no avatar, hover, focus, pressed and tablet widths.
+   - The orchestrator turned these into three user questions before planning the task.
+   - **Reuse.** The worker found that an existing organism already renders almost exactly this frame, and that the frame even carries that component's name. It listed seven concrete differences and left replace-or-wrap to the planner.
+4. **Kit problems seen.**
+   - **Marks outside the legend.** "❓ not verified" here and "not verified" in session 3. The prompt should say that an unchecked value is not a mark: the worker either reads the token or lists it under *Gaps and questions*.
+   - **Inferred tokens.** Spacing tokens inferred from a naming rule were still marked ✅. ✅ should require a value the worker actually read.
+   - **QUICK mode.** In QUICK mode the orchestrator implements the task itself, which is by design. Session 3's orchestrator edit happened in STANDARD mode, so that question is still open.
+
+**Still open after session 4:**
+- `download_assets` and the S3 host;
+- URL lifetime;
+- the plugin, connector and desktop prefixes;
+- the ❌ path under the planted-gap check: only seen once (session 3), with no planted asset gap yet;
+- marks outside ✅/≈/❌ and ✅ without a read value, in the design-worker prompt;
+- whether the orchestrator may edit source code in STANDARD mode (session 3).
