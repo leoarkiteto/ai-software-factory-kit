@@ -1,6 +1,6 @@
 # Phase 12: Figma design reference, real-session probe
 
-**Status: partial (2026-11-17).** The remote-server path is confirmed for tool names and screenshot hosts in two sessions, and token mapping was correct against a real theme. The planted-gap model check (item 3), `download_assets` and the other server variants are still open. ADR-0014 rests on two facts inferred from Figma's documentation and from how Claude Code names other MCP servers. This probe confirms them in a real session before the Figma path is called verified. Until then, the repository-image path is the tested one (evals `design-repo-image-note`, `design-pasted-image-asks-to-save`).
+**Status: partial (2026-11-17).** The remote-server path is confirmed for tool names and screenshot hosts, token mapping was correct against a real theme in two sessions, the ❌ path was exercised once, and storing an inline render with `fetch-design-image --image` worked in a real session. The planted-gap model check (item 3), `download_assets` and the other server variants are still open. ADR-0014 rests on two facts inferred from Figma's documentation and from how Claude Code names other MCP servers. This probe confirms them in a real session before the Figma path is called verified. Until then, the repository-image path is the tested one (evals `design-repo-image-note`, `design-pasted-image-asks-to-save`).
 
 ## What to confirm
 
@@ -86,3 +86,44 @@ Setup: the kit (0.4.0-beta) installed in a private product repository: a monorep
 - URL lifetime;
 - the plugin, connector and desktop prefixes;
 - a real session that confirms the inline-render fix.
+
+### Session 3 (2026-11-17)
+
+Setup: same repository, server and permission mode as session 2. Source: a carousel section from the same design-system file, a wrapper frame with a mobile and a desktop variant. The request asked for a new carousel component with scroll snapping, a slide bar on desktop and pagination buttons on mobile. The workflow ran in STANDARD mode and completed.
+
+**Mixed kit versions.** The installed plugin was not updated after session 2, so the agent definitions (the design-worker prompt) came from the cached copy of the commit before the fix. `factory-state` on `PATH`, and with it the guides the orchestrator loads, came from the kit's working copy, which has the fix. So this session tested the orchestrator half of the fix, not the design-worker half.
+
+1. **Tool names:** `mcp__figma__…` again. No permission prompt.
+2. **Inline render: the fallback works.**
+   - The design-worker used the old prompt. It called `get_design_context` without `excludeScreenshot` and never called `get_screenshot`, so the only render came back inline.
+   - It reported the file Claude Code saved in the session's `tool-results/` folder, as session 2 did.
+   - The orchestrator followed the new procedure and ran `fetch-design-image --image <path>`. That stored a 1024×393 PNG (about 350 KB) in `design/` and recorded it as an artifact, with no permission prompt.
+   - No URL host appeared. `download_assets` was not called.
+3. **Note quality.**
+   - **Status `partial`, for a real reason.** The design context code left out the desktop slide bar, which shows only in the render. The worker estimated its sizes from the image and marked them `(estimated from image)`. It did not read the bar's own node, although it used only 2 of its 10 calls.
+   - **Figma calls: 2** (`get_metadata`, `get_design_context` on the wrapper). The note's count was right this time.
+   - **Tokens:**
+     - 8 colour and effect values all map to theme tokens with exact values (✅). One shares its value with a token meant for something else, and the note says so.
+     - The spacing steps on the 8 px scale map exactly.
+   - **❌ path exercised for the first time.**
+     - A 28 px gap that is not on the spacing scale was marked ❌.
+     - Fixed card widths were marked ❌/≈, against the relative widths an existing carousel uses.
+     - The plan handled both as the procedure asks: the gap was out of scope, and the widths follow the existing relative formula. It recorded this under Technical decisions instead of Risks.
+   - **Typography was left "not verified".** The worker did not read the type tokens. "Not verified" is not one of the note's three marks (✅/≈/❌).
+   - **Gaps found:**
+     - The request's ambiguous "card positioning": the design shows start-aligned cards with the next one peeking, but no snap or padding values. The plan turned this into a prop with the design's alignment as the default.
+     - Missing states: last card, few cards, hover, focus, disabled, empty, loading, and the range between the design's breakpoint and the project's breakpoint.
+     - Empty icon slots in the metadata while the render shows icons.
+     - A gallery control inside each card that should not be read as the carousel's own pagination.
+   - **Reuse.** It found the existing slider and pagination components and the existing carousel that combines them. It flagged the overlap as a decision for the user. The plan composed the components and left the old carousel alone.
+4. **Kit problems seen.**
+   - **Stale agents.** A local install can run old agent prompts next to a new CLI without any warning. `factory-state` could warn when the installed plugin's commit differs from the kit it runs from, or the setup guide should say to update or reinstall the plugin after each kit change.
+   - **Budget left unused while the note was `partial`.** The prompt could tell the worker to read a missing element's node, or take its render, before falling back to estimating from the image.
+   - **The orchestrator edited source code.** The final report lists a one-line fix to the component made by the orchestrator itself, not by a worker. Check this against the orchestrator's contract.
+   - **❌ decisions.** The design procedure says to record them under Risks; the plan put them under Technical decisions.
+
+**Still open after session 3:**
+- the design-worker half of the inline-render fix (`excludeScreenshot` plus `get_screenshot`), with an updated plugin;
+- `download_assets` and the S3 host;
+- URL lifetime;
+- the plugin, connector and desktop prefixes.
