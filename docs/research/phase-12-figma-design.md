@@ -161,10 +161,11 @@ Setup: same repository, server and permission mode. This time the plugin was rei
    - **Inferred tokens.** Spacing tokens inferred from a naming rule were still marked ✅. ✅ should require a value the worker actually read.
    - **QUICK mode.** In QUICK mode the orchestrator implements the task itself, which is by design. Session 3's orchestrator edit happened in STANDARD mode, so that question is still open.
 
+**Fixed after session 4:** token marks. The design-worker prompt now allows only ✅, ≈ and ❌, each requiring a token value the worker read in a theme file during the task. Values it could not check go under *Gaps and questions* as "not checked against the theme". The design procedure tells the orchestrator to check those tokens itself before the plan relies on them.
+
 **Still open after session 4:**
 - `download_assets` and the S3 host;
 - URL lifetime;
 - the plugin, connector and desktop prefixes;
 - the ❌ path under the planted-gap check: only seen once (session 3), with no planted asset gap yet;
-- marks outside ✅/≈/❌ and ✅ without a read value, in the design-worker prompt;
 - whether the orchestrator may edit source code in STANDARD mode (session 3).

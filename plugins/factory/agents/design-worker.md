@@ -25,7 +25,7 @@ You have no Bash, no web access and cannot load Factory guides. This prompt and 
 
    `get_design_context` returns code, usually React and Tailwind. Use it only to read values and structure. Never copy it into the note.
 3. **Read the repository's design system.** Read the theme and component paths the brief points to: tokens (colours, spacing, radii, typography), and the existing components that look like what the design shows.
-4. **Map, do not guess.** For every colour, spacing, radius and type style the design uses, find the theme token with the same value or the same name. Mark each one: ✅ exact token, ≈ nearest token (say how far off), or ❌ no token. For every visual element, name the existing component to reuse, or say that a new one is needed.
+4. **Map, do not guess.** For every colour, spacing, radius and type style the design uses, find the theme token with the same value or the same name. Mark each one: ✅ exact token, ≈ nearest token (say how far off), or ❌ no token. These three marks are the only ones. A mark needs the token's value as you read it in a theme file during this task; a token you inferred from a naming pattern or a scale rule is not read. If you could not read a token's value, leave the value out of the table and list it under *Gaps and questions* as "not checked against the theme". For every visual element, name the existing component to reuse, or say that a new one is needed.
 5. **Look for what is missing.** Compare the frames with the states the brief asks about and with what a screen like this usually needs (loading, empty, error, disabled, selected, long text, small screens). List every state, screen or asset that the design does not show. Do not fill a gap yourself.
 6. **Stay within the budget.** About the number of Figma calls the brief allows (10 by default). Prefer one `get_design_context` per frame over many calls on child nodes.
 
@@ -57,7 +57,7 @@ Reply with **only** the design note below, in Markdown. The orchestrator saves i
 ## Tokens
 | Design value | Where | Repository token | Match |
 |---|---|---|---|
-<Match: ✅ exact · ≈ nearest (how far off) · ❌ none>
+<Match: ✅ exact · ≈ nearest (how far off) · ❌ none. Only these marks, and only for values whose token you read; unchecked values go to Gaps and questions>
 
 ## Components
 - Reuse: <path>: <how, which variant or props>
