@@ -2,10 +2,10 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createServer } from "node:http";
 import { spawnSync, execFileSync } from "node:child_process";
-import { cpSync, existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { cpSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { isAllowedDesignUrl, imageType, checkDesignId, nodeSlug, fetchDesignImage } from "../plugins/factory/lib/design.mjs";
+import { isAllowedDesignUrl, imageType, checkDesignId, nodeSlug, fetchDesignImage, readSavedDesignImage } from "../plugins/factory/lib/design.mjs";
 import { StateError } from "../plugins/factory/lib/state.mjs";
 
 const PNG = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0, 0, 0, 0x0d]);
@@ -119,21 +119,70 @@ test("the default allow-list refuses a non-Figma URL without any request, and hi
   assert.equal(called, false);
 });
 
+// Claude Code saves an inline MCP image as <config>/projects/<project>/<session>/tool-results/<name>.png.
+function fakeConfig() {
+  const config = mkdtempSync(join(tmpdir(), "factory-design-config-"));
+  const results = join(config, "projects", "-repo", "session", "tool-results");
+  mkdirSync(results, { recursive: true });
+  const put = (name, bytes) => {
+    writeFileSync(join(results, name), bytes);
+    return join(results, name);
+  };
+  return { config, projects: join(config, "projects"), results, put };
+}
+
+test("reads an inline render saved in a session's tool-results folder", () => {
+  const c = fakeConfig();
+  try {
+    const png = c.put("mcp-figma-blob-1.png", PNG);
+    assert.equal(readSavedDesignImage(png, { projectsDir: c.projects }).type, "png");
+    assert.equal(readSavedDesignImage(c.put("b.jpg", JPG), { projectsDir: c.projects }).type, "jpg");
+  } finally {
+    rmSync(c.config, { recursive: true, force: true });
+  }
+});
+
+test("refuses saved files outside tool-results, symlinks out of it, non-images and oversize files", () => {
+  const c = fakeConfig();
+  const outside = mkdtempSync(join(tmpdir(), "factory-design-outside-"));
+  try {
+    const read = (p, opts = {}) => () => readSavedDesignImage(p, { projectsDir: c.projects, ...opts });
+    writeFileSync(join(outside, "x.png"), PNG);
+    assert.throws(read(join(outside, "x.png")), /tool-results/);
+    writeFileSync(join(c.projects, "-repo", "session", "x.png"), PNG);
+    assert.throws(read(join(c.projects, "-repo", "session", "x.png")), /tool-results/, "next to tool-results, not in it");
+    symlinkSync(join(outside, "x.png"), join(c.results, "link.png"));
+    assert.throws(read(join(c.results, "link.png")), /tool-results/, "symlink resolved before the check");
+    assert.throws(read(c.put("evil.png", SVG)), /not a PNG or JPEG/);
+    assert.throws(read(c.put("big.png", Buffer.concat([PNG, Buffer.alloc(64)])), { maxBytes: 64 }), /larger than 64 bytes/);
+    assert.throws(read(join(c.results, "missing.png")), /not found/);
+    assert.throws(read(c.results), /tool-results|regular file/, "a directory is refused");
+  } finally {
+    rmSync(c.config, { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
+  }
+});
+
 test("CLI fetch-design-image validates arguments and refuses non-Figma URLs", () => {
   const repo = mkdtempSync(join(tmpdir(), "factory-design-repo-"));
   const installed = mkdtempSync(join(tmpdir(), "factory-design-plugin-"));
+  const cleanup = [];
   try {
     execFileSync("git", ["init", "-q"], { cwd: repo });
     cpSync(new URL("../plugins/factory/", import.meta.url).pathname, join(installed, "factory"), { recursive: true });
     const cli = join(installed, "factory", "bin", "factory-state");
     const env = { ...process.env };
     delete env.CLAUDE_PROJECT_DIR;
+    const c = fakeConfig();
+    env.CLAUDE_CONFIG_DIR = c.config;
+    cleanup.push(c.config);
     const fs = (...args) => {
       const r = spawnSync(cli, [...args, "--root", repo], { encoding: "utf8", env });
       return { code: r.status, out: r.stdout.trim(), err: r.stderr.trim() };
     };
     const id = fs("new", "--title", "Orders filter", "--request", "Build the filter from figma").out;
-    assert.equal(fs("fetch-design-image", id, "D1", "--node", "12:34").code, 2, "--url is required");
+    assert.equal(fs("fetch-design-image", id, "D1", "--node", "12:34").code, 2, "--url or --image is required");
+    assert.equal(fs("fetch-design-image", id, "D1", "--node", "12:34", "--url", "https://www.figma.com/a.png", "--image", "/x.png").code, 2, "not both");
     const badId = fs("fetch-design-image", id, "R1", "--node", "12:34", "--url", "https://www.figma.com/a.png");
     assert.equal(badId.code, 1);
     assert.match(badId.err, /design ID/);
@@ -141,14 +190,26 @@ test("CLI fetch-design-image validates arguments and refuses non-Figma URLs", ()
     assert.equal(offsite.code, 1);
     assert.match(offsite.err, /not allowed/);
     assert.equal(existsSync(join(repo, ".factory", "workflows", id, "design")), false);
+    const stray = join(repo, "stray.png");
+    writeFileSync(stray, PNG);
+    const refused = fs("fetch-design-image", id, "D1", "--node", "12:34", "--image", stray);
+    assert.equal(refused.code, 1);
+    assert.match(refused.err, /tool-results/);
+
+    // An inline render Claude Code saved is stored like a downloaded one.
+    const saved = fs("fetch-design-image", id, "D1", "--node", "12:35", "--image", c.put("mcp-figma-blob-2.png", PNG));
+    assert.equal(saved.code, 0, saved.err);
+    const stored = join(".factory", "workflows", id, "design", "D1-12-35.png");
+    assert.deepEqual([...readFileSync(join(repo, stored))], [...PNG]);
 
     // The design artifact kind keeps a list, like research.
     const note = join(".factory", "workflows", id, "design", "D1.md");
     assert.equal(fs("artifact", id, "design", note).code, 0);
     const manifest = JSON.parse(readFileSync(join(repo, ".factory", "workflows", id, "manifest.json"), "utf8"));
-    assert.deepEqual(manifest.artifacts.design, [note]);
+    assert.deepEqual(manifest.artifacts.design, [stored, note]);
   } finally {
     rmSync(repo, { recursive: true, force: true });
     rmSync(installed, { recursive: true, force: true });
+    for (const d of cleanup) rmSync(d, { recursive: true, force: true });
   }
 });

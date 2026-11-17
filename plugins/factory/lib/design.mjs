@@ -2,8 +2,9 @@
 // design/ folder, with the checks ADR-0014 requires (allowed hosts on every
 // redirect hop, size cap while streaming, image type from magic bytes).
 
-import { mkdirSync, renameSync, writeFileSync } from "node:fs";
-import { dirname } from "node:path";
+import { closeSync, fstatSync, mkdirSync, openSync, readSync, realpathSync, renameSync, writeFileSync, constants } from "node:fs";
+import { homedir } from "node:os";
+import { basename, dirname, join, sep } from "node:path";
 import { StateError } from "./state.mjs";
 
 export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
@@ -81,6 +82,62 @@ export async function fetchDesignImage(url, { isAllowed = isAllowedDesignUrl, fe
     const type = imageType(bytes);
     if (!type) throw new StateError("downloaded file is not a PNG or JPEG image");
     return { bytes, type };
+  }
+}
+
+/**
+ * Where Claude Code saves images an MCP tool returned inline (phase-12 probe,
+ * session 2): <config dir>/projects/<project>/<session>/tool-results/.
+ */
+export function claudeProjectsDir(env = process.env) {
+  return join(env.CLAUDE_CONFIG_DIR || join(homedir(), ".claude"), "projects");
+}
+
+/**
+ * Reads a render that a Figma tool returned inline and Claude Code saved to a
+ * session's tool-results/ folder. Returns { bytes, type }. Only regular PNG or
+ * JPEG files directly inside a tool-results/ folder under `projectsDir` are
+ * accepted (symlinks are resolved first), so the command cannot copy other
+ * files into the repository. Throws StateError.
+ */
+export function readSavedDesignImage(path, { projectsDir = claudeProjectsDir(), maxBytes = MAX_IMAGE_BYTES } = {}) {
+  let real, root;
+  try {
+    real = realpathSync(path);
+  } catch {
+    throw new StateError(`saved image not found: ${path}`);
+  }
+  try {
+    root = realpathSync(projectsDir);
+  } catch {
+    throw new StateError(`Claude Code projects folder not found: ${projectsDir}`);
+  }
+  if (!real.startsWith(root + sep) || basename(dirname(real)) !== "tool-results") {
+    throw new StateError(`saved image must be in a Claude Code session's tool-results folder under ${projectsDir}`);
+  }
+  let fd;
+  try {
+    fd = openSync(real, constants.O_RDONLY | (constants.O_NOFOLLOW ?? 0));
+  } catch (e) {
+    throw new StateError(`cannot read saved image: ${e.code ?? e.message}`);
+  }
+  try {
+    const st = fstatSync(fd);
+    if (!st.isFile()) throw new StateError("saved image is not a regular file");
+    if (st.size > maxBytes) throw new StateError(`image is larger than ${maxBytes} bytes`);
+    const bytes = Buffer.alloc(st.size);
+    let off = 0;
+    while (off < st.size) {
+      const n = readSync(fd, bytes, off, st.size - off, off);
+      if (n === 0) break;
+      off += n;
+    }
+    const out = bytes.subarray(0, off);
+    const type = imageType(out);
+    if (!type) throw new StateError("saved file is not a PNG or JPEG image");
+    return { bytes: out, type };
+  } finally {
+    closeSync(fd);
   }
 }
 

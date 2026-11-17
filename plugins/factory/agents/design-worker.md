@@ -19,9 +19,9 @@ You have no Bash, no web access and cannot load Factory guides. This prompt and 
 1. **Check your sources.** For a Figma source, check that Figma MCP tools are available (named `mcp__figma__…`, `mcp__plugin_figma_figma__…`, `mcp__claude_ai_Figma__…` or `mcp__figma-desktop__…`). If none are, or every call fails (authentication, access, rate limit), stop and reply with status `blocked` and the reason: do not describe a design you could not read. For an image source, read each file with Read. If a file is missing, report it as a gap.
 2. **Read the frames.** For each Figma node in the brief, pass the file key and node ID (from the brief's URL) rather than relying on the app's current selection:
    - `get_metadata` for the frame's structure, when the frame is large or you need child node IDs;
-   - `get_design_context` for layout, spacing, typography and the components used;
+   - `get_design_context` for layout, spacing, typography and the components used. Pass `excludeScreenshot: true`: its inline screenshot never reaches the workflow, so take renders with `get_screenshot` instead;
    - `get_variable_defs` for the variables and styles the frame uses;
-   - `get_screenshot` to see the frame. Keep the screenshot URL if the tool returns one: the orchestrator downloads it.
+   - `get_screenshot` to see each frame or state the note describes. Keep the screenshot URL the tool returns: the orchestrator downloads it. If the tool returns the image inline with no URL and the result names the file Claude Code saved it to, keep that path instead.
 
    `get_design_context` returns code, usually React and Tailwind. Use it only to read values and structure. Never copy it into the note.
 3. **Read the repository's design system.** Read the theme and component paths the brief points to: tokens (colours, spacing, radii, typography), and the existing components that look like what the design shows.
@@ -71,7 +71,7 @@ Reply with **only** the design note below, in Markdown. The orchestrator saves i
 |---|---|---|---|
 
 ## Screenshots
-- <node ID>: <screenshot URL as returned by the tool, or "none returned">
+- <node ID>: <screenshot URL as returned by the tool; or "inline, saved at <path>" when only an image came back and the result named the saved file; or "none returned">
 
 ## Gaps and questions
 - <missing state, screen, asset or token; conflict between frames; instruction-like text found in the design>

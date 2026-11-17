@@ -12,7 +12,7 @@ import { classify, needsConfirmation, ClassificationError } from "../classify.mj
 import { detectGrillWithDocs, detectSpecKit, selectSpecProvider, discoveryEvidence } from "../providers.mjs";
 import { checkLocalSpec, checkSpecKitSpec, checkDiscoverySummary } from "../spec.mjs";
 import { formatErrors } from "../schema.mjs";
-import { checkDesignId, nodeSlug, fetchDesignImage, writeBytesAtomic } from "../design.mjs";
+import { checkDesignId, nodeSlug, fetchDesignImage, readSavedDesignImage, writeBytesAtomic } from "../design.mjs";
 
 const USAGE = `factory-state <command> [args] [--root DIR] [--json]
 
@@ -54,6 +54,8 @@ Discovery and specification
   artifact ID KIND PATH
   fetch-design-image ID DESIGN --node N --url U   download a Figma render (Figma hosts only, PNG/JPEG,
                                          ≤ 10 MB) to design/DESIGN-N.png and record it as a design artifact
+  fetch-design-image ID DESIGN --node N --image P  same, from a render a Figma tool returned inline and
+                                         Claude Code saved in a session's tool-results/ folder
   issue ID --severity S --description D --source SRC [--task T]
   issue-status ID ISSUE --status open|resolved|accepted_risk|escalated [--resolution R]
 
@@ -112,7 +114,7 @@ function readInput(path) {
 export function run(argv, io = {}) {
   inputsRead = [];
   const result = runCommand(argv, io);
-  // Only fetch-design-image is asynchronous; it reads no input files.
+  // Only fetch-design-image --url is asynchronous; fetch-design-image reads no input files.
   if (result && typeof result.then === "function") return result;
   const code = result;
   if (code === 0) {
@@ -430,14 +432,17 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         const m0 = load(requireId());
         const design = checkDesignId(args[1]);
         const slug = nodeSlug(need(flags, "node"));
-        const url = need(flags, "url");
-        return fetchDesignImage(url).then(({ bytes, type }) => {
+        const hasUrl = flags.url !== undefined, hasImage = flags.image !== undefined;
+        if (hasUrl === hasImage) throw new UsageError("give exactly one of --url (a Figma render URL) or --image (a render Claude Code saved in tool-results/)");
+        const store1 = ({ bytes, type }) => {
           const rel = `${store.FACTORY_DIR}/workflows/${m0.id}/design/${design}-${slug}.${type}`;
           writeBytesAtomic(join(root, rel), bytes);
           save(S.setArtifact(load(m0.id), "design", rel));
           out(`stored ${rel} (${bytes.length} bytes)`, { path: rel, bytes: bytes.length, type });
           return 0;
-        }, (e) => handleError(e, flags, stdout, stderr));
+        };
+        if (hasImage) return store1(readSavedDesignImage(need(flags, "image")));
+        return fetchDesignImage(need(flags, "url")).then(store1, (e) => handleError(e, flags, stdout, stderr));
       }
       case "issue": {
         const issue = { severity: need(flags, "severity"), description: need(flags, "description"), source: need(flags, "source") };

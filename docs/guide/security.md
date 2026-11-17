@@ -45,7 +45,7 @@
 
 - Only `factory:design-worker` has Figma MCP tools. It cannot edit files, run commands or use the web, and workers have no Figma access (ADR-0014).
 - It reads only the frames and images your request cites. Layer names, texts and annotations in a design are treated as untrusted data, by the design worker and by the orchestrator that reads its note.
-- Screenshots are downloaded by `factory-state fetch-design-image`, which accepts only HTTPS URLs on Figma hosts (or the desktop server on `127.0.0.1:3845`), checks every redirect, keeps only PNG or JPEG files (SVG is refused), stops at 10 MB and never prints the URL's signed query string. It runs under the existing `Bash(factory-state *)` permission, so no `curl` rule is needed.
+- Screenshots are downloaded by `factory-state fetch-design-image`, which accepts only HTTPS URLs on Figma hosts (or the desktop server on `127.0.0.1:3845`), checks every redirect, keeps only PNG or JPEG files (SVG is refused), stops at 10 MB and never prints the URL's signed query string. When a Figma tool returns a render inline instead of as a URL, the same command copies the file Claude Code saved (`--image`), but only from a session's `tool-results/` folder under the Claude Code config directory, after resolving symlinks, and with the same PNG/JPEG and size checks. It runs under the existing `Bash(factory-state *)` permission, so no `curl` rule is needed.
 - The kit does not install a Figma server. Figma calls count against your seat's limits.
 - Turn it off with `"roles": { "design-worker": { "enabled": false } }`.
 

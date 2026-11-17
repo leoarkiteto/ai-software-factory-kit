@@ -26,9 +26,11 @@ Do not go looking for designs the user did not cite, even if the repository has 
 3. **Dispatch.** Launch the briefs as parallel Agent tool calls in one message: `subagent_type` and `model` from `route` (omit `model` when `route` says so), `prompt` the filled brief.
 4. **Handle `blocked`.** If the note's status is `blocked` (no Figma tools, no access, rate limit), ask the user for PNG exports of the frames saved in the repository, then dispatch again with the images as the source. Do not go on without the design the user cited.
 5. **Save the note unchanged** with the Write tool to `.factory/workflows/<id>/design/D<n>.md`, and record it: `factory-state artifact <id> design .factory/workflows/<id>/design/D<n>.md` (the kind keeps a list).
-6. **Download the screenshots at once.** Figma's URLs expire. For each URL under the note's *Screenshots*:
-   `factory-state fetch-design-image <id> D<n> --node <node ID> --url '<url>'`
-   It accepts only Figma hosts, PNG or JPEG, up to 10 MB, writes `design/D<n>-<node>.png` and records it as a `design` artifact. If it fails (expired URL, refused host), do not retry by other means (`curl`, WebFetch): ask the user for the PNG export instead, or go on with the note alone and say so in the plan's Risks.
+6. **Store the screenshots at once.** Figma's URLs expire, and the files Claude Code saves for inline images are local to this session. For each entry under the note's *Screenshots*:
+   - a URL: `factory-state fetch-design-image <id> D<n> --node <node ID> --url '<url>'`;
+   - "inline, saved at <path>": `factory-state fetch-design-image <id> D<n> --node <node ID> --image '<path>'`.
+
+   It accepts only Figma hosts (for `--url`) or a file in a Claude Code session's `tool-results/` folder (for `--image`), PNG or JPEG, up to 10 MB, writes `design/D<n>-<node>.png` and records it as a `design` artifact. If it fails (expired URL, refused host, file outside `tool-results/`), do not retry by other means (`curl`, WebFetch, `cp`): ask the user for the PNG export instead, or go on with the note alone and say so in the plan's Risks. Workers and reviewers use the stored `design/` images, never the paths in the note.
 7. **Check the note before relying on it.**
    - Every frame and image in the brief appears under *Frames and states*, and every value names its source.
    - Values marked `(estimated from image)` are approximate: prefer the nearest token and say so in the task constraints.

@@ -78,9 +78,11 @@ Setup: the kit (0.4.0-beta) installed in a private product repository: a monorep
    - **Orchestrator: change outside scope.** It caught a dependency bump made outside every task, logged it as an open issue and left it alone. The user's next workflow settled it. This worked as designed.
    - **Workers and reviewers.** All tasks stayed in scope. Two independent review rounds ran, and the round-1 findings were fixed and confirmed in round 2. There were no permission prompts in auto mode.
 
+**Fixed after session 2:** inline renders. The design-worker now passes `excludeScreenshot: true` to `get_design_context` and takes renders with `get_screenshot`. When a render still comes back inline, `fetch-design-image --image <path>` copies the file Claude Code saved in `tool-results/` into `design/` (tests in `tests/design.test.mjs`).
+
 **Still open after session 2:**
 - the planted-gap check, the ❌ path in particular;
 - `download_assets` and the S3 host;
 - URL lifetime;
 - the plugin, connector and desktop prefixes;
-- storing inline renders.
+- a real session that confirms the inline-render fix.
