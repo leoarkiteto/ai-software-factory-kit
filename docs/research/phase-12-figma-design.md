@@ -169,3 +169,46 @@ Setup: same repository, server and permission mode. This time the plugin was rei
 - the plugin, connector and desktop prefixes;
 - the ❌ path under the planted-gap check: only seen once (session 3), with no planted asset gap yet;
 - whether the orchestrator may edit source code in STANDARD mode (session 3).
+
+### Session 5 (2026-11-17)
+
+Setup: same repository, server and permission mode. The plugin was reinstalled at the commit that holds the token-mark rule. Source: a landscape card from the same design-system file, with a default and a hover variant. The request asked for a desktop-only card whose image zooms slightly on hover, and stated the scale and timing. The workflow ran in QUICK mode, and the orchestrator implemented the task. It was waiting for the user's decision on an unrelated build failure when this was written.
+
+1. **Tool names:** `mcp__figma__…` again. No permission prompt.
+2. **Hosts and renders.**
+   - The worker called `get_design_context` with `excludeScreenshot: true` and took the render with `get_screenshot`, which returned a `www.figma.com/api/mcp/asset/…` URL. This is the second session in a row with no inline image.
+   - The orchestrator stored it with `fetch-design-image --url`: a 1024×777 PNG of about 880 KB.
+   - `download_assets` was not called, and no new host appeared.
+3. **Note quality.**
+   - **Status `partial`. Figma calls: 4**, and the note's count was right.
+   - **Token marks under the new rule.**
+     - The worker added the token value it read to the table's token column, so every ✅ can be checked against the theme. I checked the spacing steps and the type tokens against the theme, and they are right.
+     - Inferred tokens are gone.
+   - **❌ path:**
+     - A fixed 640 px image width with no token was marked ❌.
+     - An 83 px padding that is not on the scale was marked ≈, with both neighbouring tokens and the distance to each. In *Gaps and questions*, the worker explained it as a side effect of centring the content.
+     - The hover scale was marked ≈, with the three conflicting values side by side: the design (about 1.27), the request (1.04) and the existing utility (1.06).
+   - **Partly compliant:**
+     - Font families stayed as a "not checked" row in the table instead of moving to *Gaps and questions*. They were listed there as well.
+     - One ✅ carried the comment "value only; usage unverified", which is acceptable.
+   - **Gaps found:**
+     - **The design does not match the request.** The frame shows an editorial teaser (eyebrow, heading, body, link) with no metadata or tags, while the request and the brief expected a post card. The worker put this at the top of the note.
+     - The hover scale conflict above.
+     - Hover changes nothing but the image.
+     - Missing states: focus, no image, long text, short text, smaller screens.
+     - Whether the whole card is a link.
+     - Image alt text.
+     - Stroke colours that were not read.
+   - **The orchestrator checked unverified items.** Before planning, it read the link component and the hover rule, and grepped the type utilities. That is the new step 7 working.
+4. **Kit problems seen.**
+   - **Conflicts settled without asking.** The design procedure (step 8) says that a conflict between the design and the request goes to the user. The orchestrator settled both conflicts itself: it built what the design shows instead of what the request named, and it used the request's scale instead of the design's. It listed both as "assumptions to confirm" only in the final message, after implementing. Both choices were reasonable, but the user saw them only after the code was written. QUICK mode may need to say that design gaps still stop for the user.
+   - **Wrong place for unchecked values.** The worker still used a table row for values it did not check. The rule may need to appear in the table template itself, not only in the procedure. The template comment already says so, so this may just be model drift.
+   - **No review.** No independent review ran: QUICK mode with no risk flag. With a design conflict settled by the implementer, a reviewer would have been the only second look.
+
+**Still open after session 5:**
+- `download_assets` and the S3 host;
+- URL lifetime;
+- the plugin, connector and desktop prefixes;
+- a planted missing-asset gap;
+- whether the orchestrator may edit source code in STANDARD mode (session 3);
+- design conflicts settled without asking in QUICK mode (session 5).
