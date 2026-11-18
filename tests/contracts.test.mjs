@@ -192,3 +192,14 @@ test("the research-worker is a read-only researcher on the light tier", () => {
   assert.deepEqual(tools.sort(), ["Glob", "Grep", "Read", "WebFetch", "WebSearch", "mcp__claude_ai_Context7__*", "mcp__context7__*"], "web tools and optional Context7, no write or shell tools");
   assert.match(agent, /^model: haiku$/m);
 });
+
+test("the design-worker is a read-only researcher on the efficient tier, with Figma tools only", () => {
+  const defaults = loadDefaults();
+  assert.deepEqual(defaults.roles["design-worker"], { agent: "factory:design-worker", kind: "researcher", model: "efficient", enabled: true });
+  assert.equal(resolveModel(defaults, "design-worker"), "sonnet");
+
+  const agent = readFileSync(new URL("../plugins/factory/agents/design-worker.md", import.meta.url), "utf8");
+  const tools = agent.match(/^tools: (.+)$/m)[1].split(/,\s*/);
+  assert.deepEqual(tools.sort(), ["Glob", "Grep", "Read", "mcp__claude_ai_Figma__*", "mcp__figma-desktop__*", "mcp__figma__*", "mcp__plugin_figma_figma__*"], "Figma MCP wildcards, no web, write or shell tools");
+  assert.match(agent, /^model: sonnet$/m);
+});

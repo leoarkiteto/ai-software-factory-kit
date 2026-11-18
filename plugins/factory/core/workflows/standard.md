@@ -15,7 +15,7 @@ Stages: `classifying → planning → executing ⇄ reviewing → integrating �
 
 ## 3. Technical plan
 
-If the approach depends on an external framework or library whose current documentation matters (for example a version-specific caching or routing API), research it first: `factory-state guide workflows/research`.
+If the approach depends on an external framework or library whose current documentation matters (for example a version-specific caching or routing API), research it first: `factory-state guide workflows/research`. If the request cites a Figma link or an image of the UI, read it first: `factory-state guide workflows/design`.
 
 Write `.factory/workflows/<id>/plan.md` from `factory-state guide templates/plan`. In STANDARD the spec lives inside the plan, in its reduced form (Summary, Scope, FR, AC, Validation). Then record it with `factory-state artifact <id> plan .factory/workflows/<id>/plan.md`.
 

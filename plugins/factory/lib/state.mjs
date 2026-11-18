@@ -300,6 +300,15 @@ const TASK_TRANSITIONS = {
 };
 
 /**
+ * Every agent that has run a task, in order of first run. `assignment` holds
+ * only the latest one; manifests written before `implementedBy` existed fall
+ * back to it.
+ */
+export function taskImplementers(task) {
+  return task.implementedBy ?? (task.assignment ? [task.assignment.agent] : []);
+}
+
+/**
  * Update one task. patch: { status, result, report, agent, model, blockedReason }
  * Starting a task (-> running) increments attempts and requires its deps completed.
  * A failed task with exhausted attempts blocks its transitive dependants.
@@ -337,7 +346,11 @@ export function updateTask(m, taskId, patch, config, now = nowIso()) {
   if (patch.result !== undefined) task.result = patch.result;
   if (patch.blockedReason !== undefined) task.blockedReason = patch.blockedReason;
   if (patch.report) task.reports = [...(task.reports ?? []), patch.report];
-  if (patch.agent) task.assignment = { agent: patch.agent, model: patch.model ?? null };
+  if (patch.agent) {
+    const before = taskImplementers(task);
+    task.assignment = { agent: patch.agent, model: patch.model ?? null };
+    task.implementedBy = before.includes(patch.agent) ? before : [...before, patch.agent];
+  }
 
   if (task.status === "failed" && (task.failures ?? 0) >= maxAttempts) {
     for (const id of dependantsOf(next.tasks, taskId)) {
@@ -476,7 +489,7 @@ export function setProvider(m, which, value, now = nowIso()) {
 }
 
 // Artifact kinds that accumulate several paths instead of being replaced.
-const LIST_ARTIFACTS = new Set(["adrs", "research"]);
+const LIST_ARTIFACTS = new Set(["adrs", "research", "design"]);
 
 export function setArtifact(m, kind, path, now = nowIso()) {
   const next = clone(m);

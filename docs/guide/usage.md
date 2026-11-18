@@ -41,6 +41,14 @@ They default to Sonnet. **Reviewers** (`factory:code-reviewer`, `factory:archite
 
 **Research.** When the work depends on a framework or library API that changes between versions (for example caching in Next.js), the orchestrator may first send concrete questions to `factory:research-worker`. It defaults to Haiku, only reads the repository and the web, pins the versions from your manifest and lockfile, and returns a note with sources. The note is saved in `.factory/workflows/<id>/research/` and its conclusions reach the workers through their briefs; the workers themselves never use the web. Claude Code asks your permission for its web searches and fetches as usual. If you use the [Context7](https://github.com/upstash/context7) MCP server, either connect the claude.ai Context7 connector or register it locally under the name `context7` (for example `claude mcp add --transport http context7 https://mcp.context7.com/mcp`), and the researcher uses it to find the right API faster; it still confirms each answer in the official docs, because Context7's content is community-contributed. The kit does not install Context7. To turn research off, set `"roles": { "research-worker": { "enabled": false } }`.
 
+**Design (Figma or screenshots).** When your request cites a Figma link or an image in the repository, the orchestrator first sends `factory:design-worker` to read it. It defaults to Sonnet, reads the frames through the Figma MCP server or reads the images, maps the design onto your theme tokens and existing components, and lists what the design leaves out. The note is saved in `.factory/workflows/<id>/design/`, the frame screenshots are downloaded next to it, and workers and reviewers get both through their briefs; workers never call Figma. Things to know:
+- **Cite the design in the request.** A Figma link with `node-id`, or a path such as `docs/design/orders-filter.png`. The kit does not look for designs you did not cite. An image pasted into the chat is not enough: the workflow pauses and asks you to save it in the repository.
+- **Gaps come back to you.** A missing state (error, loading, empty) or asset makes the workflow ask; a colour with no theme token is mapped or gets a task, never hard-coded.
+- **Figma.** Install Figma's plugin (`claude plugin install figma@claude-plugins-official`) or add its server (`claude mcp add --transport http figma https://mcp.figma.com/mcp`). It needs a Dev or Full seat on a paid plan; with a View seat (20 calls a month), export PNGs into the repository instead. Without Figma tools, the workflow asks you for PNG exports.
+- **No visual check.** No agent runs the app to compare it with the design: the final report lists that check for you to do.
+
+To turn it off, set `"roles": { "design-worker": { "enabled": false } }`; cited designs are then read from PNG exports by the orchestrator itself.
+
 ## Pausing and resuming
 
 A workflow stops and tells you exactly what it needs when:

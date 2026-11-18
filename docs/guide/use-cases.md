@@ -2,7 +2,7 @@
 
 # Use cases: what the developer types in each mode
 
-The three examples below use the same React Native + Go monorepo as the [walkthrough](monorepo-walkthrough.md), already set up with `/factory:init`. Each one shows:
+The examples below use the same React Native + Go monorepo as the [walkthrough](monorepo-walkthrough.md), already set up with `/factory:init`. Each one shows:
 - why the kit picks the mode;
 - the stages;
 - **every command you type, and when**.
@@ -153,6 +153,32 @@ If `/grill-with-docs` is not installed, step 3 changes. The kit offers three opt
 - install it, then resume;
 - `/factory:resume use the native fallback`: the orchestrator interviews you itself, in rounds, and each answer is a `/factory:resume <answers>`;
 - stop.
+
+---
+
+## 4. STANDARD with a Figma design: status filter chips
+
+**Situation.** The designer drew status filter chips for the mobile orders list in Figma, with a selected state and an empty state. You have Figma's plugin installed (`claude plugin install figma@claude-plugins-official`) and a Dev seat.
+
+```text
+/factory:start Add status filter chips to the mobile OrdersList screen, as in https://www.figma.com/design/AbC123/Orders?node-id=12-34 (default and selected) and node-id=12-56 (empty state). Filtering happens on the client; no API change.
+```
+
+**What happens.** Classification as in case 2, then:
+
+1. **Design reference.** In planning, the orchestrator sends `factory:design-worker` a design brief `D1` naming nodes `12:34` and `12:56`, the theme (`mobile/src/theme/**`) and the UI components (`mobile/src/components/ui/**`). The note comes back with the layout, a token table, the components to reuse (the existing `Chip` has a `selected` variant), the texts, and the gaps:
+   - "The loading and error states are not in the design."
+   - "`radius/pill` (999) has no theme token."
+
+   The orchestrator downloads the frame screenshots with `factory-state fetch-design-image` into `.factory/workflows/<id>/design/`.
+2. **Gap questions, in one round.** For example:
+   - "1. The design has no loading state. Reuse the list's current skeleton? (recommended: yes)"
+   - "2. No pill radius in the theme. Add `radii.pill` to the theme as its own task? (recommended: yes)"
+3. **Plan.** The tasks cite `design/D1.md` in their constraints ("selected chip uses `theme.colors.primary` and `Chip` variant `selected`; no hex literals") and the acceptance criteria are checkable in code: states implemented, tokens used, texts verbatim.
+4. **Execution and review.** The frontend worker builds from the note and the screenshots; the code reviewer checks the change against the same note.
+5. **Final report.** It lists "Visual check pending: compare the running app with `design/D1.md` (states: default, selected, empty, loading)". Run the app in the simulator and compare.
+
+**What you type:** as in case 2, plus your answers to the gap questions. If Figma's tools are not available, the workflow pauses and asks you to export the frames as PNGs into the repository (for example `docs/design/orders-chips-default.png`) and reply with their paths.
 
 ---
 

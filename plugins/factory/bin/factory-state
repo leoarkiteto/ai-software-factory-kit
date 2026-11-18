@@ -3,5 +3,8 @@
 // Uses only dynamic import() so it runs whether Node treats this
 // extensionless file as CommonJS (installed plugin) or ESM (dev repo).
 import("../lib/cli/factory-state.mjs").then(({ run }) => {
-  process.exitCode = run(process.argv.slice(2));
+  // run returns a Promise only for commands that touch the network.
+  return Promise.resolve(run(process.argv.slice(2))).then((code) => {
+    process.exitCode = code;
+  });
 });

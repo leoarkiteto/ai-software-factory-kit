@@ -1,6 +1,6 @@
 # AI Software Factory Kit: final implementation report
 
-**Current release: 0.3.0-beta (2026-11-15), which adds the read-only `research-worker` (ADR-0013). See §8 for what beta means and the 1.0 criteria.** Sections 1–7 describe the v0.1.0 build, with the Phase 9 results added.
+**Current release: 0.4.0-beta (2026-11-18), which adds the read-only `design-worker` for Figma and screenshot references (ADR-0014), after 0.3.0-beta added the read-only `research-worker` (ADR-0013). The Figma path ran in seven real sessions on Figma's remote MCP server, on a TypeScript/React monorepo, and the kit defects they found are fixed (`docs/research/phase-12-figma-design.md`). Figma's plugin, connector and desktop servers are untested. See §8 for what beta means and the 1.0 criteria.** Sections 1–7 describe the v0.1.0 build, with the Phase 9 results added.
 
 Date: 2026-11-10. Built against Claude Code 2.1.319–2.1.321. Inputs: `docs/implementation-prompt.md` and `docs/architecture.md`.
 

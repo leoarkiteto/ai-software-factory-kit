@@ -18,6 +18,9 @@
 ## Research notes
 <paths in `manifest.artifacts.research` (`.factory/workflows/<id>/research/R<n>.md`), each with its topic and the dependency versions it covers; check the change against them. Or "none">
 
+## Design notes
+<paths in `manifest.artifacts.design` (`.factory/workflows/<id>/design/D<n>.md` and its images); check that the change implements the states, layout and texts they show with the mapped tokens and components. You cannot see the running app: judge the code, not pixels. Or "none">
+
 ## Change
 - Files changed per worker reports: <list>
 - New (untracked) files: <list from git status>; read these, since they are not in `git diff`

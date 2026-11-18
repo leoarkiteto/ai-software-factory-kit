@@ -102,6 +102,13 @@ test("STANDARD workflow through the CLI, with validation at every write", () => 
   const selfRev = json(["review", id, "--file", "-"], JSON.stringify({ ...rev, reviewer: "factory:backend-worker" }));
   assert.equal(selfRev.code, 1);
   assert.match(JSON.stringify(selfRev.data.errors), /not independent/);
+  // Independence is checked against the manifest, not only the report's own list.
+  const missing = json(["review", id, "--file", "-"], JSON.stringify({ ...rev, independence: { independent: true, implementedBy: ["factory:backend-worker"] } }));
+  assert.equal(missing.code, 1);
+  assert.match(JSON.stringify(missing.data.errors), /missing implementers.*frontend-worker/);
+  const hidden = json(["review", id, "--file", "-"], JSON.stringify({ ...rev, reviewer: "factory:frontend-worker", independence: { independent: true, implementedBy: ["factory:backend-worker"] } }));
+  assert.equal(hidden.code, 1);
+  assert.match(JSON.stringify(hidden.data.errors), /ran a reviewed task/);
   const ok = json(["review", id, "--file", "-"], JSON.stringify(rev));
   assert.equal(ok.data.decision.action, "integrate");
 
@@ -271,6 +278,34 @@ test("provider records requested from the current config, not a stale --requeste
     assert.equal(m2.providers.specification.used, "local");
   } finally {
     rmSync(join(repo, ".factory", "config.json"));
+  }
+});
+
+test("from a nested git repository, workflows go to the installed outer root", () => {
+  // A monorepo app with its own .git inside a repository where the Factory is installed.
+  const outer = mkdtempSync(join(tmpdir(), "factory-cli-outer-"));
+  try {
+    execFileSync("git", ["init", "-q"], { cwd: outer });
+    mkdirSync(join(outer, ".factory"));
+    writeFileSync(join(outer, ".factory", "config.json"), JSON.stringify({ schemaVersion: 1 }));
+    const nested = join(outer, "packages", "web");
+    mkdirSync(join(nested, "components"), { recursive: true });
+    execFileSync("git", ["init", "-q"], { cwd: nested });
+    const env = { ...process.env };
+    delete env.CLAUDE_PROJECT_DIR;
+    const r = spawnSync(cli, ["new", "--title", "Nested", "--request", "x"], { cwd: join(nested, "components"), encoding: "utf8", env });
+    assert.equal(r.status, 0, r.stderr);
+    const id = r.stdout.trim();
+    assert.ok(existsSync(join(outer, ".factory", "workflows", id, "manifest.json")));
+    assert.equal(existsSync(join(nested, ".factory")), false, "no orphan workflow in the nested repository");
+
+    // Without an installed root, the git toplevel is still used.
+    rmSync(join(outer, ".factory"), { recursive: true, force: true });
+    const r2 = spawnSync(cli, ["new", "--title", "Plain", "--request", "x"], { cwd: join(nested, "components"), encoding: "utf8", env });
+    assert.equal(r2.status, 0, r2.stderr);
+    assert.ok(existsSync(join(nested, ".factory", "workflows", r2.stdout.trim(), "manifest.json")));
+  } finally {
+    rmSync(outer, { recursive: true, force: true });
   }
 });
 

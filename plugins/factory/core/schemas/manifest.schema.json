@@ -241,6 +241,7 @@
           "plan",
           "planReview",
           "research",
+          "design",
           "validationReport",
           "finalReport"
         ]

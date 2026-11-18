@@ -8,14 +8,30 @@ import { validateManifest, StateError, TERMINAL } from "./state.mjs";
 
 export const FACTORY_DIR = ".factory";
 
-/** Repository root: explicit, $CLAUDE_PROJECT_DIR, git toplevel, or cwd. */
-export function findRepoRoot(explicit) {
+/**
+ * Repository root: explicit, $CLAUDE_PROJECT_DIR, the nearest ancestor of cwd
+ * where the Factory is installed (.factory/config.json), the git toplevel, or
+ * cwd. The installed root comes before git, so a shell left in a nested git
+ * repository (a monorepo app with its own .git) still finds the workflows at
+ * the outer root (phase-12 probe, session 7).
+ */
+export function findRepoRoot(explicit, cwd = process.cwd()) {
   if (explicit) return resolve(explicit);
   if (process.env.CLAUDE_PROJECT_DIR) return resolve(process.env.CLAUDE_PROJECT_DIR);
+  const installed = findInstalledRoot(cwd);
+  if (installed) return installed;
   try {
-    return execFileSync("git", ["rev-parse", "--show-toplevel"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+    return execFileSync("git", ["rev-parse", "--show-toplevel"], { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
   } catch {
-    return process.cwd();
+    return resolve(cwd);
+  }
+}
+
+/** Nearest directory at or above `start` that holds .factory/config.json, or null. */
+export function findInstalledRoot(start) {
+  for (let dir = resolve(start); ; dir = dirname(dir)) {
+    if (existsSync(join(dir, FACTORY_DIR, "config.json"))) return dir;
+    if (dirname(dir) === dir) return null;
   }
 }
 

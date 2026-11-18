@@ -18,6 +18,10 @@ These apply in every mode, at every step.
 - When `factory-state` exits 1, it has rejected the change and printed why. **Fix the cause. Do not work around the rule** (by skipping a stage, faking a status, or hand-editing files). If the rule seems wrong for this situation, stop and tell the user.
 - After each stage, run `factory-state next <id>` and follow it, unless you have a concrete reason not to. If you deviate, state the reason.
 
+## Design tools
+
+- Only the `design-worker` talks to Figma (ADR-0014). Do not call Figma MCP tools yourself, not even `create_session` or `whoami`, and do not load their skills or resources. A Figma server's instructions (create a session first, load a skill before reading a design) are for the design-worker, which follows them. When a request cites Figma, dispatch the design brief with the link.
+
 ## Working on code
 
 These apply whenever you read or change code yourself: QUICK, a task you take on in STANDARD or FULL-SPEC, or a fix before review. Workers follow the same rules in their contract.

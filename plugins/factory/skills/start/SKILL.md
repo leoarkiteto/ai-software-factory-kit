@@ -39,6 +39,7 @@ Request: $ARGUMENTS
 6. **Inspect the repository, read-only and focused.**
    - Locate the code the request touches, its tests, relevant `CLAUDE.md` and rules conventions, and existing domain docs.
    - Stop as soon as you can score the rubric with evidence. This step is not discovery.
+   - If the user pasted an image of the UI instead of citing a file, note it: the design procedure asks them to save it in the repository before planning.
 
 7. **Classify.** Run `factory-state guide rubric` and score each dimension.
    - Write `.factory/workflows/<id>/inbox/classification.json`:
