@@ -214,3 +214,38 @@ Setup: same repository, server and permission mode. The plugin was reinstalled a
 - a planted missing-asset gap;
 - whether the orchestrator may edit source code in STANDARD mode (session 3);
 - a real session that confirms QUICK now stops on design gaps.
+
+### Session 6 (2026-11-18)
+
+Setup: same repository, server and permission mode. The installed plugin was at the commit before the QUICK design-gap fix, which did not matter here because the run was STANDARD. **Planted gap: a wrong link.** The request asked for a small form with a text input and a slider, and cited a Figma node that is an unrelated card (four variants, no input, no slider). The workflow completed with two frontend tasks and one independent review round.
+
+1. **Tool names:** `mcp__figma__…` again. No permission prompt.
+2. **Renders:** `excludeScreenshot: true` plus `get_screenshot`, which returned a `www.figma.com/api/mcp/asset/…` URL. That makes three sessions in a row without an inline image. The render was not stored, because the note was not used (see below).
+3. **Note quality.**
+   - **Status `blocked`, for the right reason.**
+     - The worker said what the node actually is and that it holds no form, input or slider.
+     - It did not describe a form, and did not read the repository's theme, since there was nothing to map.
+     - It listed the node's variables "for reference only, not checked against the theme", with no ✅/≈/❌ marks. That follows the session-4 rule.
+   - **Figma calls: 4**, and the note's count was right.
+4. **Orchestrator.**
+   - **It stopped before planning** (`block --kind user_input`) and offered three options:
+     - the correct link;
+     - PNG exports saved in the repository;
+     - going on from the request's text alone, with visuals made from the theme's tokens.
+   - It added a few questions, each with a recommendation. One of them ("does the counter show in the input? yes, if the design shows it") assumed a design that did not exist.
+   - **The user chose to go on without the design.** The plan said so in its summary and Risks ("no Figma design, so the visuals are invented"), kept a guessed slider range as an assumption, and was approved before any code was written. The final report says that no design exists to compare with.
+   - **The workflow survived a `/clear`.** After the clear, `/factory:resume` continued from the block's description alone.
+   - **Build.** A build failure caused by local services that were not running was recorded as an issue. The user started the services, the build passed on retry, and the issue was resolved.
+5. **Kit problems seen.**
+   - **The `blocked` note was not saved.** Procedure step 5 comes after step 4, so the orchestrator never wrote a `design/D1.md`. The only record of what the node shows is the block's one-line description and the plan. A `blocked` note should be saved and recorded too, so a resume or a later reader keeps the evidence.
+   - **The procedure has no "go on without the design" option.** Step 4 says not to go on without the design the user cited, but the orchestrator offered that option, and the user took it. That is the user's call, so the procedure should allow it explicitly. When the user does choose it, the plan should say so, and the final report should say that no design exists to compare with. Both happened here.
+   - **A hex literal with no design note.** The new component reuses a track colour that has no theme token, as a hex literal copied from an existing component. The "never write a literal" rule lives in the design procedure, which did not apply once the design was dropped. The final report flagged the missing token.
+
+**Still open after session 6:**
+- `download_assets` and the S3 host;
+- URL lifetime;
+- the plugin, connector and desktop prefixes;
+- a planted missing-asset gap;
+- whether the orchestrator may edit source code in STANDARD mode (session 3);
+- a real session that confirms QUICK now stops on design gaps (session 5 fix);
+- saving `blocked` notes, and a "go on without the design" option in the design procedure.
