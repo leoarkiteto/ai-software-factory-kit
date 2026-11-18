@@ -251,3 +251,25 @@ Setup: same repository, server and permission mode. The installed plugin was at 
 - whether the orchestrator may edit source code in STANDARD mode (session 3);
 - a real session that confirms QUICK now stops on design gaps (session 5 fix);
 - a real session that confirms `blocked` notes are saved (session 6 fix).
+
+### Probe: `download_assets` and URL lifetime (2026-11-18)
+
+Not a workflow run. Both checks were made from the kit's repository, against the same design-system file as sessions 2 to 6.
+
+1. **`download_assets`, 1 call on a card node** (after `create_session`).
+   - It returned 1 export (the node's render), 2 raw images and 4 SVGs. **All 7 URLs are on `https://www.figma.com/api/mcp/asset/<uuid>[.ext]`.** The raw images have no file extension.
+   - A plain `curl` with no cookie or token got HTTP 200 straight away, with no redirect. The responses carry `cache-control: private, no-store`.
+   - `fetchDesignImage` stored the export (a PNG of about 1.5 MB) and a raw image (a PNG of about 4.6 MB). It refused the SVG ("not a PNG or JPEG"), as designed.
+   - The export is the node at full size, while `get_screenshot` on the same node gave a render downscaled to 1024 px. The kit does not need the larger one, so the design-worker keeps using `get_screenshot`.
+   - **The S3 host never appeared** in any session or in this check, so it was removed from the allow-list in `plugins/factory/lib/design.mjs`, and the tests now expect it to be refused. A future S3 URL would be refused, and the orchestrator would ask the user for a PNG export.
+2. **URL lifetime, first data point.**
+   - The `get_screenshot` URLs kept in the notes of sessions 2, 4 and 5 still returned HTTP 200 with the full PNG, without authentication, 21 to 23.5 hours after they were issued.
+   - So the lifetime is at least about one day. The 7-day figure in the tools' text is still unchecked. The next checks are at 7 and 8 days, on 2026-11-24 and 2026-11-25.
+
+**Still open after this probe:**
+- URL lifetime beyond one day;
+- the plugin, connector and desktop prefixes, and the loopback origin (not planned);
+- a planted missing-asset gap;
+- whether the orchestrator may edit source code in STANDARD mode (session 3);
+- a real session that confirms QUICK now stops on design gaps (session 5 fix);
+- a real session that confirms `blocked` notes are saved (session 6 fix).

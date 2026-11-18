@@ -17,7 +17,6 @@ test("only Figma hosts over HTTPS, or the desktop server's loopback origin, are 
     "https://figma.com/x.png",
     "https://www.figma.com/api/mcp/asset/abc",
     "https://s3-alpha.figma.com/img/1/2",
-    "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/abc?X-Amz-Signature=1",
     "http://127.0.0.1:3845/assets/abc.png",
     "http://localhost:3845/assets/abc.png",
   ]) assert.equal(isAllowedDesignUrl(ok), true, ok);
@@ -27,6 +26,7 @@ test("only Figma hosts over HTTPS, or the desktop server's loopback origin, are 
     "https://figma.com.evil.example/x.png",
     "https://figma.com:8443/x.png",
     "https://user:pw@www.figma.com/x.png",
+    "https://figma-alpha-api.s3.us-west-2.amazonaws.com/images/abc?X-Amz-Signature=1",
     "https://other-bucket.s3.us-west-2.amazonaws.com/x.png",
     "http://127.0.0.1:8080/x.png",
     "file:///etc/passwd",

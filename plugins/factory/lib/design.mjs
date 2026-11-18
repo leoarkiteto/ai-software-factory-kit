@@ -11,11 +11,11 @@ export const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 const MAX_REDIRECTS = 3;
 const TIMEOUT_MS = 30_000;
 
-// www.figma.com (get_screenshot on the remote server) is confirmed by the
-// phase-12 probe; the S3 host and the loopback origin are still unconfirmed
-// (docs/research/phase-12-figma-design.md).
+// The phase-12 probe saw only www.figma.com, from get_screenshot,
+// get_design_context and download_assets on the remote server, with no
+// redirect. An S3 host was dropped after the probe never saw it; the loopback
+// origin is still unconfirmed (docs/research/phase-12-figma-design.md).
 const HTTPS_HOST_SUFFIXES = ["figma.com"];
-const HTTPS_HOSTS = ["figma-alpha-api.s3.us-west-2.amazonaws.com"];
 // The Figma desktop MCP server serves assets on loopback, port 3845.
 const LOOPBACK_ORIGINS = ["http://127.0.0.1:3845", "http://localhost:3845"];
 
@@ -31,7 +31,7 @@ export function isAllowedDesignUrl(raw) {
   if (u.protocol === "http:") return LOOPBACK_ORIGINS.includes(u.origin);
   if (u.protocol !== "https:" || (u.port && u.port !== "443")) return false;
   const host = u.hostname.toLowerCase();
-  return HTTPS_HOSTS.includes(host) || HTTPS_HOST_SUFFIXES.some((s) => host === s || host.endsWith(`.${s}`));
+  return HTTPS_HOST_SUFFIXES.some((s) => host === s || host.endsWith(`.${s}`));
 }
 
 /** "png" or "jpg" from the file's first bytes, or null. SVG is refused: it is text and can carry script. */
