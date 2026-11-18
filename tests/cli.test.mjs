@@ -274,6 +274,34 @@ test("provider records requested from the current config, not a stale --requeste
   }
 });
 
+test("from a nested git repository, workflows go to the installed outer root", () => {
+  // A monorepo app with its own .git inside a repository where the Factory is installed.
+  const outer = mkdtempSync(join(tmpdir(), "factory-cli-outer-"));
+  try {
+    execFileSync("git", ["init", "-q"], { cwd: outer });
+    mkdirSync(join(outer, ".factory"));
+    writeFileSync(join(outer, ".factory", "config.json"), JSON.stringify({ schemaVersion: 1 }));
+    const nested = join(outer, "packages", "web");
+    mkdirSync(join(nested, "components"), { recursive: true });
+    execFileSync("git", ["init", "-q"], { cwd: nested });
+    const env = { ...process.env };
+    delete env.CLAUDE_PROJECT_DIR;
+    const r = spawnSync(cli, ["new", "--title", "Nested", "--request", "x"], { cwd: join(nested, "components"), encoding: "utf8", env });
+    assert.equal(r.status, 0, r.stderr);
+    const id = r.stdout.trim();
+    assert.ok(existsSync(join(outer, ".factory", "workflows", id, "manifest.json")));
+    assert.equal(existsSync(join(nested, ".factory")), false, "no orphan workflow in the nested repository");
+
+    // Without an installed root, the git toplevel is still used.
+    rmSync(join(outer, ".factory"), { recursive: true, force: true });
+    const r2 = spawnSync(cli, ["new", "--title", "Plain", "--request", "x"], { cwd: join(nested, "components"), encoding: "utf8", env });
+    assert.equal(r2.status, 0, r2.stderr);
+    assert.ok(existsSync(join(nested, ".factory", "workflows", r2.stdout.trim(), "manifest.json")));
+  } finally {
+    rmSync(outer, { recursive: true, force: true });
+  }
+});
+
 test("guide serves core procedures and refuses traversal", () => {
   assert.match(fs(["guide"]).out, /workflows\/quick/);
   assert.match(fs(["guide", "workflows/quick"]).out, /^# QUICK Workflow/);

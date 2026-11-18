@@ -273,3 +273,31 @@ Not a workflow run. Both checks were made from the kit's repository, against the
 - whether the orchestrator may edit source code in STANDARD mode (session 3);
 - a real session that confirms QUICK now stops on design gaps (session 5 fix);
 - a real session that confirms `blocked` notes are saved (session 6 fix).
+
+### Session 7 (2026-11-18)
+
+Setup: same repository, server and permission mode. The plugin was reinstalled at the commit with the `blocked`-note fix. **Planted gap: a wrong link again.** The request asked for a small feedback form with three text inputs and a text area, and cited a Figma node that is an unrelated button component set. The workflow ran in STANDARD mode and completed with two tasks and one independent review round.
+
+1. **Design reference.**
+   - The worker made 3 Figma calls (`get_design_context`, `get_screenshot`, `get_variable_defs`), and the note's count was right. The screenshot came back as a `www.figma.com` URL.
+   - The note was `blocked` and said what the node actually shows. It did not describe a form, and did not open any other node.
+2. **Session 6 fix confirmed.**
+   - The orchestrator saved and recorded the `blocked` note as `design/D1.md`.
+   - It stopped with the note's reason and the three options. The user chose to go on without a design.
+   - The plan said "no design is used" in its Summary and had a Risks row for it. The final report used the exact line from the procedure ("Visual check pending: no design was used (D1 blocked: …)").
+   - No hex literal this time: the plan specified tokens only.
+3. **Kit bug: a stray workflow from a nested git repository.**
+   - The product repository has an app folder with its own `.git`, a repository nested inside the main one.
+   - While exploring, the orchestrator's shell stayed inside that app folder, and Claude Code's Bash tool had no `CLAUDE_PROJECT_DIR`. So `factory-state new` took the nested repository's git toplevel as the root, and created the manifest under the app folder's `.factory/`.
+   - The orchestrator's Write calls used absolute paths at the outer root, so the next commands failed with "workflow not found" and "path is outside the repository". The orchestrator diagnosed it, created a second workflow (`…-ret`) from the outer root, and told the user about the stray folder. It did not delete it.
+   - Two leftovers: an orphan manifest in the app folder's `.factory/`, and a half-made workflow folder (classification and inbox only, no manifest) at the outer root.
+   - **Fixed after session 7:** `findRepoRoot` in `plugins/factory/lib/store.mjs` now looks for the nearest ancestor with `.factory/config.json`, which the installer writes, before asking git. A shell left in a nested repository now finds the installed outer root. A new test in `tests/cli.test.mjs` covers it, and also checks that a repository without an installed root still falls back to git.
+4. **Minor.** Before dispatching the design-worker, the orchestrator itself called the Figma server's `create_session`, and read the server's design-to-code skill resource. The server instructions ask for that call, but the kit's rule is that only the design-worker talks to Figma. It cost one call and had no effect on the note.
+
+**Still open after session 7:**
+- URL lifetime beyond one day (checks due on 2026-11-24 and 2026-11-25);
+- the plugin, connector and desktop prefixes, and the loopback origin (not planned);
+- a planted missing-asset gap;
+- whether the orchestrator may edit source code in STANDARD mode (session 3);
+- a real session that confirms QUICK now stops on design gaps (session 5 fix);
+- whether the orchestrator may call Figma itself (`create_session`) before dispatching the design-worker.
