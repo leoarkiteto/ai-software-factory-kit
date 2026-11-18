@@ -241,6 +241,8 @@ Setup: same repository, server and permission mode. The installed plugin was at 
    - **The procedure has no "go on without the design" option.** Step 4 says not to go on without the design the user cited, but the orchestrator offered that option, and the user took it. That is the user's call, so the procedure should allow it explicitly. When the user does choose it, the plan should say so, and the final report should say that no design exists to compare with. Both happened here.
    - **A hex literal with no design note.** The new component reuses a track colour that has no theme token, as a hex literal copied from an existing component. The "never write a literal" rule lives in the design procedure, which did not apply once the design was dropped. The final report flagged the missing token.
 
+**Fixed after session 6:** `blocked` notes and going on without a design. In `workflows/design.md`, saving the note (now step 4) comes before handling `blocked` (now step 5), so a `blocked` note is always saved and recorded. Step 5 offers three options: the correct link, PNG exports (each as a new brief, `D<n+1>`), or going on without a design, which only the user can choose. When the user chooses it, the plan says so in the Summary and Risks, the theme rules still forbid literals, and the final report states that no design was used.
+
 **Still open after session 6:**
 - `download_assets` and the S3 host;
 - URL lifetime;
@@ -248,4 +250,4 @@ Setup: same repository, server and permission mode. The installed plugin was at 
 - a planted missing-asset gap;
 - whether the orchestrator may edit source code in STANDARD mode (session 3);
 - a real session that confirms QUICK now stops on design gaps (session 5 fix);
-- saving `blocked` notes, and a "go on without the design" option in the design procedure.
+- a real session that confirms `blocked` notes are saved (session 6 fix).

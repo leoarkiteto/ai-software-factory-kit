@@ -24,8 +24,16 @@ Do not go looking for designs the user did not cite, even if the repository has 
 1. **Check the role.** `factory-state route design-worker`. If it is disabled or unknown and the request cites Figma, ask the user for PNG exports of the cited frames saved in the repository (`block --kind user_input`), and continue with those images as the source. Without a design-worker at all, read the images yourself and write the note in the same format.
 2. **Write the brief(s).** Fill `factory-state guide templates/design-brief`. Number them `D1`, `D2`, …, one per screen or flow. Name every Figma node or image to read, the theme and component paths, the platform, and the states this change needs. Default budget: about 10 Figma calls per brief.
 3. **Dispatch.** Launch the briefs as parallel Agent tool calls in one message: `subagent_type` and `model` from `route` (omit `model` when `route` says so), `prompt` the filled brief.
-4. **Handle `blocked`.** If the note's status is `blocked` (no Figma tools, no access, rate limit), ask the user for PNG exports of the frames saved in the repository, then dispatch again with the images as the source. Do not go on without the design the user cited.
-5. **Save the note unchanged** with the Write tool to `.factory/workflows/<id>/design/D<n>.md`, and record it: `factory-state artifact <id> design .factory/workflows/<id>/design/D<n>.md` (the kind keeps a list).
+4. **Save the note unchanged**, whatever its status, `blocked` included, with the Write tool to `.factory/workflows/<id>/design/D<n>.md`. Record it: `factory-state artifact <id> design .factory/workflows/<id>/design/D<n>.md` (the kind keeps a list). A `blocked` note is the only record of why the design could not be used, and `/factory:resume` needs it.
+5. **Handle `blocked`.** If the note's status is `blocked` (no Figma tools, no access, rate limit, or the cited node does not show what the request describes), stop (`block --kind user_input`). Quote the note's reason, and offer:
+   - the correct Figma link or node, dispatched as a new brief `D<n+1>`;
+   - PNG exports saved in the repository, dispatched as a new brief `D<n+1>` with the images as the source;
+   - going on without a design. That is only on the user's explicit choice; never pick it yourself.
+
+   If the user chooses to go on without a design, skip steps 6 to 8. Then:
+   - **Plan:** say so in the Summary, and add a Risks row saying the visuals come from the theme's tokens and existing components, not from a design.
+   - **Values:** the theme rules still apply. Use tokens, never a literal for a value the theme lacks: map it to the nearest token, or add a task for the new token.
+   - **Final report:** write `Visual check pending: no design was used (D<n> blocked: <reason>)`.
 6. **Store the screenshots at once.** Figma's URLs expire, and the files Claude Code saves for inline images are local to this session. For each entry under the note's *Screenshots*:
    - a URL: `factory-state fetch-design-image <id> D<n> --node <node ID> --url '<url>'`;
    - "inline, saved at <path>": `factory-state fetch-design-image <id> D<n> --node <node ID> --image '<path>'`.
