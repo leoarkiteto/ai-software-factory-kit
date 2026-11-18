@@ -43,6 +43,19 @@ Then launch every worker in the batch **in a single message, as parallel Agent t
 
 **When parallel is not worth it.** If the batch is a single small task, or the remaining work is quicker to do than to brief, you may implement a task yourself. Record `--agent orchestrator`. Any review of that work must then come from a different agent.
 
+**Small fixes to a completed task.** Sometimes a later task, or your own check, finds a defect in a task a worker has already completed (for example, a failing test that points at two lines). You may fix it yourself, but only when all of these hold:
+- the fix stays inside that task's `scope.files`;
+- it corrects one specific, recorded problem (an issue, a failing test or an unmet criterion) and adds no new behaviour;
+- it happens before the review round that covers the task.
+
+Record it as a new attempt of that task, never as an untracked edit. Run each command as its own call:
+```bash
+factory-state task <id> <T> --status pending
+factory-state task <id> <T> --status running --agent orchestrator --model null
+factory-state task <id> <T> --status completed --result '<what you fixed, and the issue ID>'
+```
+The task's `implementedBy` then lists both the worker and `orchestrator`, and the review checks independence against both. Anything larger, or anything outside the scope, goes back to the worker as a retry with the failure in the brief.
+
 ### 3. Collect each result
 
 When a worker returns:

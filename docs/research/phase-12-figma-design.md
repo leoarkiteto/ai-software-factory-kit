@@ -298,6 +298,12 @@ Setup: same repository, server and permission mode. The plugin was reinstalled a
 - URL lifetime beyond one day (checks due on 2026-11-24 and 2026-11-25);
 - the plugin, connector and desktop prefixes, and the loopback origin (not planned);
 - a planted missing-asset gap;
-- whether the orchestrator may edit source code in STANDARD mode (session 3);
 - a real session that confirms QUICK now stops on design gaps (session 5 fix);
-- whether the orchestrator may call Figma itself (`create_session`) before dispatching the design-worker.
+- a real session that confirms the two decisions below.
+
+**Decided after session 7:**
+- **Orchestrator fixes in STANDARD (session 3).**
+  - `workflows/execution.md` now allows the orchestrator to make a small fix to a completed task when all of these hold: it stays inside the task's scope, corrects one recorded problem, adds no behaviour, and happens before review. It must be recorded as a new attempt with `--agent orchestrator`.
+  - The manifest now keeps every agent that ran a task in `implementedBy`, where `assignment` only held the latest.
+  - `factory-state review` checks a report's independence against that list. It rejects a report that leaves out an implementer, or whose reviewer ran a reviewed task (tests in `tests/state.test.mjs` and `tests/cli.test.mjs`).
+- **Only the design-worker talks to Figma (session 7).** The operating rules tell the orchestrator not to call Figma tools or follow a Figma server's instructions. The design-worker calls `create_session` first when the server offers it.

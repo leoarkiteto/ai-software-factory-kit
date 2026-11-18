@@ -188,6 +188,22 @@ test("tasks cannot start with unmet dependencies or outside executing", () => {
   assert.throws(() => S.updateTask(m, "T1", { status: "completed" }, config), /pending -> completed is not allowed/);
 });
 
+test("every agent that runs a task is kept in implementedBy, while assignment holds the latest", () => {
+  let m = standardExecuting([task("T1")]);
+  m = S.updateTask(m, "T1", { status: "running", agent: "factory:frontend-worker", model: "sonnet" }, config);
+  m = S.updateTask(m, "T1", { status: "completed", result: "ok" }, config);
+  // The orchestrator fixes the completed task itself, as a new attempt.
+  m = S.updateTask(m, "T1", { status: "pending" }, config);
+  m = S.updateTask(m, "T1", { status: "running", agent: "orchestrator", model: null }, config);
+  m = S.updateTask(m, "T1", { status: "completed", result: "two-line fix" }, config);
+  const t = m.tasks.find((x) => x.id === "T1");
+  assert.equal(t.attempts, 2);
+  assert.deepEqual(t.assignment, { agent: "orchestrator", model: null });
+  assert.deepEqual(t.implementedBy, ["factory:frontend-worker", "orchestrator"]);
+  assert.deepEqual(S.taskImplementers({ assignment: { agent: "factory:qa-worker" } }), ["factory:qa-worker"], "older manifests fall back to assignment");
+  assert.deepEqual(S.taskImplementers({}), []);
+});
+
 test("attempts are counted and bounded; exhausted failure blocks transitive dependants", () => {
   let m = standardExecuting([task("T1"), task("T2", ["T1"]), task("T3", ["T2"]), task("T4")]);
   m = S.updateTask(m, "T1", { status: "running" }, config);

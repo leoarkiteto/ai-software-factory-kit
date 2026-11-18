@@ -102,6 +102,13 @@ test("STANDARD workflow through the CLI, with validation at every write", () => 
   const selfRev = json(["review", id, "--file", "-"], JSON.stringify({ ...rev, reviewer: "factory:backend-worker" }));
   assert.equal(selfRev.code, 1);
   assert.match(JSON.stringify(selfRev.data.errors), /not independent/);
+  // Independence is checked against the manifest, not only the report's own list.
+  const missing = json(["review", id, "--file", "-"], JSON.stringify({ ...rev, independence: { independent: true, implementedBy: ["factory:backend-worker"] } }));
+  assert.equal(missing.code, 1);
+  assert.match(JSON.stringify(missing.data.errors), /missing implementers.*frontend-worker/);
+  const hidden = json(["review", id, "--file", "-"], JSON.stringify({ ...rev, reviewer: "factory:frontend-worker", independence: { independent: true, implementedBy: ["factory:backend-worker"] } }));
+  assert.equal(hidden.code, 1);
+  assert.match(JSON.stringify(hidden.data.errors), /ran a reviewed task/);
   const ok = json(["review", id, "--file", "-"], JSON.stringify(rev));
   assert.equal(ok.data.decision.action, "integrate");
 

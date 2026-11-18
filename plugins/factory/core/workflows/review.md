@@ -10,7 +10,7 @@ Runs an independent review round while the workflow is `reviewing`. It also cove
 
 3. **Prepare the round.**
    - Round number: the manifest's `review.attempts + 1`. Both review kinds in the same round use the same number.
-   - Implementers: the distinct `assignment.agent` values of the reviewed tasks.
+   - Implementers: every agent in the reviewed tasks' `implementedBy` (`factory-state show <id> --json` shows it; older manifests have only `assignment.agent`). Put them all in the brief: `factory-state review` rejects a report whose `independence.implementedBy` leaves one out, or whose reviewer ran a reviewed task.
    - **Independence:** never send the work to an agent that implemented any of it. If you (`orchestrator`) implemented a task, the reviewer is still a fresh `factory:code-reviewer` context, which counts as independent.
    - Run `git status --porcelain` and keep the output: this is the **before snapshot**. Run it exactly like that, as its own Bash call: no pipes, hashing (`| md5`), `&&` chains or `git -C`. Those need permissions the user may not have granted.
 

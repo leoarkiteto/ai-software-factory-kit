@@ -113,6 +113,15 @@
         }
       }
     },
+    "implementedBy": {
+      "description": "Every agent that has run this task, in order of first run (assignment holds only the latest). Reviews check their independence against it.",
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
     "attempts": {
       "description": "Number of times the task was started (numbers worker reports).",
       "type": "integer",

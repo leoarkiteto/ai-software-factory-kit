@@ -367,6 +367,18 @@ function runCommand(argv, { stdout = process.stdout, stderr = process.stderr } =
         const m0 = load(requireId());
         const report = readInput(need(flags, "file"));
         const errors = checkReviewReport(report);
+        if (!errors.length && report.independence.independent) {
+          // Independence is checked against who actually ran the tasks, not only the report's claim.
+          const ids = report.subject?.taskIds ?? [];
+          const ran = new Set(m0.tasks.filter((t) => ids.includes(t.id)).flatMap(S.taskImplementers));
+          if (ran.has(report.reviewer)) {
+            errors.push({ path: "$.independence", message: `reviewer ${report.reviewer} ran a reviewed task; review is not independent` });
+          }
+          const missing = [...ran].filter((a) => !report.independence.implementedBy.includes(a));
+          if (missing.length) {
+            errors.push({ path: "$.independence.implementedBy", message: `missing implementers recorded in the manifest: ${missing.join(", ")}` });
+          }
+        }
         if (errors.length) throw new S.StateError("review report rejected", errors);
         const rel = `${store.FACTORY_DIR}/workflows/${m0.id}/reviews/${report.attempt}-${report.kind}.json`;
         const entry = { attempt: report.attempt, kind: report.kind, reviewer: report.reviewer, outcome: report.outcome, independent: report.independence.independent, report: rel };

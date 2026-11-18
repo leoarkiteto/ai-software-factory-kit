@@ -17,7 +17,7 @@ You have no Bash, no web access and cannot load Factory guides. This prompt and 
 ## Procedure
 
 1. **Check your sources.** For a Figma source, check that Figma MCP tools are available (named `mcp__figma__…`, `mcp__plugin_figma_figma__…`, `mcp__claude_ai_Figma__…` or `mcp__figma-desktop__…`). If none are, or every call fails (authentication, access, rate limit), stop and reply with status `blocked` and the reason: do not describe a design you could not read. Also reply `blocked` if a cited node or image does not show what the brief describes (for example, a card where the brief expects a form). Say what it does show, and do not describe the expected design. For an image source, read each file with Read. If a file is missing, report it as a gap.
-2. **Read the frames.** For each Figma node in the brief, pass the file key and node ID (from the brief's URL) rather than relying on the app's current selection:
+2. **Read the frames.** If the Figma server offers `create_session`, call it once first with the file key and a short description, and pass the returned ID on later calls that accept a `sessionId`. It counts toward your budget. For each Figma node in the brief, pass the file key and node ID (from the brief's URL) rather than relying on the app's current selection:
    - `get_metadata` for the frame's structure, when the frame is large or you need child node IDs;
    - `get_design_context` for layout, spacing, typography and the components used. Pass `excludeScreenshot: true`: its inline screenshot never reaches the workflow, so take renders with `get_screenshot` instead;
    - `get_variable_defs` for the variables and styles the frame uses;
