@@ -5465,15 +5465,15 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-detail="context" x="339.6" y="575.8" class="t-muted" font-size="8" text-anchor="middle">task DAG covering every FR</text>
         </g>
 
-        <g id="node-plan_review" data-node-id="plan_review" data-node-label="Plan review" tabindex="0" role="button" aria-label="Focus Plan review, architecture-reviewer, Planning" aria-pressed="false" data-node-kind="backend" data-node-sublabel="architecture-reviewer" data-node-context="Planning">
-          <title>Plan review · architecture-reviewer · Planning</title>
+        <g id="node-plan_review" data-node-id="plan_review" data-node-label="Opus plan review" tabindex="0" role="button" aria-label="Focus Opus plan review, architecture-reviewer, Planning" aria-pressed="false" data-node-kind="backend" data-node-sublabel="architecture-reviewer" data-node-context="Planning">
+          <title>Opus plan review · architecture-reviewer · Planning</title>
           <rect x="533.2" y="529" width="112" height="52" rx="8" class="c-mask"/>
           <rect x="533.2" y="529" width="112" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
           <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(539.2 535) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="589.2" y="550" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Plan review</text>
-          <text data-detail="context" x="589.2" y="567" class="t-muted" font-size="8" text-anchor="middle">architecture-reviewer</text>
+          <text data-node-label="" data-detail-anchor="" x="589.2" y="561" class="t-primary" font-size="10.8" font-weight="600" text-anchor="middle">Opus plan review</text>
+          <text data-detail="context" x="589.2" y="575.9" class="t-muted" font-size="8" text-anchor="middle">architecture-reviewer</text>
         </g>
 
         <g id="node-approve_plan" data-node-id="approve_plan" data-node-label="⏸ Approve the plan" tabindex="0" role="button" aria-label="Focus ⏸ Approve the plan, Planning" aria-pressed="false" data-node-kind="security" data-node-context="Planning">
@@ -5790,6 +5790,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <ul>
           <li>Product code is not changed before you approve the plan</li>
           <li>Discovery may write domain docs (GLOSSARY.md, ADRs) and nothing else</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot amber"></div>
+          <h3>Model routing (default)</h3>
+        </div>
+        <ul>
+          <li>Orchestrator: session model (main thread), typically Opus $$$</li>
+          <li>Workers and design-worker: Sonnet $$; research-worker: Haiku $</li>
+          <li>Reviewers: Opus $$$; remap tiers in .factory/config.json</li>
         </ul>
       </div>
     </div>
