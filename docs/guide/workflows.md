@@ -23,6 +23,8 @@ flowchart TD
     C -. "low confidence" .-> U[/"⏸ Confirm the mode"/]
 ```
 
+[Interactive version](../diagrams/classification.en.html)
+
 - The thresholds and the escalation dimensions come from `classification` in the config. The defaults are shown above.
 - `--mode quick|standard|full_spec` forces a mode, and the forced mode is recorded with its reason.
 - Uncertainty counts only when the repository cannot resolve it. A request that states its decisions scores lower: in Phase 9, the same feature scored FULL-SPEC 15 when worded vaguely and STANDARD 10 once its decisions were stated.
@@ -49,6 +51,8 @@ flowchart TD
     IN --> FIN["Final validation,<br/>short final report"]
     FIN --> C(["completed"])
 ```
+
+[Interactive version](../diagrams/quick-mode.en.html)
 
 - Escalation after execution has started goes through `replanning → planning` with `--mode standard`.
 - Because the orchestrator implements, a review, when one is required, must go to `factory:code-reviewer`. The orchestrator never reviews its own work.
@@ -78,6 +82,8 @@ flowchart TD
     IN --> AC["Final validation, check every AC,<br/>final report with a follow-up request"]
     AC --> C(["completed"])
 ```
+
+[Interactive version](../diagrams/standard-mode.en.html)
 
 - Execution and review are detailed in §5.
 - The round limit is `review.maxIterations`, 3 by default.
@@ -115,6 +121,8 @@ flowchart TD
     V --> C(["completed"])
 ```
 
+[Interactive version](../diagrams/full-spec-mode.en.html)
+
 - Discovery may write domain docs (`GLOSSARY.md`, ADRs) and nothing else.
 - Only you can start `/grill-with-docs`, which is why discovery always pauses.
 
@@ -142,6 +150,8 @@ flowchart TD
     SUB -- integrate --> IN(["integrating"])
     SUB -- escalate --> ESC[/"⏸ Escalation"/]
 ```
+
+[Interactive version](../diagrams/orchestrator-loop.en.html)
 
 - A failed task is retried up to `execution.maxTaskAttempts` times, 2 by default. After that its dependants are blocked and `next` asks for a replan.
 - A worker that hits a "Factory guard" denial stops and reports `blocked`. It never works around the denial.
@@ -175,6 +185,8 @@ stateDiagram-v2
     failed --> [*]
     cancelled --> [*]
 ```
+
+[Interactive version](../diagrams/workflow-states.en.html)
 
 - Every open status can also move to `failed` or `cancelled`. Those edges are left out of the diagram for readability.
 - `failed` means the work could not be done. It can be resumed into `replanning` with your approval.

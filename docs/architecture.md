@@ -136,6 +136,8 @@ flowchart TB
     INSTALLER -.-> INFRA
 ```
 
+[Interactive version](diagrams/system-overview.html)
+
 ---
 
 ## 4. Architectural Layers
@@ -257,6 +259,8 @@ flowchart TD
     G --> H[Final Report]
 ```
 
+[Interactive version](diagrams/quick-workflow.html)
+
 Characteristics:
 
 - Minimal planning.
@@ -289,6 +293,8 @@ flowchart TD
     K --> L[Validation]
     L --> M[Final Report]
 ```
+
+[Interactive version](diagrams/standard-workflow.html)
 
 Characteristics:
 
@@ -334,6 +340,8 @@ flowchart TD
     Q --> R[Final Validation]
     R --> S[Final Report]
 ```
+
+[Interactive version](diagrams/full-spec-workflow.html)
 
 Characteristics:
 
@@ -452,6 +460,8 @@ flowchart TD
     K --> L[Validation]
 ```
 
+[Interactive version](diagrams/parallel-execution.html)
+
 ### Orchestrator Responsibilities
 
 - Maintain workflow state.
@@ -512,6 +522,8 @@ flowchart TD
     H --> I[Final Validation]
 ```
 
+[Interactive version](diagrams/contract-first-flow.html)
+
 The scheduler must:
 
 - Identify independent tasks.
@@ -543,6 +555,8 @@ flowchart TD
     F --> H[Worker Correction or Replanning]
     H --> A
 ```
+
+[Interactive version](diagrams/review-loop.html)
 
 ### Review Criteria
 
@@ -626,6 +640,8 @@ flowchart LR
     J --> K[Final Report]
 ```
 
+[Interactive version](diagrams/artifact-chain.html)
+
 Artifacts must support traceability and workflow recovery.
 
 ---
@@ -672,6 +688,8 @@ flowchart TD
     H --> I[Validate Installation]
     I --> J[Installation Report]
 ```
+
+[Interactive version](diagrams/installation-flow.html)
 
 ### Installer Responsibilities
 

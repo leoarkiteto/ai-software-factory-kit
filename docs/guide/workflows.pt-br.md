@@ -23,6 +23,8 @@ flowchart TD
     C -. "confiança baixa" .-> U[/"⏸ Confirmar o modo"/]
 ```
 
+[Versão interativa](../diagrams/classification.pt-br.html)
+
 - Os limiares e as dimensões de escalonamento vêm de `classification` na config. Os defaults são os mostrados acima.
 - `--mode quick|standard|full_spec` força um modo, e o modo forçado é registrado com o motivo.
 - A incerteza só conta quando o repositório não consegue resolvê-la. Um pedido que explicita suas decisões pontua menos: na fase 9, a mesma funcionalidade pontuou FULL-SPEC 15 quando descrita de forma vaga e STANDARD 10 depois que suas decisões foram explicitadas.
@@ -49,6 +51,8 @@ flowchart TD
     IN --> FIN["Validação final,<br/>relatório final curto"]
     FIN --> C(["completed"])
 ```
+
+[Versão interativa](../diagrams/quick-mode.pt-br.html)
 
 - Um escalonamento depois que a execução começou passa por `replanning → planning` com `--mode standard`.
 - Como o orquestrador implementa, uma revisão, quando obrigatória, precisa ir para o `factory:code-reviewer`. O orquestrador nunca revisa o próprio trabalho.
@@ -78,6 +82,8 @@ flowchart TD
     IN --> AC["Validação final, conferir cada AC,<br/>relatório final com pedido de follow-up"]
     AC --> C(["completed"])
 ```
+
+[Versão interativa](../diagrams/standard-mode.pt-br.html)
 
 - A execução e a revisão são detalhadas no §5.
 - O limite de rodadas é `review.maxIterations`, 3 por padrão.
@@ -115,6 +121,8 @@ flowchart TD
     V --> C(["completed"])
 ```
 
+[Versão interativa](../diagrams/full-spec-mode.pt-br.html)
+
 - O discovery pode escrever documentos de domínio (`GLOSSARY.md`, ADRs) e nada mais.
 - Só você pode iniciar o `/grill-with-docs`, e por isso o discovery sempre pausa.
 
@@ -142,6 +150,8 @@ flowchart TD
     SUB -- integrate --> IN(["integrating"])
     SUB -- escalate --> ESC[/"⏸ Escalonamento"/]
 ```
+
+[Versão interativa](../diagrams/orchestrator-loop.pt-br.html)
 
 - Uma tarefa que falhou é tentada de novo até `execution.maxTaskAttempts` vezes, 2 por padrão. Depois disso suas dependentes ficam bloqueadas e o `next` pede um replanejamento.
 - Um worker que recebe uma negação do "Factory guard" para e reporta `blocked`. Ele nunca contorna a negação.
@@ -175,6 +185,8 @@ stateDiagram-v2
     failed --> [*]
     cancelled --> [*]
 ```
+
+[Versão interativa](../diagrams/workflow-states.pt-br.html)
 
 - Todo status aberto também pode ir para `failed` ou `cancelled`. Essas transições foram omitidas do diagrama para facilitar a leitura.
 - `failed` significa que o trabalho não pôde ser feito. Ele pode ser retomado para `replanning` com a sua aprovação.
