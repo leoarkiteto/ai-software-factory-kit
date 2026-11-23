@@ -5246,7 +5246,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
         <!-- Flow paths -->
         <path data-edge-from="user_request" data-edge-to="classification" data-edge-label="classify" data-edge-key="0" data-edge-id="request-to-classification" data-composition-points="100,186;100,242" d="M 100 186 L 100 242" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="classification" data-edge-to="discovery" data-edge-label="discover" data-edge-key="1" data-edge-id="classification-to-discovery" data-composition-points="156,271;259,271" d="M 156 271 L 259 271" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="classification" data-edge-to="discovery" data-edge-label="discover" data-edge-key="1" data-edge-id="classification-to-discovery" data-composition-points="156,262;259,262" d="M 156 262 L 259 262" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="discovery" data-edge-to="context" data-edge-label="distill" data-edge-key="2" data-edge-id="discovery-to-context" data-composition-points="315,242;315,186" d="M 315 242 L 315 186" class="a-default" data-animate="edge" style="--step:2" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="context" data-edge-to="specification" data-edge-label="specify" data-edge-key="3" data-edge-id="context-to-spec" data-composition-points="371,157;474,157" d="M 371 157 L 474 157" class="a-emphasis" data-animate="edge" style="--step:3" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <path data-edge-from="specification" data-edge-to="impl_plan" data-edge-label="plan" data-edge-key="4" data-edge-id="spec-to-plan" data-composition-points="530,186;530,242" d="M 530 186 L 530 242" class="a-emphasis" data-animate="edge" style="--step:4" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
@@ -5255,6 +5255,8 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <path data-edge-from="worker_results" data-edge-to="review_report" data-edge-label="review" data-edge-key="7" data-edge-id="results-to-review" data-composition-points="801,157;904,157" d="M 801 157 L 904 157" class="a-default" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="review_report" data-edge-to="validation_report" data-edge-label="validate" data-edge-key="8" data-edge-id="review-to-validation" data-composition-points="960,186;960,242" d="M 960 186 L 960 242" class="a-default" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="validation_report" data-edge-to="final_report" data-edge-label="summarize" data-edge-key="9" data-edge-id="validation-to-final" data-composition-points="960,300;960,356" d="M 960 300 L 960 356" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="classification" data-edge-to="ref_notes" data-edge-label="if needed" data-edge-key="10" data-edge-id="classification-to-notes" data-composition-points="156,280;199.75,280;199.75,385;243.5,385" d="M 156 280 L 199.75 280 L 199.75 385 L 243.5 385" class="a-dashed" data-animate="edge" style="--step:10" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="ref_notes" data-edge-to="impl_plan" data-edge-label="inform" data-edge-key="11" data-edge-id="notes-to-plan" data-composition-points="386.5,385;430.25,385;430.25,271;474,271" d="M 386.5 385 L 430.25 385 L 430.25 271 L 474 271" class="a-default" data-animate="edge" style="--step:11" stroke-width="1.4" marker-end="url(#arrowhead)"/>
 
         <!-- Nodes -->
         <g id="node-user_request" data-node-id="user_request" data-node-label="User Request" tabindex="0" role="button" aria-label="Focus User Request, original ask, 01 / Intake" aria-pressed="false" data-node-kind="external" data-node-sublabel="original ask" data-node-context="01 / Intake">
@@ -5389,14 +5391,26 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <text data-detail="context" x="960" y="393" class="t-muted" font-size="7" text-anchor="middle">returned to user</text>
         </g>
 
+        <g id="node-ref_notes" data-node-id="ref_notes" data-node-label="Research + Design Notes" tabindex="0" role="button" aria-label="Focus Research + Design Notes, research/R&lt;n&gt;.md, design/D&lt;n&gt;.md, 02 / Understand" aria-pressed="false" data-node-kind="database" data-node-sublabel="research/R&lt;n&gt;.md, design/D&lt;n&gt;.md" data-node-context="02 / Understand">
+          <title>Research + Design Notes · research/R&lt;n&gt;.md, design/D&lt;n&gt;.md · 02 / Understand</title>
+          <rect x="243.5" y="356" width="143" height="58" rx="6" class="c-mask"/>
+          <rect x="243.5" y="356" width="143" height="58" rx="6" class="c-database" data-animate="node" style="--step:11" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="database" class="semantic-sigil s-database" transform="translate(249.5 362) scale(0.6875)">
+            <ellipse cx="8" cy="4" rx="5" ry="2"/>
+            <path d="M3 4v8c0 1.1 2.2 2 5 2s5-.9 5-2V4M3 8c0 1.1 2.2 2 5 2s5-.9 5-2"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="315" y="386.7" class="t-primary" font-size="9.7" font-weight="600" text-anchor="middle">Research + Design Notes</text>
+          <text data-detail="context" x="315" y="400.1" class="t-muted" font-size="7" text-anchor="middle">research/R&lt;n&gt;.md, design/D&lt;n&gt;.md</text>
+        </g>
+
         <!-- Flow labels -->
         <g data-detail="context" data-edge-from="user_request" data-edge-to="classification" data-edge-label="classify" data-edge-key="0" data-edge-id="request-to-classification">
           <rect x="74.4" y="193" width="51.2" height="16" rx="4" class="c-mask"/>
           <text x="100" y="204" class="t-edge-default" font-size="8" text-anchor="middle">classify</text>
         </g>
         <g data-detail="context" data-edge-from="classification" data-edge-to="discovery" data-edge-label="discover" data-edge-key="1" data-edge-id="classification-to-discovery">
-          <rect x="181.9" y="250" width="51.2" height="16" rx="4" class="c-mask"/>
-          <text x="207.5" y="261" class="t-edge-default" font-size="8" text-anchor="middle">discover</text>
+          <rect x="181.9" y="241" width="51.2" height="16" rx="4" class="c-mask"/>
+          <text x="207.5" y="252" class="t-edge-default" font-size="8" text-anchor="middle">discover</text>
         </g>
         <g data-detail="context" data-edge-from="discovery" data-edge-to="context" data-edge-label="distill" data-edge-key="2" data-edge-id="discovery-to-context">
           <rect x="291.85" y="193" width="46.3" height="16" rx="4" class="c-mask"/>
@@ -5430,6 +5444,14 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
           <rect x="931.95" y="307" width="56.1" height="16" rx="4" class="c-mask"/>
           <text x="960" y="318" class="t-edge-default" font-size="8" text-anchor="middle">summarize</text>
         </g>
+        <g data-detail="context" data-edge-from="classification" data-edge-to="ref_notes" data-edge-label="if needed" data-edge-key="10" data-edge-id="classification-to-notes">
+          <rect x="171.7" y="311.5" width="56.1" height="16" rx="4" class="c-mask"/>
+          <text x="199.75" y="322.5" class="t-edge-dashed" font-size="8" text-anchor="middle">if needed</text>
+        </g>
+        <g data-detail="context" data-edge-from="ref_notes" data-edge-to="impl_plan" data-edge-label="inform" data-edge-key="11" data-edge-id="notes-to-plan">
+          <rect x="409.55" y="307" width="41.4" height="16" rx="4" class="c-mask"/>
+          <text x="430.25" y="318" class="t-edge-default" font-size="8" text-anchor="middle">inform</text>
+        </g>
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
@@ -5438,13 +5460,17 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
             <path d="M 40 473 L 74 473" class="a-emphasis" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
             <text x="83" y="476" class="t-muted" font-size="10" font-weight="500">primary data</text>
           </g>
-          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="data store" data-legend-x="180" data-legend-baseline="476" data-legend-width="105">
-            <rect x="180" y="468" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
-            <text x="202" y="476" class="t-muted" font-size="10" font-weight="500">data store</text>
+          <g data-legend-semantic-kind="dashed" data-legend-x="180" data-legend-baseline="476" data-legend-width="112">
+            <path d="M 180 473 L 214 473" class="a-dashed" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+            <text x="223" y="476" class="t-muted" font-size="10" font-weight="500">async batch</text>
           </g>
-          <g data-legend-semantic-kind="default" data-legend-x="307" data-legend-baseline="476" data-legend-width="99">
-            <path d="M 307 473 L 341 473" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-            <text x="350" y="476" class="t-muted" font-size="10" font-weight="500">data flow</text>
+          <g data-legend-semantic-kind="database" data-legend-kind="database" data-legend-label="data store" data-legend-x="314" data-legend-baseline="476" data-legend-width="105">
+            <rect x="314" y="468" width="14" height="9" rx="2" class="c-database" stroke-width="1"/>
+            <text x="336" y="476" class="t-muted" font-size="10" font-weight="500">data store</text>
+          </g>
+          <g data-legend-semantic-kind="default" data-legend-x="441" data-legend-baseline="476" data-legend-width="99">
+            <path d="M 441 473 L 475 473" class="a-default" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+            <text x="484" y="476" class="t-muted" font-size="10" font-weight="500">data flow</text>
           </g>
         </g>
       </svg>

@@ -5203,7 +5203,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PLACA 04">
-      <svg viewBox="0 0 1240 842" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="">
+      <svg viewBox="0 0 1240 968" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="">
         <title id="archify-diagram-title">Fluxo do modo FULL-SPEC</title>
         <desc id="archify-diagram-description">Um diagrama de fluxo de trabalho gerado pelo Archify.</desc>
         <!-- Definitions -->
@@ -5256,11 +5256,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="278" width="1176" height="190" rx="10" class="c-lane" stroke-width="1"/>
         <text x="54" y="300" class="t-muted" font-size="10" font-weight="600">02 / Especificação</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="488" width="1176" height="104" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="488" width="1176" height="230" rx="10" class="c-lane" stroke-width="1"/>
         <text x="54" y="510" class="t-muted" font-size="10" font-weight="600">03 / Planejamento</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-3" x="40" y="612" width="1176" height="106" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="54" y="634" class="t-muted" font-size="10" font-weight="600">04 / Execução e integração</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-3" x="40" y="738" width="1176" height="106" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="760" class="t-muted" font-size="10" font-weight="600">04 / Execução e integração</text>
 
         <!-- Phase headers -->
 
@@ -5269,30 +5269,32 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 
         <!-- Edge paths -->
-        <path data-edge-from="approve_plan" data-edge-to="executing" data-edge-key="0" data-edge-id="e-approve-execute" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="960,581;960,734;167.60000000000002,734;167.60000000000002,714" d="M 960 581 L 960 726 Q 960 734 952 734 L 175.60000000000002 734 Q 167.60000000000002 734 167.60000000000002 726 L 167.60000000000002 714" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="approve_spec" data-edge-to="planning" data-edge-key="1" data-edge-id="e-approve-planning" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="1126,414;1126,478;329.6,478;329.6,529" d="M 1126 414 L 1126 470 Q 1126 478 1118 478 L 337.6 478 Q 329.6 478 329.6 486 L 329.6 529" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="approve_plan" data-edge-to="executing" data-edge-key="0" data-edge-id="e-approve-execute" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="960,644;960,860;167.60000000000002,860;167.60000000000002,840" d="M 960 644 L 960 852 Q 960 860 952 860 L 175.60000000000002 860 Q 167.60000000000002 860 167.60000000000002 852 L 167.60000000000002 840" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="approve_spec" data-edge-to="planning" data-edge-key="1" data-edge-id="e-approve-planning" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="1126,414;1126,478;167.60000000000002,478;167.60000000000002,592" d="M 1126 414 L 1126 470 Q 1126 478 1118 478 L 175.60000000000002 478 Q 167.60000000000002 478 167.60000000000002 486 L 167.60000000000002 592" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="brief" data-edge-to="grill_available" data-edge-key="2" data-edge-id="e-brief-check" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="873.6,170;908,170" d="M 873.6 170 L 908 170" class="a-default" data-animate="edge" style="--step:2" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="spec_check" data-edge-to="approve_spec" data-edge-key="3" data-edge-id="e-check-approve" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="1010,388;1074,388" d="M 1010 388 L 1074 388" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="classifying" data-edge-to="repo_discovery" data-edge-key="4" data-edge-id="e-classify-discover" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="213.60000000000002,170;247.60000000000002,170" d="M 213.60000000000002 170 L 247.60000000000002 170" class="a-default" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="repo_discovery" data-edge-to="discovering" data-edge-key="5" data-edge-id="e-discover-state" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="411.6,170;457.6,170" d="M 411.6 170 L 457.6 170" class="a-default" data-animate="edge" style="--step:5" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="plan_doc" data-edge-to="plan_review" data-edge-key="6" data-edge-id="e-doc-review" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="593.6,555;707.6,555" d="M 593.6 555 L 707.6 555" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="executing" data-edge-to="integrating" data-edge-key="7" data-edge-id="e-execute-integrate" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="251.60000000000002,680;283.6,680" d="M 251.60000000000002 680 L 283.6 680" class="a-default" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="plan_doc" data-edge-to="plan_review" data-edge-key="6" data-edge-id="e-doc-review" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="593.6,618;707.6,618" d="M 593.6 618 L 707.6 618" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="executing" data-edge-to="integrating" data-edge-key="7" data-edge-id="e-execute-integrate" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="251.60000000000002,806;283.6,806" d="M 251.60000000000002 806 L 283.6 806" class="a-default" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="native_fallback" data-edge-to="summary" data-edge-key="8" data-edge-id="e-fallback-summary" data-edge-role="" data-composition-points="1046,235;20,235;20,388;101.60000000000002,388" d="M 1046 235 L 28 235 Q 20 235 20 243 L 20 380 Q 20 388 28 388 L 101.60000000000002 388" class="a-default" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="grill_available" data-edge-to="native_fallback" data-edge-label="não" data-edge-key="9" data-edge-id="e-grill-no" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="1012,170;1126,170;1126,202" d="M 1012 170 L 1118 170 Q 1126 170 1126 178 L 1126 202" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="grill" data-edge-to="summary" data-edge-key="10" data-edge-id="e-grill-summary" data-edge-role="" data-composition-points="1208,112;1224,112;1224,268;167.60000000000002,268;167.60000000000002,362" d="M 1208 112 L 1216 112 Q 1224 112 1224 120 L 1224 260 Q 1224 268 1216 268 L 175.60000000000002 268 Q 167.60000000000002 268 167.60000000000002 276 L 167.60000000000002 362" class="a-default" data-animate="edge" style="--step:10" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="grill_available" data-edge-to="grill" data-edge-label="sim" data-edge-key="11" data-edge-id="e-grill-yes" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="960,144;960,112;1044,112" d="M 960 144 L 960 120 Q 960 112 968 112 L 1044 112" class="a-emphasis" data-animate="edge" style="--step:11" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="integrating" data-edge-to="final_walk" data-edge-key="12" data-edge-id="e-integrate-walk" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="375.6,680;407.6,680" d="M 375.6 680 L 407.6 680" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="integrating" data-edge-to="final_walk" data-edge-key="12" data-edge-id="e-integrate-walk" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="375.6,806;407.6,806" d="M 375.6 806 L 407.6 806" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="speckit_ready" data-edge-to="local_spec" data-edge-label="não" data-edge-key="13" data-edge-id="e-kit-no" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="503.6,414;503.6,438;705.6,438" d="M 503.6 414 L 503.6 430 Q 503.6 438 511.6 438 L 705.6 438" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
         <path data-edge-from="speckit_ready" data-edge-to="speckit" data-edge-label="sim" data-edge-key="14" data-edge-id="e-kit-yes" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="503.6,362;503.6,338;713.6,338" d="M 503.6 362 L 503.6 346 Q 503.6 338 511.6 338 L 713.6 338" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
         <path data-edge-from="local_spec" data-edge-to="spec_check" data-edge-key="15" data-edge-id="e-local-check" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="849.6,438;960,438;960,414" d="M 849.6 438 L 952 438 Q 960 438 960 430 L 960 414" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="planning" data-edge-to="plan_doc" data-edge-key="16" data-edge-id="e-planning-doc" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="375.6,555;413.6,555" d="M 375.6 555 L 413.6 555" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="plan_review" data-edge-to="approve_plan" data-edge-label="aprovado" data-edge-key="17" data-edge-id="e-review-approved" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="847.6,555;904,555" d="M 847.6 555 L 904 555" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="plan_review" data-edge-to="plan_doc" data-edge-label="achados obrigatórios" data-edge-key="18" data-edge-id="e-review-findings" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="777.6,529;777.6,513;503.6,513;503.6,529" d="M 777.6 529 L 777.6 521 Q 777.6 513 769.6 513 L 511.6 513 Q 503.6 513 503.6 521 L 503.6 529" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
-        <path data-edge-from="specifying" data-edge-to="speckit_ready" data-edge-key="19" data-edge-id="e-spec-check-kit" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="375.6,388;457.6,388" d="M 375.6 388 L 457.6 388" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="speckit" data-edge-to="spec_check" data-edge-key="20" data-edge-id="e-speckit-check" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="841.6,338;960,338;960,362" d="M 841.6 338 L 952 338 Q 960 338 960 346 L 960 362" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="discovering" data-edge-to="brief" data-edge-key="21" data-edge-id="e-state-brief" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="549.6,170;681.6,170" d="M 549.6 170 L 681.6 170" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="summary" data-edge-to="specifying" data-edge-key="22" data-edge-id="e-summary-spec" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="233.60000000000002,388;283.6,388" d="M 233.60000000000002 388 L 283.6 388" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="final_walk" data-edge-to="completed" data-edge-key="23" data-edge-id="e-walk-complete" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="599.6,680;731.6,680" d="M 599.6 680 L 731.6 680" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="planning" data-edge-to="plan_doc" data-edge-key="16" data-edge-id="e-planning-doc" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="213.60000000000002,618;413.6,618" d="M 213.60000000000002 618 L 413.6 618" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="planning" data-edge-to="ref_workers" data-edge-label="se preciso" data-edge-key="17" data-edge-id="e-planning-ref" data-edge-role="branch" data-composition-points="167.60000000000002,644;167.60000000000002,688;235.60000000000002,688" d="M 167.60000000000002 644 L 167.60000000000002 680 Q 167.60000000000002 688 175.60000000000002 688 L 235.60000000000002 688" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="ref_workers" data-edge-to="plan_doc" data-edge-label="notas" data-edge-key="18" data-edge-id="e-ref-doc" data-edge-role="" data-composition-points="423.6,688;503.6,688;503.6,644" d="M 423.6 688 L 495.6 688 Q 503.6 688 503.6 680 L 503.6 644" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="plan_review" data-edge-to="approve_plan" data-edge-label="aprovado" data-edge-key="19" data-edge-id="e-review-approved" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="847.6,618;904,618" d="M 847.6 618 L 904 618" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="plan_review" data-edge-to="plan_doc" data-edge-label="achados obrigatórios" data-edge-key="20" data-edge-id="e-review-findings" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="777.6,592;777.6,576;503.6,576;503.6,592" d="M 777.6 592 L 777.6 584 Q 777.6 576 769.6 576 L 511.6 576 Q 503.6 576 503.6 584 L 503.6 592" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="specifying" data-edge-to="speckit_ready" data-edge-key="21" data-edge-id="e-spec-check-kit" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="375.6,388;457.6,388" d="M 375.6 388 L 457.6 388" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="speckit" data-edge-to="spec_check" data-edge-key="22" data-edge-id="e-speckit-check" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="841.6,338;960,338;960,362" d="M 841.6 338 L 952 338 Q 960 338 960 346 L 960 362" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="discovering" data-edge-to="brief" data-edge-key="23" data-edge-id="e-state-brief" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="549.6,170;681.6,170" d="M 549.6 170 L 681.6 170" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="summary" data-edge-to="specifying" data-edge-key="24" data-edge-id="e-summary-spec" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="233.60000000000002,388;283.6,388" d="M 233.60000000000002 388 L 283.6 388" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="final_walk" data-edge-to="completed" data-edge-key="25" data-edge-id="e-walk-complete" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="599.6,806;731.6,806" d="M 599.6 806 L 731.6 806" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
 
         <!-- Nodes -->
         <g id="node-classifying" data-node-id="classifying" data-node-label="classifying" tabindex="0" role="button" aria-label="Focar classifying, Discovery" aria-pressed="false" data-node-kind="messagebus" data-node-context="Discovery">
@@ -5446,87 +5448,101 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
         <g id="node-planning" data-node-id="planning" data-node-label="planning" tabindex="0" role="button" aria-label="Focar planning, Planejamento" aria-pressed="false" data-node-kind="messagebus" data-node-context="Planejamento">
           <title>planning · Planejamento</title>
-          <rect x="283.6" y="529" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="283.6" y="529" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(289.6 535) scale(0.6875)">
+          <rect x="121.60000000000002" y="592" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="121.60000000000002" y="592" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(127.60000000000002 598) scale(0.6875)">
             <path d="M3 14V2h10l-2 3 2 3H3"/>
           </g>
-          <text data-node-label="" x="329.6" y="550" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">planning</text>
+          <text data-node-label="" x="167.60000000000002" y="613" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">planning</text>
+        </g>
+
+        <g id="node-ref_workers" data-node-id="ref_workers" data-node-label="Workers de pesquisa + design" tabindex="0" role="button" aria-label="Focar Workers de pesquisa + design, em paralelo · notas somente leitura, Planejamento" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="em paralelo · notas somente leitura" data-node-context="Planejamento">
+          <title>Workers de pesquisa + design · em paralelo · notas somente leitura · Planejamento</title>
+          <rect x="235.60000000000002" y="662" width="188" height="52" rx="8" class="c-mask"/>
+          <rect x="235.60000000000002" y="662" width="188" height="52" rx="8" class="c-frontend" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(241.60000000000002 668) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="329.6" y="693.9" class="t-primary" font-size="10.7" font-weight="600" text-anchor="middle">Workers de pesquisa + design</text>
+          <text data-detail="context" x="329.6" y="708.8" class="t-muted" font-size="8" text-anchor="middle">em paralelo · notas somente leitura</text>
         </g>
 
         <g id="node-plan_doc" data-node-id="plan_doc" data-node-label="plan.md: contratos primeiro" tabindex="0" role="button" aria-label="Focar plan.md: contratos primeiro, DAG de tarefas cobrindo cada FR, Planejamento" aria-pressed="false" data-node-kind="backend" data-node-sublabel="DAG de tarefas cobrindo cada FR" data-node-context="Planejamento">
           <title>plan.md: contratos primeiro · DAG de tarefas cobrindo cada FR · Planejamento</title>
-          <rect x="413.6" y="529" width="180" height="52" rx="8" class="c-mask"/>
-          <rect x="413.6" y="529" width="180" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(419.6 535) scale(0.6875)">
+          <rect x="413.6" y="592" width="180" height="52" rx="8" class="c-mask"/>
+          <rect x="413.6" y="592" width="180" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(419.6 598) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="503.6" y="560.8" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">plan.md: contratos primeiro</text>
-          <text data-detail="context" x="503.6" y="575.6" class="t-muted" font-size="8" text-anchor="middle">DAG de tarefas cobrindo cada FR</text>
+          <text data-node-label="" data-detail-anchor="" x="503.6" y="623.8" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">plan.md: contratos primeiro</text>
+          <text data-detail="context" x="503.6" y="638.6" class="t-muted" font-size="8" text-anchor="middle">DAG de tarefas cobrindo cada FR</text>
         </g>
 
         <g id="node-plan_review" data-node-id="plan_review" data-node-label="Revisão Opus do plano" tabindex="0" role="button" aria-label="Focar Revisão Opus do plano, architecture-reviewer, Planejamento" aria-pressed="false" data-node-kind="backend" data-node-sublabel="architecture-reviewer" data-node-context="Planejamento">
           <title>Revisão Opus do plano · architecture-reviewer · Planejamento</title>
-          <rect x="707.6" y="529" width="140" height="52" rx="8" class="c-mask"/>
-          <rect x="707.6" y="529" width="140" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(713.6 535) scale(0.6875)">
+          <rect x="707.6" y="592" width="140" height="52" rx="8" class="c-mask"/>
+          <rect x="707.6" y="592" width="140" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(713.6 598) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="777.6" y="560.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Revisão Opus do plano</text>
-          <text data-detail="context" x="777.6" y="575.3" class="t-muted" font-size="8" text-anchor="middle">architecture-reviewer</text>
+          <text data-node-label="" data-detail-anchor="" x="777.6" y="623.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Revisão Opus do plano</text>
+          <text data-detail="context" x="777.6" y="638.3" class="t-muted" font-size="8" text-anchor="middle">architecture-reviewer</text>
         </g>
 
         <g id="node-approve_plan" data-node-id="approve_plan" data-node-label="⏸ Aprovar o plano" tabindex="0" role="button" aria-label="Focar ⏸ Aprovar o plano, Planejamento" aria-pressed="false" data-node-kind="security" data-node-context="Planejamento">
           <title>⏸ Aprovar o plano · Planejamento</title>
-          <rect x="904" y="529" width="112" height="52" rx="8" class="c-mask"/>
-          <rect x="904" y="529" width="112" height="52" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="waiting" class="semantic-sigil s-security" transform="translate(910 535) scale(0.6875)">
+          <rect x="904" y="592" width="112" height="52" rx="8" class="c-mask"/>
+          <rect x="904" y="592" width="112" height="52" rx="8" class="c-security" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="waiting" class="semantic-sigil s-security" transform="translate(910 598) scale(0.6875)">
             <path d="M4 2.5h8M4 13.5h8M5 3c0 2.8 2 3.2 3 5-1 1.8-3 2.2-3 5M11 3c0 2.8-2 3.2-3 5 1 1.8 3 2.2 3 5"/>
           </g>
-          <text data-node-label="" x="960" y="560.2" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">⏸ Aprovar o plano</text>
+          <text data-node-label="" x="960" y="623.2" class="t-primary" font-size="10.1" font-weight="600" text-anchor="middle">⏸ Aprovar o plano</text>
         </g>
 
         <g id="node-executing" data-node-id="executing" data-node-label="executing ⇄ reviewing" tabindex="0" role="button" aria-label="Focar executing ⇄ reviewing, como no STANDARD, Execução e integração" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="como no STANDARD" data-node-tag="revisão de código + arquitetura sempre" data-node-context="Execução e integração">
           <title>executing ⇄ reviewing · como no STANDARD · Execução e integração · revisão de código + arquitetura sempre</title>
-          <rect x="83.60000000000002" y="646" width="168" height="68" rx="8" class="c-mask"/>
-          <rect x="83.60000000000002" y="646" width="168" height="68" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(89.60000000000002 652) scale(0.6875)">
+          <rect x="83.60000000000002" y="772" width="168" height="68" rx="8" class="c-mask"/>
+          <rect x="83.60000000000002" y="772" width="168" height="68" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(89.60000000000002 778) scale(0.6875)">
             <path d="M3 14V2h10l-2 3 2 3H3"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="171.90000000000003" y="667" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">executing ⇄ reviewing</text>
-          <text data-detail="context" x="167.60000000000002" y="684" class="t-muted" font-size="8" text-anchor="middle">como no STANDARD</text>
-        <text data-detail="fine" x="167.60000000000002" y="702" class="t-messagebus" font-size="7" text-anchor="middle">revisão de código + arquitetura sempre</text>
+          <text data-node-label="" data-detail-anchor="" x="171.90000000000003" y="793" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">executing ⇄ reviewing</text>
+          <text data-detail="context" x="167.60000000000002" y="810" class="t-muted" font-size="8" text-anchor="middle">como no STANDARD</text>
+        <text data-detail="fine" x="167.60000000000002" y="828" class="t-messagebus" font-size="7" text-anchor="middle">revisão de código + arquitetura sempre</text>
         </g>
 
         <g id="node-integrating" data-node-id="integrating" data-node-label="integrating" tabindex="0" role="button" aria-label="Focar integrating, Execução e integração" aria-pressed="false" data-node-kind="messagebus" data-node-context="Execução e integração">
           <title>integrating · Execução e integração</title>
-          <rect x="283.6" y="654" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="283.6" y="654" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(289.6 660) scale(0.6875)">
+          <rect x="283.6" y="780" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="283.6" y="780" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(289.6 786) scale(0.6875)">
             <path d="M3 14V2h10l-2 3 2 3H3"/>
           </g>
-          <text data-node-label="" x="329.6" y="686.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">integrating</text>
+          <text data-node-label="" x="329.6" y="812.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">integrating</text>
         </g>
 
         <g id="node-final_walk" data-node-id="final_walk" data-node-label="Percorrer FR, NFR, AC e SC" tabindex="0" role="button" aria-label="Focar Percorrer FR, NFR, AC e SC, todos, com evidências; relatório final, Execução e integração" aria-pressed="false" data-node-kind="backend" data-node-sublabel="todos, com evidências; relatório final" data-node-context="Execução e integração">
           <title>Percorrer FR, NFR, AC e SC · todos, com evidências; relatório final · Execução e integração</title>
-          <rect x="407.6" y="654" width="192" height="52" rx="8" class="c-mask"/>
-          <rect x="407.6" y="654" width="192" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(413.6 660) scale(0.6875)">
+          <rect x="407.6" y="780" width="192" height="52" rx="8" class="c-mask"/>
+          <rect x="407.6" y="780" width="192" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(413.6 786) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="503.6" y="686.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Percorrer FR, NFR, AC e SC</text>
-          <text data-detail="context" x="503.6" y="701.1" class="t-muted" font-size="8" text-anchor="middle">todos, com evidências; relatório final</text>
+          <text data-node-label="" data-detail-anchor="" x="503.6" y="812.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Percorrer FR, NFR, AC e SC</text>
+          <text data-detail="context" x="503.6" y="827.1" class="t-muted" font-size="8" text-anchor="middle">todos, com evidências; relatório final</text>
         </g>
 
         <g id="node-completed" data-node-id="completed" data-node-label="completed" tabindex="0" role="button" aria-label="Focar completed, Execução e integração" aria-pressed="false" data-node-kind="messagebus" data-node-context="Execução e integração">
           <title>completed · Execução e integração</title>
-          <rect x="731.6" y="654" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="731.6" y="654" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(737.6 660) scale(0.6875)">
+          <rect x="731.6" y="780" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="731.6" y="780" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="flag" class="semantic-sigil s-messagebus" transform="translate(737.6 786) scale(0.6875)">
             <path d="M3 14V2h10l-2 3 2 3H3"/>
           </g>
-          <text data-node-label="" x="780.3000000000001" y="675" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">completed</text>
+          <text data-node-label="" x="780.3000000000001" y="801" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">completed</text>
         </g>
 
         <!-- Edge labels -->
@@ -5559,13 +5575,21 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         </g>
 
 
-        <g data-detail="context" data-edge-from="plan_review" data-edge-to="approve_plan" data-edge-label="aprovado" data-edge-key="17" data-edge-id="e-review-approved">
-          <rect x="851.5999999999999" y="535" width="48.4" height="14" rx="3" class="c-mask"/>
-          <text x="875.8" y="545" class="t-edge-emphasis" font-size="8" text-anchor="middle">aprovado</text>
+        <g data-detail="context" data-edge-from="planning" data-edge-to="ref_workers" data-edge-label="se preciso" data-edge-key="17" data-edge-id="e-planning-ref">
+          <rect x="172.60000000000002" y="668" width="58" height="14" rx="3" class="c-mask"/>
+          <text x="201.60000000000002" y="678" class="t-edge-dashed" font-size="8" text-anchor="middle">se preciso</text>
         </g>
-        <g data-detail="context" data-edge-from="plan_review" data-edge-to="plan_doc" data-edge-label="achados obrigatórios" data-edge-key="18" data-edge-id="e-review-findings">
-          <rect x="587.6" y="493" width="106" height="14" rx="3" class="c-mask"/>
-          <text x="640.6" y="503" class="t-edge-dashed" font-size="8" text-anchor="middle">achados obrigatórios</text>
+        <g data-detail="context" data-edge-from="ref_workers" data-edge-to="plan_doc" data-edge-label="notas" data-edge-key="18" data-edge-id="e-ref-doc">
+          <rect x="446.6" y="668" width="34" height="14" rx="3" class="c-mask"/>
+          <text x="463.6" y="678" class="t-edge-dashed" font-size="8" text-anchor="middle">notas</text>
+        </g>
+        <g data-detail="context" data-edge-from="plan_review" data-edge-to="approve_plan" data-edge-label="aprovado" data-edge-key="19" data-edge-id="e-review-approved">
+          <rect x="851.5999999999999" y="598" width="48.4" height="14" rx="3" class="c-mask"/>
+          <text x="875.8" y="608" class="t-edge-emphasis" font-size="8" text-anchor="middle">aprovado</text>
+        </g>
+        <g data-detail="context" data-edge-from="plan_review" data-edge-to="plan_doc" data-edge-label="achados obrigatórios" data-edge-key="20" data-edge-id="e-review-findings">
+          <rect x="587.6" y="556" width="106" height="14" rx="3" class="c-mask"/>
+          <text x="640.6" y="566" class="t-edge-dashed" font-size="8" text-anchor="middle">achados obrigatórios</text>
         </g>
 
 
@@ -5575,22 +5599,26 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
-          <text x="20" y="742" class="t-primary" font-size="12" font-weight="650">Legenda</text>
-          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Etapa da Factory" data-legend-x="20" data-legend-baseline="762" data-legend-width="118">
-            <rect x="20" y="754" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-            <text x="42" y="762" class="t-muted" font-size="7.5" font-weight="500">Etapa da Factory</text>
+          <text x="20" y="868" class="t-primary" font-size="12" font-weight="650">Legenda</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="UI do usuário" data-legend-x="20" data-legend-baseline="888" data-legend-width="104">
+            <rect x="20" y="880" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="888" class="t-muted" font-size="7.5" font-weight="500">UI do usuário</text>
           </g>
-          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="⏸ Pausa para você" data-legend-x="145" data-legend-baseline="762" data-legend-width="123">
-            <rect x="145" y="754" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
-            <text x="167" y="762" class="t-muted" font-size="7.5" font-weight="500">⏸ Pausa para você</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Etapa da Factory" data-legend-x="131" data-legend-baseline="888" data-legend-width="118">
+            <rect x="131" y="880" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="153" y="888" class="t-muted" font-size="7.5" font-weight="500">Etapa da Factory</text>
           </g>
-          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Status do workflow (gravado no manifesto)" data-legend-x="275" data-legend-baseline="762" data-legend-width="234">
-            <rect x="275" y="754" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
-            <text x="297" y="762" class="t-muted" font-size="7.5" font-weight="500">Status do workflow (gravado no manifesto)</text>
+          <g data-legend-semantic-kind="security" data-legend-kind="security" data-legend-label="⏸ Pausa para você" data-legend-x="256" data-legend-baseline="888" data-legend-width="123">
+            <rect x="256" y="880" width="14" height="9" rx="2" class="c-security" stroke-width="1"/>
+            <text x="278" y="888" class="t-muted" font-size="7.5" font-weight="500">⏸ Pausa para você</text>
           </g>
-          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Decisão" data-legend-x="516" data-legend-baseline="762" data-legend-width="76">
-            <rect x="516" y="754" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
-            <text x="538" y="762" class="t-muted" font-size="7.5" font-weight="500">Decisão</text>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Status do workflow (gravado no manifesto)" data-legend-x="386" data-legend-baseline="888" data-legend-width="234">
+            <rect x="386" y="880" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
+            <text x="408" y="888" class="t-muted" font-size="7.5" font-weight="500">Status do workflow (gravado no manifesto)</text>
+          </g>
+          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Decisão" data-legend-x="627" data-legend-baseline="888" data-legend-width="76">
+            <rect x="627" y="880" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
+            <text x="649" y="888" class="t-muted" font-size="7.5" font-weight="500">Decisão</text>
           </g>
         </g>
       </svg>

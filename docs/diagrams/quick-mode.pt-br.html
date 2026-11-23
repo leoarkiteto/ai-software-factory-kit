@@ -5203,7 +5203,7 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
     <!-- Main Diagram -->
     <div class="diagram-container" data-detail-level="read"
          data-preset-badge-editorial-plate="ARCHIFY / PLACA 04">
-      <svg viewBox="0 0 1040 996" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="">
+      <svg viewBox="0 0 1040 1092" data-reader-fit="width-first" data-layout-contract="readable-v2" role="img" lang="pt-BR" aria-labelledby="archify-diagram-title archify-diagram-description" data-animation="trace" data-preset="classic" data-quality-profile="showcase" data-node-ui="">
         <title id="archify-diagram-title">Modo QUICK</title>
         <desc id="archify-diagram-description">Um diagrama de fluxo de trabalho gerado pelo Archify.</desc>
         <!-- Definitions -->
@@ -5250,18 +5250,18 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
         <rect width="100%" height="100%" fill="url(#grid)" />
 
         <!-- Swimlanes -->
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="984" height="190" rx="10" class="c-lane" stroke-width="1"/>
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-0-exception" x="46" y="58" width="972" height="178" rx="8" class="c-security-group" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-0" x="40" y="52" width="984" height="214" rx="10" class="c-lane" stroke-width="1"/>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="exception-lane" data-composition-frame-id="lane-0-exception" x="46" y="58" width="972" height="202" rx="8" class="c-security-group" stroke-width="1"/>
         <text x="54" y="74" class="t-security" font-size="10" font-weight="600">EX / Escalonamento</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="262" width="984" height="190" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="54" y="284" class="t-muted" font-size="10" font-weight="600">02 / Análise</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-1" x="40" y="286" width="984" height="214" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="308" class="t-muted" font-size="10" font-weight="600">02 / Análise</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="472" width="984" height="190" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="54" y="494" class="t-muted" font-size="10" font-weight="600">03 / Execução</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-2" x="40" y="520" width="984" height="214" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="542" class="t-muted" font-size="10" font-weight="600">03 / Execução</text>
 
-        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-3" x="40" y="682" width="984" height="190" rx="10" class="c-lane" stroke-width="1"/>
-        <text x="54" y="704" class="t-muted" font-size="10" font-weight="600">04 / Revisão e integração</text>
+        <rect data-graph-role="structural-frame" data-composition-frame-kind="lane" data-composition-frame-id="lane-3" x="40" y="754" width="984" height="214" rx="10" class="c-lane" stroke-width="1"/>
+        <text x="54" y="776" class="t-muted" font-size="10" font-weight="600">04 / Revisão e integração</text>
 
         <!-- Phase headers -->
 
@@ -5270,170 +5270,186 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 
         <!-- Edge paths -->
-        <path data-edge-from="analyse" data-edge-to="still_quick" data-edge-key="0" data-edge-id="analyse-to-still_quick" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="374,372;452,372" d="M 374 372 L 452 372" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="classifying" data-edge-to="analyse" data-edge-key="1" data-edge-id="classifying-to-analyse" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="154,372;214,372" d="M 154 372 L 214 372" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="define_t1" data-edge-to="executing" data-edge-key="2" data-edge-id="define_t1-to-executing" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="720,398;720,462;46,462;46,582;62,582" d="M 720 398 L 720 454 Q 720 462 712 462 L 54 462 Q 46 462 46 470 L 46 574 Q 46 582 54 582 L 62 582" class="a-default" data-animate="edge" style="--step:2" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="executing" data-edge-to="implement" data-edge-key="3" data-edge-id="executing-to-implement" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="154,582;212,582" d="M 154 582 L 212 582" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="failing" data-edge-to="implement" data-edge-label="sim" data-edge-key="4" data-edge-id="failing-to-implement" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="720,556;720,540;294,540;294,556" d="M 720 556 L 720 548 Q 720 540 712 540 L 302 540 Q 294 540 294 548 L 294 556" class="a-security" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="failing" data-edge-to="risk" data-edge-label="não" data-edge-key="5" data-edge-id="failing-to-risk" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="720,608;720,672;32,672;32,792;48,792" d="M 720 608 L 720 664 Q 720 672 712 672 L 40 672 Q 32 672 32 680 L 32 784 Q 32 792 40 792 L 48 792" class="a-emphasis" data-animate="edge" style="--step:5" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="final" data-edge-to="completed" data-edge-key="6" data-edge-id="final-to-completed" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="768,792;800,792" d="M 768 792 L 800 792" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="implement" data-edge-to="validate" data-edge-key="7" data-edge-id="implement-to-validate" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="376,582;408,582" d="M 376 582 L 408 582" class="a-default" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="integrating" data-edge-to="final" data-edge-key="8" data-edge-id="integrating-to-final" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="544,792;672,792" d="M 544 792 L 672 792" class="a-default" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="reviewing" data-edge-to="integrating" data-edge-key="9" data-edge-id="reviewing-to-integrating" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="388,742;498,742;498,766" d="M 388 742 L 490 742 Q 498 742 498 750 L 498 766" class="a-default" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="risk" data-edge-to="integrating" data-edge-label="não" data-edge-key="10" data-edge-id="risk-to-integrating" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="168,792;452,792" d="M 168 792 L 452 792" class="a-emphasis" data-animate="edge" style="--step:10" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="risk" data-edge-to="reviewing" data-edge-label="sim" data-edge-key="11" data-edge-id="risk-to-reviewing" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="108,766;108,742;200,742" d="M 108 766 L 108 750 Q 108 742 116 742 L 200 742" class="a-default" data-animate="edge" style="--step:11" stroke-width="1.4" marker-end="url(#arrowhead)"/>
-        <path data-edge-from="still_quick" data-edge-to="define_t1" data-edge-label="sim" data-edge-key="12" data-edge-id="still_quick-to-define_t1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="544,372;638,372" d="M 544 372 L 638 372" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
-        <path data-edge-from="still_quick" data-edge-to="reclassify" data-edge-label="não" data-edge-key="13" data-edge-id="still_quick-to-reclassify" data-composition-routing="workflow-v2-auto" data-edge-role="error" data-composition-points="498,346;498,188" d="M 498 346 L 498 188" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
-        <path data-edge-from="validate" data-edge-to="failing" data-edge-key="14" data-edge-id="validate-to-failing" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="588,582;620,582" d="M 588 582 L 620 582" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="analyse" data-edge-to="still_quick" data-edge-key="0" data-edge-id="analyse-to-still_quick" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="374,408;452,408" d="M 374 408 L 452 408" class="a-default" data-animate="edge" style="--step:0" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="classifying" data-edge-to="analyse" data-edge-key="1" data-edge-id="classifying-to-analyse" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="154,408;214,408" d="M 154 408 L 214 408" class="a-default" data-animate="edge" style="--step:1" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="define_t1" data-edge-to="executing" data-edge-key="2" data-edge-id="define_t1-to-executing" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="846,434;846,750;108,750;108,668" d="M 846 434 L 846 742 Q 846 750 838 750 L 116 750 Q 108 750 108 742 L 108 668" class="a-default" data-animate="edge" style="--step:2" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="executing" data-edge-to="implement" data-edge-key="3" data-edge-id="executing-to-implement" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="154,642;212,642" d="M 154 642 L 212 642" class="a-default" data-animate="edge" style="--step:3" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="failing" data-edge-to="implement" data-edge-label="sim" data-edge-key="4" data-edge-id="failing-to-implement" data-composition-routing="workflow-v2-auto" data-edge-role="return" data-composition-points="720,616;720,600;294,600;294,616" d="M 720 616 L 720 608 Q 720 600 712 600 L 302 600 Q 294 600 294 608 L 294 616" class="a-security" data-animate="edge" style="--step:4" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="failing" data-edge-to="risk" data-edge-label="não" data-edge-key="5" data-edge-id="failing-to-risk" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="744,616;744,504;32,504;32,876;48,876" d="M 744 616 L 744 512 Q 744 504 736 504 L 40 504 Q 32 504 32 512 L 32 868 Q 32 876 40 876 L 48 876" class="a-emphasis" data-animate="edge" style="--step:5" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="final" data-edge-to="completed" data-edge-key="6" data-edge-id="final-to-completed" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="768,876;800,876" d="M 768 876 L 800 876" class="a-default" data-animate="edge" style="--step:6" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="implement" data-edge-to="validate" data-edge-key="7" data-edge-id="implement-to-validate" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="376,642;408,642" d="M 376 642 L 408 642" class="a-default" data-animate="edge" style="--step:7" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="integrating" data-edge-to="final" data-edge-key="8" data-edge-id="integrating-to-final" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="544,876;672,876" d="M 544 876 L 672 876" class="a-default" data-animate="edge" style="--step:8" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="ref_brief" data-edge-to="define_t1" data-edge-label="notas" data-edge-key="9" data-edge-id="ref-to-define_t1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="806,346;846,346;846,382" d="M 806 346 L 838 346 Q 846 346 846 354 L 846 382" class="a-dashed" data-animate="edge" style="--step:9" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="reviewing" data-edge-to="integrating" data-edge-key="10" data-edge-id="reviewing-to-integrating" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="388,826;498,826;498,850" d="M 388 826 L 490 826 Q 498 826 498 834 L 498 850" class="a-default" data-animate="edge" style="--step:10" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="risk" data-edge-to="integrating" data-edge-label="não" data-edge-key="11" data-edge-id="risk-to-integrating" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="168,876;452,876" d="M 168 876 L 452 876" class="a-emphasis" data-animate="edge" style="--step:11" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="risk" data-edge-to="reviewing" data-edge-label="sim" data-edge-key="12" data-edge-id="risk-to-reviewing" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="108,850;108,826;200,826" d="M 108 850 L 108 834 Q 108 826 116 826 L 200 826" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
+        <path data-edge-from="still_quick" data-edge-to="define_t1" data-edge-label="sim" data-edge-key="13" data-edge-id="still_quick-to-define_t1" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="544,408;764,408" d="M 544 408 L 764 408" class="a-emphasis" data-animate="edge" style="--step:12" stroke-width="1.8" marker-end="url(#arrowhead-emphasis)"/>
+        <path data-edge-from="still_quick" data-edge-to="reclassify" data-edge-label="não" data-edge-key="14" data-edge-id="still_quick-to-reclassify" data-composition-routing="workflow-v2-auto" data-edge-role="error" data-composition-points="498,382;498,200" d="M 498 382 L 498 200" class="a-security" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-security)"/>
+        <path data-edge-from="still_quick" data-edge-to="ref_brief" data-edge-label="precisa de doc ou design" data-edge-key="15" data-edge-id="still_quick-to-ref" data-composition-routing="workflow-v2-auto" data-edge-role="branch" data-composition-points="522,382;522,294;720,294;720,320" d="M 522 382 L 522 302 Q 522 294 530 294 L 712 294 Q 720 294 720 302 L 720 320" class="a-dashed" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead-dashed)"/>
+        <path data-edge-from="validate" data-edge-to="failing" data-edge-key="16" data-edge-id="validate-to-failing" data-composition-routing="workflow-v2-auto" data-edge-role="" data-composition-points="588,642;620,642" d="M 588 642 L 620 642" class="a-default" data-animate="edge" style="--step:12" stroke-width="1.4" marker-end="url(#arrowhead)"/>
 
         <!-- Nodes -->
         <g id="node-reclassify" data-node-id="reclassify" data-node-label="Reclassificar, ou escalar" tabindex="0" role="button" aria-label="Focar Reclassificar, ou escalar, para STANDARD (avisar o usuário), Escalonamento" aria-pressed="false" data-node-kind="backend" data-node-sublabel="para STANDARD (avisar o usuário)" data-node-context="Escalonamento">
           <title>Reclassificar, ou escalar · para STANDARD (avisar o usuário) · Escalonamento</title>
-          <rect x="416" y="136" width="164" height="52" rx="8" class="c-mask"/>
-          <rect x="416" y="136" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(422 142) scale(0.6875)">
+          <rect x="416" y="148" width="164" height="52" rx="8" class="c-mask"/>
+          <rect x="416" y="148" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step:0" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(422 154) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="498" y="167.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Reclassificar, ou escalar</text>
-          <text data-detail="context" x="498" y="182.3" class="t-muted" font-size="8" text-anchor="middle">para STANDARD (avisar o usuário)</text>
+          <text data-node-label="" data-detail-anchor="" x="498" y="179.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Reclassificar, ou escalar</text>
+          <text data-detail="context" x="498" y="194.3" class="t-muted" font-size="8" text-anchor="middle">para STANDARD (avisar o usuário)</text>
         </g>
 
         <g id="node-classifying" data-node-id="classifying" data-node-label="classifying" tabindex="0" role="button" aria-label="Focar classifying, Análise" aria-pressed="false" data-node-kind="messagebus" data-node-context="Análise">
           <title>classifying · Análise</title>
-          <rect x="62" y="346" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="62" y="346" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:1" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(68 352) scale(0.6875)">
+          <rect x="62" y="382" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="62" y="382" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:1" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(68 388) scale(0.6875)">
             <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
           </g>
-          <text data-node-label="" x="108" y="378.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">classifying</text>
+          <text data-node-label="" x="108" y="414.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">classifying</text>
         </g>
 
         <g id="node-analyse" data-node-id="analyse" data-node-label="Análise focada" tabindex="0" role="button" aria-label="Focar Análise focada, código alvo, chamadores, testes, Análise" aria-pressed="false" data-node-kind="backend" data-node-sublabel="código alvo, chamadores, testes" data-node-context="Análise">
           <title>Análise focada · código alvo, chamadores, testes · Análise</title>
-          <rect x="214" y="346" width="160" height="52" rx="8" class="c-mask"/>
-          <rect x="214" y="346" width="160" height="52" rx="8" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(220 352) scale(0.6875)">
+          <rect x="214" y="382" width="160" height="52" rx="8" class="c-mask"/>
+          <rect x="214" y="382" width="160" height="52" rx="8" class="c-backend" data-animate="node" style="--step:2" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(220 388) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="294" y="367" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Análise focada</text>
-          <text data-detail="context" x="294" y="384" class="t-muted" font-size="8" text-anchor="middle">código alvo, chamadores, testes</text>
+          <text data-node-label="" data-detail-anchor="" x="294" y="403" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">Análise focada</text>
+          <text data-detail="context" x="294" y="420" class="t-muted" font-size="8" text-anchor="middle">código alvo, chamadores, testes</text>
         </g>
 
         <g id="node-still_quick" data-node-id="still_quick" data-node-label="Ainda é QUICK?" tabindex="0" role="button" aria-label="Focar Ainda é QUICK?, Análise" aria-pressed="false" data-node-kind="cloud" data-node-context="Análise">
           <title>Ainda é QUICK? · Análise</title>
-          <rect x="452" y="346" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="452" y="346" width="92" height="52" rx="8" class="c-cloud" data-animate="node" style="--step:3" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-cloud" transform="translate(458 352) scale(0.6875)">
+          <rect x="452" y="382" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="452" y="382" width="92" height="52" rx="8" class="c-cloud" data-animate="node" style="--step:3" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-cloud" transform="translate(458 388) scale(0.6875)">
             <path d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/>
           </g>
-          <text data-node-label="" x="498" y="377" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Ainda é QUICK?</text>
+          <text data-node-label="" x="498" y="413" class="t-primary" font-size="10" font-weight="600" text-anchor="middle">Ainda é QUICK?</text>
+        </g>
+
+        <g id="node-ref_brief" data-node-id="ref_brief" data-node-label="Brief de pesquisa / design" tabindex="0" role="button" aria-label="Focar Brief de pesquisa / design, um brief curto · nota somente leitura, Análise" aria-pressed="false" data-node-kind="frontend" data-node-sublabel="um brief curto · nota somente leitura" data-node-context="Análise">
+          <title>Brief de pesquisa / design · um brief curto · nota somente leitura · Análise</title>
+          <rect x="634" y="320" width="172" height="52" rx="8" class="c-mask"/>
+          <rect x="634" y="320" width="172" height="52" rx="8" class="c-frontend" data-animate="node" style="--step:4" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="frontend" class="semantic-sigil s-frontend" transform="translate(640 326) scale(0.6875)">
+            <rect x="2" y="3" width="12" height="10" rx="2"/>
+            <path d="M2 6.5h12"/>
+            <circle cx="4.1" cy="4.8" r=".7" class="sigil-fill"/>
+            <circle cx="6.3" cy="4.8" r=".7" class="sigil-fill"/>
+          </g>
+          <text data-node-label="" data-detail-anchor="" x="720" y="351.6" class="t-primary" font-size="10.5" font-weight="600" text-anchor="middle">Brief de pesquisa / design</text>
+          <text data-detail="context" x="720" y="365.6" class="t-muted" font-size="7.3" text-anchor="middle">um brief curto · nota somente leitura</text>
         </g>
 
         <g id="node-define_t1" data-node-id="define_t1" data-node-label="Definir a tarefa única T1" tabindex="0" role="button" aria-label="Focar Definir a tarefa única T1, escopo e critérios de aceite, Análise" aria-pressed="false" data-node-kind="backend" data-node-sublabel="escopo e critérios de aceite" data-node-context="Análise">
           <title>Definir a tarefa única T1 · escopo e critérios de aceite · Análise</title>
-          <rect x="638" y="346" width="164" height="52" rx="8" class="c-mask"/>
-          <rect x="638" y="346" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step:4" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(644 352) scale(0.6875)">
+          <rect x="764" y="382" width="164" height="52" rx="8" class="c-mask"/>
+          <rect x="764" y="382" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step:5" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(770 388) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="720" y="377.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Definir a tarefa única T1</text>
-          <text data-detail="context" x="720" y="392.3" class="t-muted" font-size="8" text-anchor="middle">escopo e critérios de aceite</text>
+          <text data-node-label="" data-detail-anchor="" x="846" y="413.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">Definir a tarefa única T1</text>
+          <text data-detail="context" x="846" y="428.3" class="t-muted" font-size="8" text-anchor="middle">escopo e critérios de aceite</text>
         </g>
 
         <g id="node-executing" data-node-id="executing" data-node-label="executing" tabindex="0" role="button" aria-label="Focar executing, Execução" aria-pressed="false" data-node-kind="messagebus" data-node-context="Execução">
           <title>executing · Execução</title>
-          <rect x="62" y="556" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="62" y="556" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:5" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(68 562) scale(0.6875)">
+          <rect x="62" y="616" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="62" y="616" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:6" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(68 622) scale(0.6875)">
             <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
           </g>
-          <text data-node-label="" x="110.7" y="577" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">executing</text>
+          <text data-node-label="" x="110.7" y="637" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">executing</text>
         </g>
 
         <g id="node-implement" data-node-id="implement" data-node-label="O orquestrador implementa" tabindex="0" role="button" aria-label="Focar O orquestrador implementa, thread principal · Opus $$$, Execução" aria-pressed="false" data-node-kind="backend" data-node-sublabel="thread principal · Opus $$$" data-node-context="Execução">
           <title>O orquestrador implementa · thread principal · Opus $$$ · Execução</title>
-          <rect x="212" y="556" width="164" height="52" rx="8" class="c-mask"/>
-          <rect x="212" y="556" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step:6" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(218 562) scale(0.6875)">
+          <rect x="212" y="616" width="164" height="52" rx="8" class="c-mask"/>
+          <rect x="212" y="616" width="164" height="52" rx="8" class="c-backend" data-animate="node" style="--step:7" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(218 622) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="294" y="587.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">O orquestrador implementa</text>
-          <text data-detail="context" x="294" y="602.3" class="t-muted" font-size="8" text-anchor="middle">thread principal · Opus $$$</text>
+          <text data-node-label="" data-detail-anchor="" x="294" y="647.5" class="t-primary" font-size="10.4" font-weight="600" text-anchor="middle">O orquestrador implementa</text>
+          <text data-detail="context" x="294" y="662.3" class="t-muted" font-size="8" text-anchor="middle">thread principal · Opus $$$</text>
         </g>
 
         <g id="node-validate" data-node-id="validate" data-node-label="Rodar comandos de validação" tabindex="0" role="button" aria-label="Focar Rodar comandos de validação, registrar cada resultado, Execução" aria-pressed="false" data-node-kind="backend" data-node-sublabel="registrar cada resultado" data-node-context="Execução">
           <title>Rodar comandos de validação · registrar cada resultado · Execução</title>
-          <rect x="408" y="556" width="180" height="52" rx="8" class="c-mask"/>
-          <rect x="408" y="556" width="180" height="52" rx="8" class="c-backend" data-animate="node" style="--step:7" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(414 562) scale(0.6875)">
+          <rect x="408" y="616" width="180" height="52" rx="8" class="c-mask"/>
+          <rect x="408" y="616" width="180" height="52" rx="8" class="c-backend" data-animate="node" style="--step:8" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(414 622) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="498" y="587.8" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">Rodar comandos de validação</text>
-          <text data-detail="context" x="498" y="602.6" class="t-muted" font-size="8" text-anchor="middle">registrar cada resultado</text>
+          <text data-node-label="" data-detail-anchor="" x="498" y="647.8" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">Rodar comandos de validação</text>
+          <text data-detail="context" x="498" y="662.6" class="t-muted" font-size="8" text-anchor="middle">registrar cada resultado</text>
         </g>
 
         <g id="node-failing" data-node-id="failing" data-node-label="Falhando por causa da mudança?" tabindex="0" role="button" aria-label="Focar Falhando por causa da mudança?, Execução" aria-pressed="false" data-node-kind="cloud" data-node-context="Execução">
           <title>Falhando por causa da mudança? · Execução</title>
-          <rect x="620" y="556" width="200" height="52" rx="8" class="c-mask"/>
-          <rect x="620" y="556" width="200" height="52" rx="8" class="c-cloud" data-animate="node" style="--step:8" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-cloud" transform="translate(626 562) scale(0.6875)">
+          <rect x="620" y="616" width="200" height="52" rx="8" class="c-mask"/>
+          <rect x="620" y="616" width="200" height="52" rx="8" class="c-cloud" data-animate="node" style="--step:9" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-cloud" transform="translate(626 622) scale(0.6875)">
             <path d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/>
           </g>
-          <text data-node-label="" x="720" y="587.8" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">Falhando por causa da mudança?</text>
+          <text data-node-label="" x="720" y="647.8" class="t-primary" font-size="10.6" font-weight="600" text-anchor="middle">Falhando por causa da mudança?</text>
         </g>
 
         <g id="node-risk" data-node-id="risk" data-node-label="Risco sinalizado?" tabindex="0" role="button" aria-label="Focar Risco sinalizado?, review.code.quick = on_risk, Revisão e integração" aria-pressed="false" data-node-kind="cloud" data-node-sublabel="review.code.quick = on_risk" data-node-context="Revisão e integração">
           <title>Risco sinalizado? · review.code.quick = on_risk · Revisão e integração</title>
-          <rect x="48" y="766" width="120" height="52" rx="8" class="c-mask"/>
-          <rect x="48" y="766" width="120" height="52" rx="8" class="c-cloud" data-animate="node" style="--step:9" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-cloud" transform="translate(54 772) scale(0.6875)">
+          <rect x="48" y="850" width="120" height="52" rx="8" class="c-mask"/>
+          <rect x="48" y="850" width="120" height="52" rx="8" class="c-cloud" data-animate="node" style="--step:10" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="decision" class="semantic-sigil s-cloud" transform="translate(54 856) scale(0.6875)">
             <path d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="108" y="798.1" class="t-primary" font-size="10.9" font-weight="600" text-anchor="middle">Risco sinalizado?</text>
-          <text data-detail="context" x="108" y="811.7" class="t-muted" font-size="6.9" text-anchor="middle">review.code.quick = on_risk</text>
+          <text data-node-label="" data-detail-anchor="" x="108" y="882.1" class="t-primary" font-size="10.9" font-weight="600" text-anchor="middle">Risco sinalizado?</text>
+          <text data-detail="context" x="108" y="895.7" class="t-muted" font-size="6.9" text-anchor="middle">review.code.quick = on_risk</text>
         </g>
 
         <g id="node-reviewing" data-node-id="reviewing" data-node-label="reviewing" tabindex="0" role="button" aria-label="Focar reviewing, code-reviewer independente · Opus $$$, Revisão e integração" aria-pressed="false" data-node-kind="messagebus" data-node-sublabel="code-reviewer independente · Opus $$$" data-node-context="Revisão e integração">
           <title>reviewing · code-reviewer independente · Opus $$$ · Revisão e integração</title>
-          <rect x="200" y="716" width="188" height="52" rx="8" class="c-mask"/>
-          <rect x="200" y="716" width="188" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:10" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(206 722) scale(0.6875)">
+          <rect x="200" y="800" width="188" height="52" rx="8" class="c-mask"/>
+          <rect x="200" y="800" width="188" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:11" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(206 806) scale(0.6875)">
             <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="294" y="737" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">reviewing</text>
-          <text data-detail="context" x="294" y="754" class="t-muted" font-size="8" text-anchor="middle">code-reviewer independente · Opus $$$</text>
+          <text data-node-label="" data-detail-anchor="" x="294" y="821" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">reviewing</text>
+          <text data-detail="context" x="294" y="838" class="t-muted" font-size="8" text-anchor="middle">code-reviewer independente · Opus $$$</text>
         </g>
 
         <g id="node-integrating" data-node-id="integrating" data-node-label="integrating" tabindex="0" role="button" aria-label="Focar integrating, Revisão e integração" aria-pressed="false" data-node-kind="messagebus" data-node-context="Revisão e integração">
           <title>integrating · Revisão e integração</title>
-          <rect x="452" y="766" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="452" y="766" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:11" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(458 772) scale(0.6875)">
+          <rect x="452" y="850" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="452" y="850" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="active" class="semantic-sigil s-messagebus" transform="translate(458 856) scale(0.6875)">
             <path d="M2 8h3l1.5-3.5L9 12l1.6-4H14"/>
           </g>
-          <text data-node-label="" x="498" y="798.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">integrating</text>
+          <text data-node-label="" x="498" y="882.2" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">integrating</text>
         </g>
 
         <g id="node-final" data-node-id="final" data-node-label="Validação final" tabindex="0" role="button" aria-label="Focar Validação final, relatório final curto, Revisão e integração" aria-pressed="false" data-node-kind="backend" data-node-sublabel="relatório final curto" data-node-context="Revisão e integração">
           <title>Validação final · relatório final curto · Revisão e integração</title>
-          <rect x="672" y="766" width="96" height="52" rx="8" class="c-mask"/>
-          <rect x="672" y="766" width="96" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(678 772) scale(0.6875)">
+          <rect x="672" y="850" width="96" height="52" rx="8" class="c-mask"/>
+          <rect x="672" y="850" width="96" height="52" rx="8" class="c-backend" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="backend" class="semantic-sigil s-backend" transform="translate(678 856) scale(0.6875)">
             <path d="M6 3 3 8l3 5M10 3l3 5-3 5"/>
           </g>
-          <text data-node-label="" data-detail-anchor="" x="720" y="796.7" class="t-primary" font-size="9.7" font-weight="600" text-anchor="middle">Validação final</text>
-          <text data-detail="context" x="720" y="809.9" class="t-muted" font-size="6.9" text-anchor="middle">relatório final curto</text>
+          <text data-node-label="" data-detail-anchor="" x="720" y="880.7" class="t-primary" font-size="9.7" font-weight="600" text-anchor="middle">Validação final</text>
+          <text data-detail="context" x="720" y="893.9" class="t-muted" font-size="6.9" text-anchor="middle">relatório final curto</text>
         </g>
 
         <g id="node-completed" data-node-id="completed" data-node-label="completed" tabindex="0" role="button" aria-label="Focar completed, Revisão e integração" aria-pressed="false" data-node-kind="messagebus" data-node-context="Revisão e integração">
           <title>completed · Revisão e integração</title>
-          <rect x="800" y="766" width="92" height="52" rx="8" class="c-mask"/>
-          <rect x="800" y="766" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
-          <g aria-hidden="true" data-semantic-sigil="success" class="semantic-sigil s-messagebus" transform="translate(806 772) scale(0.6875)">
+          <rect x="800" y="850" width="92" height="52" rx="8" class="c-mask"/>
+          <rect x="800" y="850" width="92" height="52" rx="8" class="c-messagebus" data-animate="node" style="--step:12" stroke-width="1.5"/>
+          <g aria-hidden="true" data-semantic-sigil="success" class="semantic-sigil s-messagebus" transform="translate(806 856) scale(0.6875)">
             <circle cx="8" cy="8" r="5.3"/>
             <path d="m5.2 8 1.8 1.8 3.8-4"/>
           </g>
-          <text data-node-label="" x="848.7" y="787" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">completed</text>
+          <text data-node-label="" x="848.7" y="871" class="t-primary" font-size="11" font-weight="600" text-anchor="middle">completed</text>
         </g>
 
         <!-- Edge labels -->
@@ -5442,49 +5458,61 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
 
 
         <g data-detail="context" data-edge-from="failing" data-edge-to="implement" data-edge-label="sim" data-edge-key="4" data-edge-id="failing-to-implement">
-          <rect x="492" y="520" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="507" y="530" class="t-edge-security" font-size="8" text-anchor="middle">sim</text>
+          <rect x="492" y="580" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="507" y="590" class="t-edge-security" font-size="8" text-anchor="middle">sim</text>
         </g>
         <g data-detail="context" data-edge-from="failing" data-edge-to="risk" data-edge-label="não" data-edge-key="5" data-edge-id="failing-to-risk">
-          <rect x="361" y="652" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="376" y="662" class="t-edge-emphasis" font-size="8" text-anchor="middle">não</text>
+          <rect x="373" y="484" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="388" y="494" class="t-edge-emphasis" font-size="8" text-anchor="middle">não</text>
         </g>
 
 
 
+        <g data-detail="context" data-edge-from="ref_brief" data-edge-to="define_t1" data-edge-label="notas" data-edge-key="9" data-edge-id="ref-to-define_t1">
+          <rect x="809" y="326" width="34" height="14" rx="3" class="c-mask"/>
+          <text x="826" y="336" class="t-edge-dashed" font-size="8" text-anchor="middle">notas</text>
+        </g>
 
-        <g data-detail="context" data-edge-from="risk" data-edge-to="integrating" data-edge-label="não" data-edge-key="10" data-edge-id="risk-to-integrating">
-          <rect x="295" y="772" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="310" y="782" class="t-edge-emphasis" font-size="8" text-anchor="middle">não</text>
+        <g data-detail="context" data-edge-from="risk" data-edge-to="integrating" data-edge-label="não" data-edge-key="11" data-edge-id="risk-to-integrating">
+          <rect x="295" y="856" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="310" y="866" class="t-edge-emphasis" font-size="8" text-anchor="middle">não</text>
         </g>
-        <g data-detail="context" data-edge-from="risk" data-edge-to="reviewing" data-edge-label="sim" data-edge-key="11" data-edge-id="risk-to-reviewing">
-          <rect x="139" y="722" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="154" y="732" class="t-muted" font-size="8" text-anchor="middle">sim</text>
+        <g data-detail="context" data-edge-from="risk" data-edge-to="reviewing" data-edge-label="sim" data-edge-key="12" data-edge-id="risk-to-reviewing">
+          <rect x="139" y="806" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="154" y="816" class="t-muted" font-size="8" text-anchor="middle">sim</text>
         </g>
-        <g data-detail="context" data-edge-from="still_quick" data-edge-to="define_t1" data-edge-label="sim" data-edge-key="12" data-edge-id="still_quick-to-define_t1">
-          <rect x="576" y="352" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="591" y="362" class="t-edge-emphasis" font-size="8" text-anchor="middle">sim</text>
+        <g data-detail="context" data-edge-from="still_quick" data-edge-to="define_t1" data-edge-label="sim" data-edge-key="13" data-edge-id="still_quick-to-define_t1">
+          <rect x="639" y="388" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="654" y="398" class="t-edge-emphasis" font-size="8" text-anchor="middle">sim</text>
         </g>
-        <g data-detail="context" data-edge-from="still_quick" data-edge-to="reclassify" data-edge-label="não" data-edge-key="13" data-edge-id="still_quick-to-reclassify">
-          <rect x="483" y="257" width="30" height="14" rx="3" class="c-mask"/>
-          <text x="498" y="267" class="t-edge-security" font-size="8" text-anchor="middle">não</text>
+        <g data-detail="context" data-edge-from="still_quick" data-edge-to="reclassify" data-edge-label="não" data-edge-key="14" data-edge-id="still_quick-to-reclassify">
+          <rect x="483" y="281" width="30" height="14" rx="3" class="c-mask"/>
+          <text x="498" y="291" class="t-edge-security" font-size="8" text-anchor="middle">não</text>
+        </g>
+        <g data-detail="context" data-edge-from="still_quick" data-edge-to="ref_brief" data-edge-label="precisa de doc ou design" data-edge-key="15" data-edge-id="still_quick-to-ref">
+          <rect x="558.4" y="274" width="125.19999999999999" height="14" rx="3" class="c-mask"/>
+          <text x="621" y="284" class="t-edge-dashed" font-size="8" text-anchor="middle">precisa de doc ou design</text>
         </g>
 
 
         <!-- Legend -->
         <g data-legend="" data-legend-bridge="">
-          <text x="20" y="896" class="t-primary" font-size="12" font-weight="650">Legenda</text>
-          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Ação" data-legend-x="20" data-legend-baseline="916" data-legend-width="62">
-            <rect x="20" y="908" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
-            <text x="42" y="916" class="t-muted" font-size="7.5" font-weight="500">Ação</text>
+          <text x="20" y="992" class="t-primary" font-size="12" font-weight="650">Legenda</text>
+          <g data-legend-semantic-kind="frontend" data-legend-kind="frontend" data-legend-label="UI do usuário" data-legend-x="20" data-legend-baseline="1012" data-legend-width="104">
+            <rect x="20" y="1004" width="14" height="9" rx="2" class="c-frontend" stroke-width="1"/>
+            <text x="42" y="1012" class="t-muted" font-size="7.5" font-weight="500">UI do usuário</text>
           </g>
-          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Status do workflow" data-legend-x="89" data-legend-baseline="916" data-legend-width="127">
-            <rect x="89" y="908" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
-            <text x="111" y="916" class="t-muted" font-size="7.5" font-weight="500">Status do workflow</text>
+          <g data-legend-semantic-kind="backend" data-legend-kind="backend" data-legend-label="Ação" data-legend-x="131" data-legend-baseline="1012" data-legend-width="62">
+            <rect x="131" y="1004" width="14" height="9" rx="2" class="c-backend" stroke-width="1"/>
+            <text x="153" y="1012" class="t-muted" font-size="7.5" font-weight="500">Ação</text>
           </g>
-          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Decisão" data-legend-x="223" data-legend-baseline="916" data-legend-width="76">
-            <rect x="223" y="908" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
-            <text x="245" y="916" class="t-muted" font-size="7.5" font-weight="500">Decisão</text>
+          <g data-legend-semantic-kind="messagebus" data-legend-kind="messagebus" data-legend-label="Status do workflow" data-legend-x="200" data-legend-baseline="1012" data-legend-width="127">
+            <rect x="200" y="1004" width="14" height="9" rx="2" class="c-messagebus" stroke-width="1"/>
+            <text x="222" y="1012" class="t-muted" font-size="7.5" font-weight="500">Status do workflow</text>
+          </g>
+          <g data-legend-semantic-kind="cloud" data-legend-kind="cloud" data-legend-label="Decisão" data-legend-x="334" data-legend-baseline="1012" data-legend-width="76">
+            <rect x="334" y="1004" width="14" height="9" rx="2" class="c-cloud" stroke-width="1"/>
+            <text x="356" y="1012" class="t-muted" font-size="7.5" font-weight="500">Decisão</text>
           </g>
         </g>
       </svg>
@@ -5667,10 +5695,11 @@ OTHER DEALINGS IN THE FONT SOFTWARE.
       <div class="card">
         <div class="card-header">
           <div class="card-dot cyan"></div>
-          <h3>Sem plano, sem delegação</h3>
+          <h3>Sem plano, delegação mínima</h3>
         </div>
         <ul>
           <li>Mudanças pequenas e isoladas: o próprio orquestrador implementa a mudança.</li>
+          <li>A única delegação antes da revisão: um brief curto de pesquisa ou design, quando a mudança depende de uma API externa ou cita um design.</li>
           <li>Um escalonamento depois que a execução começou passa por replanning → planning com --mode standard.</li>
         </ul>
       </div>

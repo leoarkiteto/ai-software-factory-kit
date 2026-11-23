@@ -38,7 +38,10 @@ flowchart TD
     S(["classifying"]) --> A["Focused analysis:<br/>target code, callers, tests"]
     A --> B{"Still QUICK?"}
     B -- no --> ESC["Re-classify, or escalate<br/>to STANDARD (tell the user)"]
-    B -- yes --> T["Define the single task T1:<br/>scope and acceptance criteria"]
+    B -- yes --> RQ{"Hinges on an external API,<br/>or cites a design?"}
+    RQ -- yes --> RB["One short brief each:<br/>research-worker / design-worker<br/>(read-only notes)"]
+    RB --> T
+    RQ -- no --> T["Define the single task T1:<br/>scope and acceptance criteria"]
     T --> X(["executing"])
     X --> I["Orchestrator implements<br/>in the main thread"]
     I --> V["Run the validation commands<br/>and record each result"]
@@ -64,7 +67,10 @@ Moderate features that touch several files or components. A light plan, workers 
 ```mermaid
 flowchart TD
     S(["classifying"]) --> P(["planning"])
-    P --> Q1{"Questions the repository<br/>cannot answer?"}
+    P --> RQ{"External API whose docs matter,<br/>or a cited design?"}
+    RQ -- yes --> RB["research-worker / design-worker<br/>in parallel → read-only notes"]
+    RB --> Q1
+    RQ -- no --> Q1{"Questions the repository<br/>cannot answer?"}
     Q1 -- yes --> U1[/"⏸ One round of questions,<br/>each with a recommended answer"/]
     U1 --> PL
     Q1 -- no --> PL["plan.md with the inline spec<br/>(scope, FR, AC) and the task DAG"]
@@ -111,7 +117,10 @@ flowchart TD
     LS --> SC
     SC --> U1[/"⏸ Approve the spec"/]
     U1 --> PL(["planning"])
-    PL --> PP["plan.md with contracts first,<br/>task DAG covering every FR"]
+    PL --> RQ{"External API whose docs matter,<br/>or a cited design?"}
+    RQ -- yes --> RB["research-worker / design-worker<br/>in parallel → read-only notes"]
+    RB --> PP
+    RQ -- no --> PP["plan.md with contracts first,<br/>task DAG covering every FR"]
     PP --> PR["Plan review:<br/>architecture-reviewer"]
     PR -- "required findings" --> PP
     PR -- approved --> U2[/"⏸ Approve the plan"/]
@@ -131,7 +140,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     N["factory-state next"] --> A{"Next action"}
-    A -- run_tasks --> B["Brief each ready task<br/>and dispatch it to its worker"]
+    A -- run_tasks --> B["Brief each ready task (quoting the<br/>research and design notes it needs)<br/>and dispatch it to its worker"]
     B --> R["Collect the JSON report,<br/>cross-check it against git status"]
     R --> N
     A -- retry_tasks --> RT["Task back to pending,<br/>the brief carries the failure"]
@@ -141,7 +150,7 @@ flowchart TD
     RPL --> N
     A -- review --> RV(["reviewing"])
     RV --> SNAP["git status snapshot"]
-    SNAP --> RVS["Reviewers in parallel,<br/>independent of the implementers"]
+    SNAP --> RVS["Reviewers in parallel,<br/>independent of the implementers,<br/>with the note paths"]
     RVS --> CHK{"Tree unchanged?"}
     CHK -- no --> DISC["Discard that review<br/>and record an issue"]
     CHK -- yes --> SUB["factory-state review<br/>prints the decision"]
