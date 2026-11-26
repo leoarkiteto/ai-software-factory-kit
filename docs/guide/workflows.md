@@ -23,6 +23,8 @@ flowchart TD
     C -. "low confidence" .-> U[/"⏸ Confirm the mode"/]
 ```
 
+[Interactive version](../diagrams/classification.en.html)
+
 - The thresholds and the escalation dimensions come from `classification` in the config. The defaults are shown above.
 - `--mode quick|standard|full_spec` forces a mode, and the forced mode is recorded with its reason.
 - Uncertainty counts only when the repository cannot resolve it. A request that states its decisions scores lower: in Phase 9, the same feature scored FULL-SPEC 15 when worded vaguely and STANDARD 10 once its decisions were stated.
@@ -36,7 +38,10 @@ flowchart TD
     S(["classifying"]) --> A["Focused analysis:<br/>target code, callers, tests"]
     A --> B{"Still QUICK?"}
     B -- no --> ESC["Re-classify, or escalate<br/>to STANDARD (tell the user)"]
-    B -- yes --> T["Define the single task T1:<br/>scope and acceptance criteria"]
+    B -- yes --> RQ{"Hinges on an external API,<br/>or cites a design?"}
+    RQ -- yes --> RB["One short brief each:<br/>research-worker / design-worker<br/>(read-only notes)"]
+    RB --> T
+    RQ -- no --> T["Define the single task T1:<br/>scope and acceptance criteria"]
     T --> X(["executing"])
     X --> I["Orchestrator implements<br/>in the main thread"]
     I --> V["Run the validation commands<br/>and record each result"]
@@ -50,6 +55,8 @@ flowchart TD
     FIN --> C(["completed"])
 ```
 
+[Interactive version](../diagrams/quick-mode.en.html)
+
 - Escalation after execution has started goes through `replanning → planning` with `--mode standard`.
 - Because the orchestrator implements, a review, when one is required, must go to `factory:code-reviewer`. The orchestrator never reviews its own work.
 
@@ -60,7 +67,10 @@ Moderate features that touch several files or components. A light plan, workers 
 ```mermaid
 flowchart TD
     S(["classifying"]) --> P(["planning"])
-    P --> Q1{"Questions the repository<br/>cannot answer?"}
+    P --> RQ{"External API whose docs matter,<br/>or a cited design?"}
+    RQ -- yes --> RB["research-worker / design-worker<br/>in parallel → read-only notes"]
+    RB --> Q1
+    RQ -- no --> Q1{"Questions the repository<br/>cannot answer?"}
     Q1 -- yes --> U1[/"⏸ One round of questions,<br/>each with a recommended answer"/]
     U1 --> PL
     Q1 -- no --> PL["plan.md with the inline spec<br/>(scope, FR, AC) and the task DAG"]
@@ -78,6 +88,8 @@ flowchart TD
     IN --> AC["Final validation, check every AC,<br/>final report with a follow-up request"]
     AC --> C(["completed"])
 ```
+
+[Interactive version](../diagrams/standard-mode.en.html)
 
 - Execution and review are detailed in §5.
 - The round limit is `review.maxIterations`, 3 by default.
@@ -105,7 +117,10 @@ flowchart TD
     LS --> SC
     SC --> U1[/"⏸ Approve the spec"/]
     U1 --> PL(["planning"])
-    PL --> PP["plan.md with contracts first,<br/>task DAG covering every FR"]
+    PL --> RQ{"External API whose docs matter,<br/>or a cited design?"}
+    RQ -- yes --> RB["research-worker / design-worker<br/>in parallel → read-only notes"]
+    RB --> PP
+    RQ -- no --> PP["plan.md with contracts first,<br/>task DAG covering every FR"]
     PP --> PR["Plan review:<br/>architecture-reviewer"]
     PR -- "required findings" --> PP
     PR -- approved --> U2[/"⏸ Approve the plan"/]
@@ -115,6 +130,8 @@ flowchart TD
     V --> C(["completed"])
 ```
 
+[Interactive version](../diagrams/full-spec-mode.en.html)
+
 - Discovery may write domain docs (`GLOSSARY.md`, ADRs) and nothing else.
 - Only you can start `/grill-with-docs`, which is why discovery always pauses.
 
@@ -123,7 +140,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     N["factory-state next"] --> A{"Next action"}
-    A -- run_tasks --> B["Brief each ready task<br/>and dispatch it to its worker"]
+    A -- run_tasks --> B["Brief each ready task (quoting the<br/>research and design notes it needs)<br/>and dispatch it to its worker"]
     B --> R["Collect the JSON report,<br/>cross-check it against git status"]
     R --> N
     A -- retry_tasks --> RT["Task back to pending,<br/>the brief carries the failure"]
@@ -133,7 +150,7 @@ flowchart TD
     RPL --> N
     A -- review --> RV(["reviewing"])
     RV --> SNAP["git status snapshot"]
-    SNAP --> RVS["Reviewers in parallel,<br/>independent of the implementers"]
+    SNAP --> RVS["Reviewers in parallel,<br/>independent of the implementers,<br/>with the note paths"]
     RVS --> CHK{"Tree unchanged?"}
     CHK -- no --> DISC["Discard that review<br/>and record an issue"]
     CHK -- yes --> SUB["factory-state review<br/>prints the decision"]
@@ -142,6 +159,8 @@ flowchart TD
     SUB -- integrate --> IN(["integrating"])
     SUB -- escalate --> ESC[/"⏸ Escalation"/]
 ```
+
+[Interactive version](../diagrams/orchestrator-loop.en.html)
 
 - A failed task is retried up to `execution.maxTaskAttempts` times, 2 by default. After that its dependants are blocked and `next` asks for a replan.
 - A worker that hits a "Factory guard" denial stops and reports `blocked`. It never works around the denial.
@@ -175,6 +194,8 @@ stateDiagram-v2
     failed --> [*]
     cancelled --> [*]
 ```
+
+[Interactive version](../diagrams/workflow-states.en.html)
 
 - Every open status can also move to `failed` or `cancelled`. Those edges are left out of the diagram for readability.
 - `failed` means the work could not be done. It can be resumed into `replanning` with your approval.

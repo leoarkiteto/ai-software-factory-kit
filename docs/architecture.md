@@ -76,6 +76,11 @@ flowchart TB
             DEVOPS[DevOps Worker]
         end
 
+        subgraph REFERENCE["Reference Layer (read-only, optional)"]
+            RESEARCHER["Research Worker<br/>(current external docs)"]
+            DESIGNER["Design Worker<br/>(Figma frames or repo images)"]
+        end
+
         subgraph REVIEW["Review Layer"]
             CODE_REVIEW[Code Reviewer]
             ARCH_REVIEW[Architecture Reviewer]
@@ -116,6 +121,11 @@ flowchart TB
     ORCHESTRATOR --> QA
     ORCHESTRATOR --> DEVOPS
 
+    ORCHESTRATOR -. "research brief" .-> RESEARCHER
+    ORCHESTRATOR -. "design brief" .-> DESIGNER
+    RESEARCHER -. "research note" .-> WORKERS
+    DESIGNER -. "design note" .-> WORKERS
+
     FRONTEND --> CODE_REVIEW
     BACKEND --> CODE_REVIEW
     QA --> CODE_REVIEW
@@ -135,6 +145,8 @@ flowchart TB
     HOOKS -.-> WORKERS
     INSTALLER -.-> INFRA
 ```
+
+[Interactive version](diagrams/system-overview.html)
 
 ---
 
@@ -251,11 +263,16 @@ flowchart TD
     A[User Request] --> B[Task Classification]
     B --> C[Quick Workflow]
     C --> D[Focused Analysis]
-    D --> E[Implementation]
+    D --> X{"External API or<br/>cited design?"}
+    X -->|Yes| RD["One short brief:<br/>Research or Design Worker"]
+    RD --> E
+    X -->|No| E[Implementation]
     E --> F[Relevant Tests]
     F --> G[Validation]
     G --> H[Final Report]
 ```
+
+[Interactive version](diagrams/quick-workflow.html)
 
 Characteristics:
 
@@ -273,7 +290,10 @@ Designed for moderate features and multi-component changes.
 flowchart TD
     A[User Request] --> B[Task Classification]
     B --> C[Requirements Clarification]
-    C --> D[Technical Plan]
+    C --> X{"External API or<br/>cited design?"}
+    X -->|Yes| RD["Research and Design Workers<br/>(read-only notes)"]
+    RD --> D
+    X -->|No| D[Technical Plan]
     D --> E[Task Decomposition]
     E --> F[Orchestrator]
 
@@ -289,6 +309,8 @@ flowchart TD
     K --> L[Validation]
     L --> M[Final Report]
 ```
+
+[Interactive version](diagrams/standard-workflow.html)
 
 Characteristics:
 
@@ -317,7 +339,10 @@ flowchart TD
     G --> H
 
     H --> I[Specification Validation]
-    I --> J[Technical Planning]
+    I --> X{"External API or<br/>cited design?"}
+    X -->|Yes| RD["Research and Design Workers<br/>(read-only notes)"]
+    RD --> J
+    X -->|No| J[Technical Planning]
     J --> K[Task Decomposition]
 
     K --> L[Workflow Orchestrator]
@@ -334,6 +359,8 @@ flowchart TD
     Q --> R[Final Validation]
     R --> S[Final Report]
 ```
+
+[Interactive version](diagrams/full-spec-workflow.html)
 
 Characteristics:
 
@@ -436,6 +463,7 @@ flowchart TD
     A[Validated Specification] --> B[Task Decomposition]
     B --> C[Dependency Graph]
     C --> D[Execution Scheduler]
+    N["Research and Design Notes<br/>(when produced)"] -. "quoted in each brief" .-> D
 
     D --> E[Frontend Worker]
     D --> F[Backend Worker]
@@ -451,6 +479,8 @@ flowchart TD
     J --> K[Review]
     K --> L[Validation]
 ```
+
+[Interactive version](diagrams/parallel-execution.html)
 
 ### Orchestrator Responsibilities
 
@@ -483,6 +513,8 @@ The architecture must not depend on fixed model names.
 | Backend Worker | APIs, business logic, persistence |
 | QA Worker | Test strategy, test execution, validation |
 | DevOps Worker | CI/CD, infrastructure, deployment configuration |
+| Research Worker | Read-only: current external documentation at the pinned version, returned as a research note (ADR-0013) |
+| Design Worker | Read-only: cited Figma frames or repository images mapped onto the theme and components, returned as a design note (ADR-0014) |
 | Code Reviewer | Independent implementation review |
 | Architecture Reviewer | Architectural consistency and technical decisions |
 
@@ -512,6 +544,8 @@ flowchart TD
     H --> I[Final Validation]
 ```
 
+[Interactive version](diagrams/contract-first-flow.html)
+
 The scheduler must:
 
 - Identify independent tasks.
@@ -532,6 +566,7 @@ The review system validates implementation against the original requirements.
 ```mermaid
 flowchart TD
     A[Implementation Complete] --> B[Code Review]
+    N["Research and Design Notes"] -. "same sources" .-> B
     B --> C[Architecture Review if Required]
     C --> D{Review Result}
 
@@ -543,6 +578,8 @@ flowchart TD
     F --> H[Worker Correction or Replanning]
     H --> A
 ```
+
+[Interactive version](diagrams/review-loop.html)
 
 ### Review Criteria
 
@@ -619,12 +656,16 @@ flowchart LR
     C --> D[Context]
     D --> E[Specification]
     E --> F[Implementation Plan]
+    E -. "optional" .-> N["Research and Design Notes"]
+    N --> F
     F --> G[Tasks]
     G --> H[Worker Results]
     H --> I[Review Report]
     I --> J[Validation Report]
     J --> K[Final Report]
 ```
+
+[Interactive version](diagrams/artifact-chain.html)
 
 Artifacts must support traceability and workflow recovery.
 
@@ -672,6 +713,8 @@ flowchart TD
     H --> I[Validate Installation]
     I --> J[Installation Report]
 ```
+
+[Interactive version](diagrams/installation-flow.html)
 
 ### Installer Responsibilities
 

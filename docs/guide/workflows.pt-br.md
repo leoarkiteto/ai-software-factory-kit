@@ -23,6 +23,8 @@ flowchart TD
     C -. "confiança baixa" .-> U[/"⏸ Confirmar o modo"/]
 ```
 
+[Versão interativa](../diagrams/classification.pt-br.html)
+
 - Os limiares e as dimensões de escalonamento vêm de `classification` na config. Os defaults são os mostrados acima.
 - `--mode quick|standard|full_spec` força um modo, e o modo forçado é registrado com o motivo.
 - A incerteza só conta quando o repositório não consegue resolvê-la. Um pedido que explicita suas decisões pontua menos: na fase 9, a mesma funcionalidade pontuou FULL-SPEC 15 quando descrita de forma vaga e STANDARD 10 depois que suas decisões foram explicitadas.
@@ -36,7 +38,10 @@ flowchart TD
     S(["classifying"]) --> A["Análise focada:<br/>código alvo, chamadores, testes"]
     A --> B{"Ainda é QUICK?"}
     B -- não --> ESC["Reclassificar, ou escalar<br/>para STANDARD (avisar o usuário)"]
-    B -- sim --> T["Definir a tarefa única T1:<br/>escopo e critérios de aceite"]
+    B -- sim --> RQ{"Depende de uma API externa,<br/>ou cita um design?"}
+    RQ -- sim --> RB["Um brief curto cada:<br/>research-worker / design-worker<br/>(notas somente leitura)"]
+    RB --> T
+    RQ -- não --> T["Definir a tarefa única T1:<br/>escopo e critérios de aceite"]
     T --> X(["executing"])
     X --> I["O orquestrador implementa<br/>na thread principal"]
     I --> V["Rodar os comandos de validação<br/>e registrar cada resultado"]
@@ -50,6 +55,8 @@ flowchart TD
     FIN --> C(["completed"])
 ```
 
+[Versão interativa](../diagrams/quick-mode.pt-br.html)
+
 - Um escalonamento depois que a execução começou passa por `replanning → planning` com `--mode standard`.
 - Como o orquestrador implementa, uma revisão, quando obrigatória, precisa ir para o `factory:code-reviewer`. O orquestrador nunca revisa o próprio trabalho.
 
@@ -60,7 +67,10 @@ Funcionalidades moderadas que tocam vários arquivos ou componentes. Um plano le
 ```mermaid
 flowchart TD
     S(["classifying"]) --> P(["planning"])
-    P --> Q1{"Perguntas que o repositório<br/>não responde?"}
+    P --> RQ{"API externa cuja doc importa,<br/>ou um design citado?"}
+    RQ -- sim --> RB["research-worker / design-worker<br/>em paralelo → notas somente leitura"]
+    RB --> Q1
+    RQ -- não --> Q1{"Perguntas que o repositório<br/>não responde?"}
     Q1 -- sim --> U1[/"⏸ Uma rodada de perguntas,<br/>cada uma com resposta recomendada"/]
     U1 --> PL
     Q1 -- não --> PL["plan.md com a spec inline<br/>(escopo, FR, AC) e o DAG de tarefas"]
@@ -78,6 +88,8 @@ flowchart TD
     IN --> AC["Validação final, conferir cada AC,<br/>relatório final com pedido de follow-up"]
     AC --> C(["completed"])
 ```
+
+[Versão interativa](../diagrams/standard-mode.pt-br.html)
 
 - A execução e a revisão são detalhadas no §5.
 - O limite de rodadas é `review.maxIterations`, 3 por padrão.
@@ -105,7 +117,10 @@ flowchart TD
     LS --> SC
     SC --> U1[/"⏸ Aprovar a spec"/]
     U1 --> PL(["planning"])
-    PL --> PP["plan.md com contratos primeiro,<br/>DAG de tarefas cobrindo cada FR"]
+    PL --> RQ{"API externa cuja doc importa,<br/>ou um design citado?"}
+    RQ -- sim --> RB["research-worker / design-worker<br/>em paralelo → notas somente leitura"]
+    RB --> PP
+    RQ -- não --> PP["plan.md com contratos primeiro,<br/>DAG de tarefas cobrindo cada FR"]
     PP --> PR["Revisão do plano:<br/>architecture-reviewer"]
     PR -- "achados obrigatórios" --> PP
     PR -- aprovado --> U2[/"⏸ Aprovar o plano"/]
@@ -115,6 +130,8 @@ flowchart TD
     V --> C(["completed"])
 ```
 
+[Versão interativa](../diagrams/full-spec-mode.pt-br.html)
+
 - O discovery pode escrever documentos de domínio (`GLOSSARY.md`, ADRs) e nada mais.
 - Só você pode iniciar o `/grill-with-docs`, e por isso o discovery sempre pausa.
 
@@ -123,7 +140,7 @@ flowchart TD
 ```mermaid
 flowchart TD
     N["factory-state next"] --> A{"Próxima ação"}
-    A -- run_tasks --> B["Preparar o brief de cada tarefa pronta<br/>e despachá-la para seu worker"]
+    A -- run_tasks --> B["Preparar o brief de cada tarefa pronta<br/>(citando as notas de pesquisa e design que ela usa)<br/>e despachá-la para seu worker"]
     B --> R["Coletar o relatório JSON,<br/>conferir contra o git status"]
     R --> N
     A -- retry_tasks --> RT["Tarefa volta para pending,<br/>o brief carrega a falha"]
@@ -133,7 +150,7 @@ flowchart TD
     RPL --> N
     A -- review --> RV(["reviewing"])
     RV --> SNAP["Snapshot do git status"]
-    SNAP --> RVS["Revisores em paralelo,<br/>independentes de quem implementou"]
+    SNAP --> RVS["Revisores em paralelo,<br/>independentes de quem implementou,<br/>com os caminhos das notas"]
     RVS --> CHK{"Árvore inalterada?"}
     CHK -- não --> DISC["Descartar essa revisão<br/>e registrar uma issue"]
     CHK -- sim --> SUB["factory-state review<br/>imprime a decisão"]
@@ -142,6 +159,8 @@ flowchart TD
     SUB -- integrate --> IN(["integrating"])
     SUB -- escalate --> ESC[/"⏸ Escalonamento"/]
 ```
+
+[Versão interativa](../diagrams/orchestrator-loop.pt-br.html)
 
 - Uma tarefa que falhou é tentada de novo até `execution.maxTaskAttempts` vezes, 2 por padrão. Depois disso suas dependentes ficam bloqueadas e o `next` pede um replanejamento.
 - Um worker que recebe uma negação do "Factory guard" para e reporta `blocked`. Ele nunca contorna a negação.
@@ -175,6 +194,8 @@ stateDiagram-v2
     failed --> [*]
     cancelled --> [*]
 ```
+
+[Versão interativa](../diagrams/workflow-states.pt-br.html)
 
 - Todo status aberto também pode ir para `failed` ou `cancelled`. Essas transições foram omitidas do diagrama para facilitar a leitura.
 - `failed` significa que o trabalho não pôde ser feito. Ele pode ser retomado para `replanning` com a sua aprovação.

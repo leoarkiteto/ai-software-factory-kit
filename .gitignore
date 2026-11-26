@@ -4,3 +4,4 @@ node_modules/
 .claude/worktrees/
 .claude/settings.local.json
 plugins/factory/evals/results/
+.archify/
